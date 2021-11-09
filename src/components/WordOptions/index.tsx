@@ -1,11 +1,11 @@
-import { useMemo, Fragment, FC, useContext } from 'react';
+import { useMemo, Fragment, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { WordContext } from '../../WordContext';
 
 const WordOptions = () => {
   const values = useContext(WordContext);
-  const { wpm, timerId, setWordCount } = values;
+  const { wpm, setWordCount } = values;
   const options = useMemo(() => [10, 25, 50], []);
   return (
     <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -21,7 +21,7 @@ const WordOptions = () => {
               key={option + idx}
               onClick={() => {
                 setWordCount(option);
-                if (timerId) clearInterval(timerId);
+                document.getElementsByTagName('button')[0].click();
               }}
             >
               {option}

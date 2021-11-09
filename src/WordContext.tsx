@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, FC } from 'react';
+import { createContext, useState, FC } from 'react';
 
 interface IProps {
   children?: React.ReactNode;

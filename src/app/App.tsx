@@ -1,4 +1,4 @@
-import { useEffect, useState, FC, useContext } from 'react';
+import { useEffect, FC, useContext } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
@@ -7,11 +7,11 @@ import { WordContext } from '../WordContext';
 
 const App: FC = () => {
   const values = useContext(WordContext);
-  const { wordCount, setWordCount, wordList, setWordList } = values;
+  const { wordCount, setWordList } = values;
 
   useEffect(() => {
     setWordList(randomizedWords(wordCount));
-  }, [wordCount]);
+  }, [wordCount, setWordList]);
 
   return (
     <Box

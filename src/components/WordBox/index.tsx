@@ -1,5 +1,4 @@
 import {
-  FC,
   useMemo,
   useState,
   useRef,
@@ -26,7 +25,7 @@ const WordBox = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(1);
   const [charCount, setCharCount] = useState(0);
 
   const wordRef = useRef<HTMLDivElement>(null);
@@ -43,7 +42,7 @@ const WordBox = () => {
   }, [wordList]);
 
   const handleReset = useCallback(() => {
-    if (wordRef.current && textFieldRef.current && timerId) {
+    if (wordRef.current && textFieldRef.current) {
       if (!userInput && !currentWordIndex && !currentCharIndex) {
         setWordList(randomizeWords(wordCount));
       } else {
@@ -60,9 +59,12 @@ const WordBox = () => {
         setCurrentCharIndex(0);
         setCurrentWordIndex(0);
       }
-      clearInterval(timerId);
-      setTimerId(null);
-      setTimer(0);
+      if (timerId) {
+        clearInterval(timerId);
+        setTimerId(null);
+        setTimer(1);
+        setCharCount(0);
+      }
     }
     document.getElementsByTagName('input')[0].focus();
   }, [
@@ -74,21 +76,25 @@ const WordBox = () => {
     currentCharIndex,
     classes,
     wordCount,
+    setTimerId,
+    timerId,
   ]);
 
   // Timer for WPM
   useEffect(() => {
-    let intervalTimer: undefined | NodeJS.Timeout;
     if (userInput.length > 0 && !timerId) {
-      intervalTimer = setInterval(() => setTimer((prev) => prev + 1), 1000);
+      const intervalTimer = setInterval(
+        () => setTimer((prev) => prev + 1),
+        1000
+      );
       setTimerId(intervalTimer);
     }
-    if (currentWordIndex === charList.length - 1 && intervalTimer) {
-      clearInterval(intervalTimer);
-    }
-  }, [userInput, timerId]);
+  }, [userInput, timerId, currentWordIndex, setTimerId]);
 
-  console.log(timer);
+  useEffect(() => {
+    const wpmCalc = Math.floor(charCount / 5 / (timer / 60));
+    setWpm(wpmCalc);
+  }, [timer, charCount, setWpm]);
 
   // handle pressing escape
   useEffect(() => {
@@ -99,6 +105,19 @@ const WordBox = () => {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
+
+  useEffect(() => {
+    if (timerId) {
+      const handleDelete = (e: KeyboardEvent) => {
+        if (e.key === 'Backspace' && userInput) {
+          setCharCount((prev) => prev - 2);
+          setUserInput((prev) => prev.slice(0, userInput.length));
+        }
+      };
+      document.addEventListener('keydown', handleDelete);
+      return () => document.removeEventListener('keydown', handleDelete);
+    }
+  }, [userInput, timerId, charCount]);
 
   // focus on input field whenever charList changes
   useEffect(() => {
@@ -135,6 +154,7 @@ const WordBox = () => {
         // else move to next word
         setCurrentCharIndex(0);
         setCurrentWordIndex((prev) => prev + 1);
+        setCharCount((prev) => prev + 1);
         setUserInput('');
       } else {
         // if the user completely clears input box, remove all classes
@@ -163,7 +183,10 @@ const WordBox = () => {
             );
         }
         // move to next character
-        setCurrentCharIndex(e.target.value.length);
+        if (e.target.value.length <= charList[currentWordIndex].length) {
+          setCurrentCharIndex(e.target.value.length);
+          setCharCount((prev) => prev + 1);
+        }
       }
     }
   };
@@ -223,6 +246,13 @@ const WordBox = () => {
           currentCharIndex
         ].classList.add(classes.currentChar);
       }
+    }
+    if (
+      (currentWordIndex === charList.length - 1 ||
+        userInput === wordList[wordList.length - 1]) &&
+      timerId
+    ) {
+      clearInterval(timerId);
     }
   }, [currentWordIndex, wordRef, wordList, currentCharIndex]); //eslint-disable-line
 
