@@ -1,18 +1,22 @@
-import { useEffect, FC, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import randomizedWords from '../words';
-import { WordContext } from '../WordContext';
+import { WordContext } from 'WordContext';
+import Stats from 'components/Stats';
 
-const App: FC = () => {
+const App = () => {
   const values = useContext(WordContext);
-  const { wordCount, setWordList } = values;
-
+  const { wpmData, wordCount } = values;
+  // handle pressing escape
   useEffect(() => {
-    setWordList(randomizedWords(wordCount));
-  }, [wordCount, setWordList]);
-
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape')
+        document.getElementsByTagName('button')[0].click();
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
   return (
     <Box
       sx={{
@@ -37,17 +41,23 @@ const App: FC = () => {
           justifyContent: 'center',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            maxWidth: '75%',
-            minHeight: '30%',
-          }}
-        >
-          <WordOptions />
-          <WordBox />
-        </Box>
+        {wpmData.length === wordCount ? (
+          <Stats />
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              maxWidth: '75%',
+              minHeight: '30%',
+            }}
+          >
+            <>
+              <WordOptions />
+              <WordBox />
+            </>
+          </Box>
+        )}
       </Box>
       <Box
         sx={{

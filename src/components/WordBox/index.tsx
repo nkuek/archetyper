@@ -11,22 +11,35 @@ import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import useStyles from './styles';
-import randomizeWords from '../../words';
-import { WordContext } from '../../WordContext';
+import randomizeWords from 'words';
+import { WordContext } from 'WordContext';
+
+const calculateWpm = (charCount: number, timer: number) =>
+  Math.floor(charCount / 5 / (timer / 60));
 
 const WordBox = () => {
   const values = useContext(WordContext);
 
-  const { wordList, setWordList, wordCount, setWpm, timerId, setTimerId } =
-    values;
+  const {
+    wordList,
+    setWordList,
+    wordCount,
+    setWpm,
+    timerId,
+    setTimerId,
+    wpm,
+    setWpmData,
+    timer,
+    setTimer,
+  } = values;
 
   const classes = useStyles();
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
-  const [timer, setTimer] = useState(1);
   const [charCount, setCharCount] = useState(0);
+  const [incorrectChars, setIncorrectChars] = useState(0);
 
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLDivElement>(null);
@@ -55,10 +68,13 @@ const WordBox = () => {
           }
           word.classList.remove(classes.currentWord);
         }
-        setUserInput('');
-        setCurrentCharIndex(0);
-        setCurrentWordIndex(0);
       }
+      setUserInput('');
+      setCurrentCharIndex(0);
+      setCurrentWordIndex(0);
+      setIncorrectChars(0);
+      setWpm(0);
+      setWpmData([]);
       if (timerId) {
         clearInterval(timerId);
         setTimerId(null);
@@ -92,20 +108,10 @@ const WordBox = () => {
   }, [userInput, timerId, currentWordIndex, setTimerId]);
 
   useEffect(() => {
-    const wpmCalc = Math.floor(charCount / 5 / (timer / 60));
-    setWpm(wpmCalc);
+    setWpm(calculateWpm(charCount, timer));
   }, [timer, charCount, setWpm]);
 
-  // handle pressing escape
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape')
-        document.getElementsByTagName('button')[0].click();
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
-
+  // handle character count when user presses delete
   useEffect(() => {
     if (timerId) {
       const handleDelete = (e: KeyboardEvent) => {
@@ -151,10 +157,32 @@ const WordBox = () => {
             child.classList.add(classes.incorrect);
           }
         }
+
+        // set wpm data timestep
+        const extraChars =
+          e.target.value.length - 1 - charList[currentWordIndex].length > 0
+            ? e.target.value.length - 1 - charList[currentWordIndex].length
+            : 0;
+        const missingChars =
+          charList[currentWordIndex].length - currentCharIndex;
+        setWpmData((prev) => [
+          ...prev,
+          {
+            word: wordList[currentWordIndex],
+            wordNum: currentWordIndex + 1,
+            errors: missingChars + extraChars + incorrectChars,
+            wpm,
+            missingChars,
+            extraChars,
+            incorrectChars,
+          },
+        ]);
+
         // else move to next word
         setCurrentCharIndex(0);
         setCurrentWordIndex((prev) => prev + 1);
         setCharCount((prev) => prev + 1);
+        setIncorrectChars(0);
         setUserInput('');
       } else {
         // if the user completely clears input box, remove all classes
@@ -227,6 +255,7 @@ const WordBox = () => {
         currentWord.children[currentCharIndex - 1].classList.remove(
           classes.currentChar
         );
+        setIncorrectChars((prev) => prev + 1);
       }
     }
   }, [currentCharIndex, userInput, currentWordIndex, wordRef]); // eslint-disable-line
@@ -248,8 +277,8 @@ const WordBox = () => {
       }
     }
     if (
-      (currentWordIndex === charList.length - 1 ||
-        userInput === wordList[wordList.length - 1]) &&
+      currentWordIndex === charList.length - 1 &&
+      userInput === wordList[wordList.length - 1] &&
       timerId
     ) {
       clearInterval(timerId);
