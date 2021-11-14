@@ -4,10 +4,12 @@ import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
 import { WordContext } from 'WordContext';
 import Stats from 'components/Stats';
+import { Container } from '@mui/material';
 
 const App = () => {
   const values = useContext(WordContext);
-  const { wpmData, wordCount } = values;
+  const { wpmData, wordCount, setFocused } = values;
+
   // handle pressing escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -17,11 +19,13 @@ const App = () => {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
+
   return (
-    <Box
+    <Container
       sx={{
         fontFamily: 'Roboto',
       }}
+      onClick={() => setFocused(false)}
     >
       <Box
         sx={{
@@ -33,11 +37,11 @@ const App = () => {
       >
         Typer
       </Box>
-      <Box
+      <Container
         sx={{
           height: 'calc(100vh - 80px)',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: wpmData.length === wordCount ? 'start' : 'center',
           justifyContent: 'center',
         }}
       >
@@ -58,7 +62,7 @@ const App = () => {
             </>
           </Box>
         )}
-      </Box>
+      </Container>
       <Box
         sx={{
           display: 'flex',
@@ -69,7 +73,7 @@ const App = () => {
       >
         themes
       </Box>
-    </Box>
+    </Container>
   );
 };
 

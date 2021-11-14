@@ -13,6 +13,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
+import { Tooltip as MuiTooltip } from '@mui/material';
 
 const CustomTooltip = (props: any) => {
   const { payload } = props;
@@ -63,14 +64,18 @@ const Stats = () => {
     setWpm,
     setTimer,
     setTimerId,
+    timer,
+    setFocused,
   } = values;
 
-  const handleReset = () => {
+  const handleReset = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
     setWordList(randomizeWords(wordCount));
     setWpmData([]);
     setWpm(0);
     setTimer(1);
     setTimerId(null);
+    setFocused(true);
   };
 
   const totalChars = useMemo(
@@ -96,26 +101,44 @@ const Stats = () => {
   }, [wpmData]);
 
   const accuracy = useMemo(() => {
-    const _percentage = (totalChars - totalErrors.errors) / totalChars;
-    return Math.floor(_percentage * 100);
+    return (totalChars - totalErrors.errors) / totalChars;
   }, [totalChars, totalErrors]);
 
   return (
-    <Container sx={{ width: '100%' }}>
-      <Box>{`WPM: ${wpm}`}</Box>
-      <Box>{`Accuracy: ${accuracy}%`}</Box>
-      <Box>{`Total Errors: ${totalErrors.errors}`}</Box>
-      <Box>{`Total Characters: ${totalChars}`}</Box>
-      <Box>{`Incorrect Characters: ${totalErrors.incorrectChars}`}</Box>
-      <Box>{`Missing Characters: ${totalErrors.missingChars}`}</Box>
-      <Box>{`Extra Characters: ${totalErrors.extraChars}`}</Box>
+    <Container
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Container sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box textAlign="center" fontSize="1.5em">
+          wpm:
+        </Box>
+        <Box textAlign="center" fontSize="2em">
+          {wpm}
+        </Box>
+      </Container>
+      <Container
+        sx={{ display: 'flex', flexDirection: 'column', marginBottom: '1em' }}
+      >
+        <Box textAlign="center" fontSize="1.5em">
+          accuracy:
+        </Box>
+        <MuiTooltip title={`${(accuracy * 100).toFixed(2)}%`} arrow>
+          <Box textAlign="center" fontSize="2em">{`${Math.round(
+            Math.floor(accuracy * 100)
+          )}%`}</Box>
+        </MuiTooltip>
+      </Container>
       <ResponsiveContainer width={'100%'} height={250}>
-        <LineChart data={wpmData}>
+        <LineChart margin={{ right: 20 }} data={wpmData}>
           <CartesianGrid />
           <XAxis dataKey="wordNum" />
           <YAxis
             label={{
-              value: 'Words per Minute',
+              value: 'words per minute',
               angle: -90,
               dx: -15,
             }}
@@ -125,9 +148,28 @@ const Stats = () => {
           <Line type="monotone" dataKey={'wpm'} />
         </LineChart>
       </ResponsiveContainer>
-      <Button onClick={handleReset}>
-        <ReplayIcon />
-      </Button>
+      <Container
+        sx={{
+          display: 'flex',
+          padding: 0,
+        }}
+      >
+        <Container sx={{ width: 'fit-content' }}>
+          <Box fontSize="1.1em">characters:</Box>
+          <MuiTooltip title="total / incorrect / missing / extra" arrow>
+            <Box fontSize="1.5em">{`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}</Box>
+          </MuiTooltip>
+        </Container>
+        <Container sx={{ width: 'fit-content', marginBottom: '1em' }}>
+          <Box fontSize="1.1em">time:</Box>
+          <Box fontSize="1.5em">{`${timer}s`}</Box>
+        </Container>
+      </Container>
+      <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button onClick={handleReset}>
+          <ReplayIcon />
+        </Button>
+      </Container>
     </Container>
   );
 };

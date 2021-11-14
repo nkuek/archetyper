@@ -204,7 +204,7 @@ const words = [
 const randomizeWords = (wordCount: number) => {
   const randomized = [];
   while (randomized.length < wordCount) {
-    randomized.push(words[Math.floor(Math.random() * 50)]);
+    randomized.push(words[Math.floor(Math.random() * 200)]);
   }
   return randomized;
 };

@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import useStyles from './styles';
 import randomizeWords from 'words';
 import { WordContext } from 'WordContext';
+import Replay from '@mui/icons-material/Replay';
 
 const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
@@ -31,15 +32,17 @@ const WordBox = () => {
     setWpmData,
     timer,
     setTimer,
+    focused,
+    setFocused,
   } = values;
-
-  const classes = useStyles();
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
+
+  const classes = useStyles();
 
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLDivElement>(null);
@@ -54,6 +57,14 @@ const WordBox = () => {
     return charList;
   }, [wordList]);
 
+  const handleFocus = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+      setFocused(true);
+    }
+  };
+
   const handleReset = useCallback(() => {
     if (wordRef.current && textFieldRef.current) {
       if (!userInput && !currentWordIndex && !currentCharIndex) {
@@ -66,7 +77,6 @@ const WordBox = () => {
             char.classList.remove(classes.incorrect);
             char.classList.remove(classes.currentChar);
           }
-          word.classList.remove(classes.currentWord);
         }
       }
       setUserInput('');
@@ -94,6 +104,9 @@ const WordBox = () => {
     wordCount,
     setTimerId,
     timerId,
+    setTimer,
+    setWpm,
+    setWpmData,
   ]);
 
   // Timer for WPM
@@ -105,7 +118,7 @@ const WordBox = () => {
       );
       setTimerId(intervalTimer);
     }
-  }, [userInput, timerId, currentWordIndex, setTimerId]);
+  }, [userInput, timerId, currentWordIndex, setTimerId]); // eslint-disable-line
 
   useEffect(() => {
     setWpm(calculateWpm(charCount, timer));
@@ -148,9 +161,20 @@ const WordBox = () => {
           return;
         }
         // if user presses space before reaching the end of the word, make entire word incorrect and remove other styling
-        if (currentCharIndex - 1 !== charList[currentWordIndex].length - 1) {
+        if (
+          currentCharIndex !== charList[currentWordIndex].length ||
+          e.target.value.length - 1 > charList[currentWordIndex].length
+        ) {
           let i = currentCharIndex;
-          if (e.target.value.length > charList[currentWordIndex].length) i = 0;
+
+          if (e.target.value.length - 1 > charList[currentWordIndex].length) {
+            i = 0;
+          }
+
+          currentWord.children[currentCharIndex].classList.add(
+            classes.incorrect
+          );
+
           for (i; i < currentWord.children.length; i++) {
             const child = currentWord.children[i];
             child.classList.remove(classes.currentChar);
@@ -195,22 +219,14 @@ const WordBox = () => {
             currentWord.children[0].classList.add(classes.currentChar);
           }
           // if user deletes character from input, remove that character's styling
-        } else if (
-          e.target.value.length < currentCharIndex &&
-          e.target.value.length <= charList[currentWordIndex].length
-        ) {
-          currentWord.children[currentCharIndex - 1].classList.remove(
-            classes.incorrect
-          );
-          currentWord.children[currentCharIndex - 1].classList.remove(
-            classes.correct
-          );
-          if (currentCharIndex < charList[currentWordIndex].length)
-            currentWord.children[currentCharIndex].classList.remove(
-              classes.currentChar
-            );
         }
         // move to next character
+        if (currentCharIndex < charList[currentWordIndex].length) {
+          const currentChar = currentWord.children[currentCharIndex];
+          currentChar.classList.remove(classes.currentChar);
+          currentChar.classList.remove(classes.correct);
+          currentChar.classList.remove(classes.incorrect);
+        }
         if (e.target.value.length <= charList[currentWordIndex].length) {
           setCurrentCharIndex(e.target.value.length);
           setCharCount((prev) => prev + 1);
@@ -267,9 +283,6 @@ const WordBox = () => {
       wordList.length > 0 &&
       currentWordIndex < charList.length
     ) {
-      wordRef.current.children[currentWordIndex].classList.add(
-        classes.currentWord
-      );
       if (currentCharIndex < charList[currentWordIndex].length) {
         wordRef.current.children[currentWordIndex].children[
           currentCharIndex
@@ -285,25 +298,78 @@ const WordBox = () => {
     }
   }, [currentWordIndex, wordRef, wordList, currentCharIndex]); //eslint-disable-line
 
+  useEffect(() => {
+    const blurWindow = () => setFocused(false);
+    const focusWindow = () => setFocused(true);
+    window.addEventListener('blur', blurWindow);
+    window.addEventListener('focus', focusWindow);
+    return () => {
+      window.removeEventListener('blur', blurWindow);
+      window.removeEventListener('focus', blurWindow);
+    };
+  });
+
   return (
     <Container
       sx={{
         border: '1px solid black',
-        padding: '2em',
+        padding: '2rem',
+        paddingTop: '0em',
         borderRadius: 5,
+        fontSize: '1.5em',
       }}
+      onClick={handleFocus}
     >
+      <Container
+        sx={{
+          visibility: timerId ? 'visible' : 'hidden',
+          height: '2em',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '0em .2em',
+        }}
+        disableGutters
+      >
+        <Box>{`${currentWordIndex} / ${wordCount}`}</Box>
+        <Box>{`${timer}s`}</Box>
+      </Container>
       <Box
-        sx={{ display: 'flex', flexWrap: 'wrap', marginBottom: '2em' }}
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          position: 'relative',
+          zIndex: 1,
+        }}
         ref={wordRef}
       >
-        {charList.map((word, idx) => (
-          <Box key={idx} sx={{ display: 'flex', margin: '0.25em' }}>
-            {word.map((char, idx) => (
-              <Box key={char + idx}>{char}</Box>
+        {charList.map((word, wordIdx) => (
+          <Box
+            color={wordIdx === currentWordIndex ? 'plum' : 'black'}
+            key={wordIdx}
+            sx={{ display: 'flex', margin: '0.25em' }}
+          >
+            {word.map((char, charIdx) => (
+              <Box key={char + charIdx}>{char}</Box>
             ))}
           </Box>
         ))}
+        {!focused && (
+          <Box
+            sx={{
+              position: 'absolute',
+              zIndex: 2,
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              background: 'white',
+            }}
+          >
+            Click here to focus
+          </Box>
+        )}
       </Box>
       <Box
         sx={{
@@ -314,19 +380,18 @@ const WordBox = () => {
         }}
       >
         <TextField
-          sx={{ width: '80%', boxSizing: 'border-box' }}
+          sx={{ width: 0, opacity: 0, boxSizing: 'border-box' }}
           variant="outlined"
           value={userInput}
           onChange={handleUserInput}
-          autoFocus={true}
-          ref={textFieldRef}
+          autoFocus
+          inputRef={textFieldRef}
         />
         <Button
-          sx={{ height: '95%', width: '20%' }}
-          variant="outlined"
+          sx={{ color: 'gray', height: '95%', width: '20%' }}
           onClick={handleReset}
         >
-          Redo
+          <Replay />
         </Button>
       </Box>
     </Container>

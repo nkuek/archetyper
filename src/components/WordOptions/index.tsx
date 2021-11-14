@@ -5,11 +5,11 @@ import { WordContext } from 'WordContext';
 
 const WordOptions = () => {
   const values = useContext(WordContext);
-  const { wpm, setWordCount } = values;
+  const { wpm, setWordCount, wordCount, setFocused } = values;
   const options = useMemo(() => [10, 25, 50], []);
   return (
     <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Container sx={{ display: 'flex', padding: 0 }}>
+      <Container sx={{ display: 'flex', padding: 0, marginBottom: '.5em' }}>
         {options.map((option, idx) => (
           <Fragment key={'box' + idx}>
             <Box
@@ -17,11 +17,14 @@ const WordOptions = () => {
                 margin: '0em .5em',
                 marginLeft: idx === 0 ? '0' : '.5em',
                 cursor: 'pointer',
+                borderBottom: option === wordCount ? '1px solid black' : 'none',
               }}
               key={option + idx}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setWordCount(option);
                 document.getElementsByTagName('button')[0].click();
+                setFocused(true);
               }}
             >
               {option}
@@ -30,7 +33,8 @@ const WordOptions = () => {
           </Fragment>
         ))}
       </Container>
-      <Box>{`WPM: ${wpm || ''}`}</Box>
+      <Box>{'WPM: '}</Box>
+      <Box>{wpm || ''}</Box>
     </Container>
   );
 };

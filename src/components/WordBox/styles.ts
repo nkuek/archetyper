@@ -1,6 +1,11 @@
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
+  '@keyframes caretFlash': {
+    '50%': {
+      opacity: 0.25,
+    },
+  },
   correct: {
     color: 'green',
   },
@@ -12,6 +17,7 @@ const useStyles = makeStyles({
   },
   currentChar: {
     color: 'darkmagenta',
+    animation: `$caretFlash 1.5s linear infinite`,
   },
 });
 

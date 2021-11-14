@@ -5,6 +5,8 @@ interface IProps {
   children?: React.ReactNode;
 }
 
+type TReactSetState<T> = React.Dispatch<React.SetStateAction<T>>;
+
 interface ITimeStepData {
   wordNum: number;
   word: string;
@@ -17,17 +19,19 @@ interface ITimeStepData {
 
 interface IWordContext {
   wordList: string[];
-  setWordList: React.Dispatch<React.SetStateAction<string[]>>;
+  setWordList: TReactSetState<string[]>;
   wordCount: number;
-  setWordCount: React.Dispatch<React.SetStateAction<number>>;
+  setWordCount: TReactSetState<number>;
   wpm: number;
-  setWpm: React.Dispatch<React.SetStateAction<number>>;
+  setWpm: TReactSetState<number>;
   timerId: null | NodeJS.Timeout;
-  setTimerId: React.Dispatch<React.SetStateAction<null | NodeJS.Timeout>>;
+  setTimerId: TReactSetState<null | NodeJS.Timeout>;
   wpmData: ITimeStepData[];
-  setWpmData: React.Dispatch<React.SetStateAction<ITimeStepData[]>>;
+  setWpmData: TReactSetState<ITimeStepData[]>;
   timer: number;
-  setTimer: React.Dispatch<React.SetStateAction<number>>;
+  setTimer: TReactSetState<number>;
+  focused: boolean;
+  setFocused: TReactSetState<boolean>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -39,6 +43,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [timerId, setTimerId] = useState<null | NodeJS.Timeout>(null);
   const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);
   const [timer, setTimer] = useState(1);
+  const [focused, setFocused] = useState(true);
 
   useEffect(() => {
     setWordList(randomizedWords(wordCount));
@@ -57,6 +62,8 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     setWpmData,
     timer,
     setTimer,
+    focused,
+    setFocused,
   };
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;
 };
