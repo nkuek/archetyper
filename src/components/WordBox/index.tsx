@@ -19,8 +19,6 @@ const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
 
 const WordBox = () => {
-  const values = useContext(WordContext);
-
   const {
     wordList,
     setWordList,
@@ -34,7 +32,7 @@ const WordBox = () => {
     setTimer,
     focused,
     setFocused,
-  } = values;
+  } = useContext(WordContext);
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
@@ -71,6 +69,8 @@ const WordBox = () => {
         setWordList(randomizeWords(wordCount));
       } else {
         const words = wordRef.current.children;
+        const extraWords = document.querySelectorAll(`.${classes.extra}`);
+        extraWords.forEach((word) => word.remove());
         for (const word of words) {
           for (const char of word.children) {
             char.classList.remove(classes.correct);
@@ -131,12 +131,21 @@ const WordBox = () => {
         if (e.key === 'Backspace' && userInput) {
           setCharCount((prev) => prev - 2);
           setUserInput((prev) => prev.slice(0, userInput.length));
+          if (
+            userInput.length > charList[currentWordIndex].length - 1 &&
+            wordRef.current
+          ) {
+            const currentWord = wordRef.current.children[currentWordIndex];
+            const lastChild =
+              currentWord.children[currentWord.children.length - 1];
+            currentWord.removeChild(lastChild);
+          }
         }
       };
       document.addEventListener('keydown', handleDelete);
       return () => document.removeEventListener('keydown', handleDelete);
     }
-  }, [userInput, timerId, charCount]);
+  }, [userInput, timerId, charCount, charList, currentWordIndex]);
 
   // focus on input field whenever charList changes
   useEffect(() => {
@@ -165,17 +174,7 @@ const WordBox = () => {
           currentCharIndex !== charList[currentWordIndex].length ||
           e.target.value.length - 1 > charList[currentWordIndex].length
         ) {
-          let i = currentCharIndex;
-
-          if (e.target.value.length - 1 > charList[currentWordIndex].length) {
-            i = 0;
-          }
-
-          currentWord.children[currentCharIndex].classList.add(
-            classes.incorrect
-          );
-
-          for (i; i < currentWord.children.length; i++) {
+          for (let i = currentCharIndex; i < currentWord.children.length; i++) {
             const child = currentWord.children[i];
             child.classList.remove(classes.currentChar);
             child.classList.add(classes.incorrect);
@@ -230,6 +229,15 @@ const WordBox = () => {
         if (e.target.value.length <= charList[currentWordIndex].length) {
           setCurrentCharIndex(e.target.value.length);
           setCharCount((prev) => prev + 1);
+        }
+
+        // append extra letters to words if user types more letters
+        if (e.target.value.length > charList[currentWordIndex].length) {
+          const extraLetter = e.target.value[e.target.value.length - 1];
+          const extraLetterEl = document.createElement('div');
+          extraLetterEl.innerHTML = extraLetter;
+          extraLetterEl.classList.add(classes.extra);
+          currentWord.appendChild(extraLetterEl);
         }
       }
     }
@@ -298,23 +306,20 @@ const WordBox = () => {
     }
   }, [currentWordIndex, wordRef, wordList, currentCharIndex]); //eslint-disable-line
 
-  useEffect(() => {
-    const blurWindow = () => setFocused(false);
-    const focusWindow = () => setFocused(true);
-    window.addEventListener('blur', blurWindow);
-    window.addEventListener('focus', focusWindow);
-    return () => {
-      window.removeEventListener('blur', blurWindow);
-      window.removeEventListener('focus', blurWindow);
-    };
-  });
+  // useEffect(() => {
+  //   const blurWindow = () => setFocused(false);
+  //   const focusWindow = () => setFocused(true);
+  //   window.addEventListener('blur', blurWindow);
+  //   window.addEventListener('focus', focusWindow);
+  //   return () => {
+  //     window.removeEventListener('blur', blurWindow);
+  //     window.removeEventListener('focus', blurWindow);
+  //   };
+  // });
 
   return (
     <Container
       sx={{
-        border: '1px solid black',
-        padding: '2rem',
-        paddingTop: '0em',
         borderRadius: 5,
         fontSize: '1.5em',
       }}
@@ -327,7 +332,7 @@ const WordBox = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '0em .2em',
+          padding: 0,
         }}
         disableGutters
       >
@@ -364,10 +369,11 @@ const WordBox = () => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              textAlign: 'center',
               background: 'white',
             }}
           >
-            Click here to focus
+            Click here to start typing
           </Box>
         )}
       </Box>

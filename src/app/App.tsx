@@ -7,8 +7,7 @@ import Stats from 'components/Stats';
 import { Container } from '@mui/material';
 
 const App = () => {
-  const values = useContext(WordContext);
-  const { wpmData, wordCount, setFocused } = values;
+  const { wpmData, wordCount, setFocused } = useContext(WordContext);
 
   // handle pressing escape
   useEffect(() => {
@@ -24,6 +23,7 @@ const App = () => {
     <Container
       sx={{
         fontFamily: 'Roboto',
+        overflowY: 'scroll',
       }}
       onClick={() => setFocused(false)}
     >
@@ -39,10 +39,11 @@ const App = () => {
       </Box>
       <Container
         sx={{
-          height: 'calc(100vh - 80px)',
+          minHeight: 'calc(100vh - 80px)',
           display: 'flex',
           alignItems: wpmData.length === wordCount ? 'start' : 'center',
           justifyContent: 'center',
+          padding: 0,
         }}
       >
         {wpmData.length === wordCount ? (

@@ -19,6 +19,10 @@ const useStyles = makeStyles({
     color: 'darkmagenta',
     animation: `$caretFlash 1.5s linear infinite`,
   },
+  extra: {
+    color: '#e00000',
+    opacity: '.8',
+  },
 });
 
 export default useStyles;
