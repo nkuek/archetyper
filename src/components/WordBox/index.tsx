@@ -123,29 +123,6 @@ const WordBox = () => {
     setWpm(calculateWpm(charCount, timer));
   }, [timer, charCount, setWpm]);
 
-  const handleDelete = useCallback(
-    (e: KeyboardEvent) => {
-      console.log(wordRef.current?.children[currentWordIndex].children.length);
-      if (e.key === 'Backspace' && userInput && wordRef.current) {
-        setCharCount((prev) => prev - 2);
-        setUserInput((prev) => prev.slice(0, userInput.length));
-        const currentWord = wordRef.current.children[currentWordIndex];
-        if (currentWord.children.length > charList[currentWordIndex].length) {
-          const lastChild =
-            currentWord.children[currentWord.children.length - 1];
-          currentWord.removeChild(lastChild);
-        }
-      }
-    },
-    [userInput, charList, currentWordIndex, wordRef]
-  );
-
-  // handle character count when user presses delete
-  useEffect(() => {
-    document.addEventListener('keydown', handleDelete);
-    return () => document.removeEventListener('keydown', handleDelete);
-  }, [timerId, handleDelete]);
-
   // focus on input field whenever charList changes
   useEffect(() => {
     if (charList.length > 0) {
@@ -233,13 +210,26 @@ const WordBox = () => {
           setCharCount((prev) => prev + 1);
         }
 
+        const extraChars = Array.from(currentWord.children).filter((child) =>
+          child.classList.contains(classes.extra)
+        );
+
         // append extra letters to words if user types more letters
-        if (e.target.value.length > charList[currentWordIndex].length) {
-          const extraLetter = e.target.value[e.target.value.length - 1];
-          const extraLetterEl = document.createElement('div');
-          extraLetterEl.innerHTML = extraLetter;
-          extraLetterEl.classList.add(classes.extra);
-          currentWord.appendChild(extraLetterEl);
+        if (e.target.value.length > wordList[currentWordIndex].length) {
+          // userInput length is greater than target value length if user deletes a value since the userInput state will always be one state behind the target value
+          if (userInput.length > e.target.value.length) {
+            currentWord.removeChild(
+              currentWord.children[currentWord.children.length - 1]
+            );
+          } else {
+            const extraChar = e.target.value[e.target.value.length - 1];
+            const extraLetterEl = document.createElement('div');
+            extraLetterEl.innerHTML = extraChar;
+            extraLetterEl.classList.add(classes.extra);
+            currentWord.appendChild(extraLetterEl);
+          }
+        } else {
+          extraChars.forEach((char) => currentWord.removeChild(char));
         }
       }
     }
@@ -307,17 +297,6 @@ const WordBox = () => {
       clearInterval(timerId);
     }
   }, [currentWordIndex, wordRef, wordList, currentCharIndex]); //eslint-disable-line
-
-  // useEffect(() => {
-  //   const blurWindow = () => setFocused(false);
-  //   const focusWindow = () => setFocused(true);
-  //   window.addEventListener('blur', blurWindow);
-  //   window.addEventListener('focus', focusWindow);
-  //   return () => {
-  //     window.removeEventListener('blur', blurWindow);
-  //     window.removeEventListener('focus', blurWindow);
-  //   };
-  // });
 
   return (
     <Container
