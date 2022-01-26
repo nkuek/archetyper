@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Container, Button } from '@mui/material';
 import { WordContext } from 'WordContext';
 import { Box } from '@mui/system';
@@ -56,7 +56,6 @@ const Stats = () => {
   const values = useContext(WordContext);
   const {
     wpm,
-    wordCount,
     setWordList,
     setWpmData,
     wpmData,
@@ -64,19 +63,30 @@ const Stats = () => {
     setWpm,
     setTimer,
     setTimerId,
+    timerId,
     timer,
     setFocused,
   } = values;
 
-  const handleReset = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    setWordList(randomizeWords(wordCount));
-    setWpmData([]);
-    setWpm(0);
-    setTimer(1);
-    setTimerId(null);
-    setFocused(true);
-  };
+  useEffect(() => {
+    if (timerId) {
+      clearInterval(timerId);
+    }
+  }, [timerId]);
+
+  const handleReset = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+      setWordList(randomizeWords());
+      setWpmData([]);
+      setWpm(0);
+
+      setTimer(1);
+      setTimerId(null);
+      setFocused(true);
+    },
+    [setWpmData, setWordList, setWpm, setTimer, setTimerId, setFocused]
+  );
 
   const totalChars = useMemo(
     () => wordList.reduce((acc, word) => acc + word.length, 0),

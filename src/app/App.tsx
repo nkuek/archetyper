@@ -23,7 +23,6 @@ const App = () => {
     <Container
       sx={{
         fontFamily: 'Roboto',
-        overflowY: 'scroll',
       }}
       onClick={() => setFocused(false)}
     >

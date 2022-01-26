@@ -23,7 +23,9 @@ const WordOptions = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 setWordCount(option);
-                document.getElementsByTagName('button')[0].click();
+                if (option === wordCount) {
+                  document.getElementsByTagName('button')[0].click();
+                }
                 setFocused(true);
               }}
             >

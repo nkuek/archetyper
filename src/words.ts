@@ -201,9 +201,9 @@ const words = [
   'line',
 ];
 
-const randomizeWords = (wordCount: number) => {
+const randomizeWords = () => {
   const randomized = [];
-  while (randomized.length < wordCount) {
+  while (randomized.length < 200) {
     randomized.push(words[Math.floor(Math.random() * 200)]);
   }
   return randomized;

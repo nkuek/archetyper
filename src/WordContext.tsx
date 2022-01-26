@@ -1,4 +1,4 @@
-import { createContext, useState, FC, useEffect } from 'react';
+import { createContext, useState, FC, useEffect, useMemo } from 'react';
 import randomizedWords from 'words';
 
 interface IProps {
@@ -46,25 +46,43 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [focused, setFocused] = useState(true);
 
   useEffect(() => {
-    setWordList(randomizedWords(wordCount));
+    setWordList(randomizedWords());
   }, [wordCount, setWordList]);
 
-  const value = {
-    wordList,
-    setWordList,
-    wordCount,
-    setWordCount,
-    wpm,
-    setWpm,
-    timerId,
-    setTimerId,
-    wpmData,
-    setWpmData,
-    timer,
-    setTimer,
-    focused,
-    setFocused,
-  };
+  const value = useMemo(
+    () => ({
+      wordList,
+      setWordList,
+      wordCount,
+      setWordCount,
+      wpm,
+      setWpm,
+      timerId,
+      setTimerId,
+      wpmData,
+      setWpmData,
+      timer,
+      setTimer,
+      focused,
+      setFocused,
+    }),
+    [
+      wordList,
+      setWordList,
+      wordCount,
+      setWordCount,
+      wpm,
+      setWpm,
+      timerId,
+      setTimerId,
+      wpmData,
+      setWpmData,
+      timer,
+      setTimer,
+      focused,
+      setFocused,
+    ]
+  );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;
 };
 

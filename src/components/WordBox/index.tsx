@@ -66,7 +66,7 @@ const WordBox = () => {
   const handleReset = useCallback(() => {
     if (wordRef.current && textFieldRef.current) {
       if (!userInput && !currentWordIndex && !currentCharIndex) {
-        setWordList(randomizeWords(wordCount));
+        setWordList(randomizeWords());
       } else {
         const words = wordRef.current.children;
         const extraWords = document.querySelectorAll(`.${classes.extra}`);
@@ -101,7 +101,6 @@ const WordBox = () => {
     currentWordIndex,
     currentCharIndex,
     classes,
-    wordCount,
     setTimerId,
     timerId,
     setTimer,
@@ -118,34 +117,34 @@ const WordBox = () => {
       );
       setTimerId(intervalTimer);
     }
-  }, [userInput, timerId, currentWordIndex, setTimerId]); // eslint-disable-line
+  }, [userInput, timerId]); // eslint-disable-line
 
   useEffect(() => {
     setWpm(calculateWpm(charCount, timer));
   }, [timer, charCount, setWpm]);
 
+  const handleDelete = useCallback(
+    (e: KeyboardEvent) => {
+      console.log(wordRef.current?.children[currentWordIndex].children.length);
+      if (e.key === 'Backspace' && userInput && wordRef.current) {
+        setCharCount((prev) => prev - 2);
+        setUserInput((prev) => prev.slice(0, userInput.length));
+        const currentWord = wordRef.current.children[currentWordIndex];
+        if (currentWord.children.length > charList[currentWordIndex].length) {
+          const lastChild =
+            currentWord.children[currentWord.children.length - 1];
+          currentWord.removeChild(lastChild);
+        }
+      }
+    },
+    [userInput, charList, currentWordIndex, wordRef]
+  );
+
   // handle character count when user presses delete
   useEffect(() => {
-    if (timerId) {
-      const handleDelete = (e: KeyboardEvent) => {
-        if (e.key === 'Backspace' && userInput) {
-          setCharCount((prev) => prev - 2);
-          setUserInput((prev) => prev.slice(0, userInput.length));
-          if (
-            userInput.length > charList[currentWordIndex].length - 1 &&
-            wordRef.current
-          ) {
-            const currentWord = wordRef.current.children[currentWordIndex];
-            const lastChild =
-              currentWord.children[currentWord.children.length - 1];
-            currentWord.removeChild(lastChild);
-          }
-        }
-      };
-      document.addEventListener('keydown', handleDelete);
-      return () => document.removeEventListener('keydown', handleDelete);
-    }
-  }, [userInput, timerId, charCount, charList, currentWordIndex]);
+    document.addEventListener('keydown', handleDelete);
+    return () => document.removeEventListener('keydown', handleDelete);
+  }, [timerId, handleDelete]);
 
   // focus on input field whenever charList changes
   useEffect(() => {
@@ -207,6 +206,9 @@ const WordBox = () => {
         setCharCount((prev) => prev + 1);
         setIncorrectChars(0);
         setUserInput('');
+        wordRef.current.children[currentWordIndex + 1].scrollIntoView({
+          block: 'center',
+        });
       } else {
         // if the user completely clears input box, remove all classes
         if (e.target.value.length === 0) {
@@ -345,6 +347,8 @@ const WordBox = () => {
           flexWrap: 'wrap',
           position: 'relative',
           zIndex: 1,
+          height: 100,
+          overflow: 'hidden',
         }}
         ref={wordRef}
       >
