@@ -400,7 +400,7 @@ const WordBox = () => {
           inputRef={textFieldRef}
         />
         <Button
-          sx={{ color: 'gray', height: '95%', width: '20%' }}
+          sx={{ color: theme.currentWord, height: '95%', width: '20%' }}
           onClick={handleReset}
         >
           <Replay />

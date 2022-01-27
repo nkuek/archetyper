@@ -1,5 +1,6 @@
 export interface ITheme {
   buttonBackground: string;
+  buttonText?: string;
   pageBackground: string;
   wordBoxBackground: string;
   currentWord: string;
@@ -9,6 +10,8 @@ export interface ITheme {
   wordsContrast?: string;
   graphText?: string;
   lineColor?: string;
+  headings?: string;
+  gradientUnderline?: string[];
 }
 export interface IThemeList {
   [key: string]: ITheme;
@@ -27,6 +30,22 @@ const themeList: IThemeList = {
     wordsContrast: 'black',
     graphText: 'hsl(45deg 72% 58%)',
     lineColor: '#66d2bc',
+    headings: 'black',
+    gradientUnderline: ['#d73811', '#e1ba45'],
+  },
+  8008: {
+    buttonBackground: 'hsl(215deg 18% 29%)',
+    buttonText: 'hsl(342deg 88% 63%)',
+    pageBackground: 'hsl(215deg 18% 29%)',
+    wordBoxBackground: 'hsl(213deg 17% 69%)',
+    currentWord: 'hsl(342deg 88% 63%)',
+    currentChar: 'hsl(342deg 88% 33%)',
+    words: '#3c4756',
+    correct: '#6f7b8a',
+    graphText: 'black',
+    lineColor: 'hsl(342deg 88% 63%)',
+    gradientUnderline: ['#6f7b8a', 'hsl(342deg 88% 63%)'],
+    headings: 'hsl(342deg 88% 63%)',
   },
   default: {
     buttonBackground: 'white',
@@ -36,6 +55,7 @@ const themeList: IThemeList = {
     currentChar: 'darkmagenta',
     words: 'black',
     correct: 'green',
+    headings: 'black',
   },
 };
 export default themeList;

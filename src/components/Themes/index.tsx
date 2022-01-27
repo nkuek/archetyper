@@ -14,24 +14,45 @@ interface IProps {
 }
 
 const Themes: FC<IProps> = ({ open, onClose }) => {
-  const { setThemeName } = useContext(ThemeContext);
+  const { themeName, setThemeName } = useContext(ThemeContext);
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Theme</DialogTitle>
-      <DialogContent>
-        {Object.keys(themeList).map((themeName) => {
-          const theme = themeList[themeName];
+      <DialogContent sx={{ display: 'flex' }}>
+        {Object.keys(themeList).map((themeListItem) => {
+          const theme = themeList[themeListItem];
           return (
-            <Button
-              key={themeName}
-              sx={{ background: theme.buttonBackground, color: theme.words }}
-              onClick={() => {
-                setThemeName(themeName);
-                localStorage.setItem('typer-theme', JSON.stringify(themeName));
+            <div
+              style={{
+                padding: '.5em',
+                display: 'flex',
+                backgroundColor: themeListItem === themeName ? 'lightgray' : '',
+                borderRadius: 2,
               }}
             >
-              {themeName}
-            </Button>
+              <Button
+                key={themeListItem}
+                disableRipple
+                sx={{
+                  padding: '1em 2em',
+                  background: theme.buttonBackground,
+                  color: theme.buttonText || theme.words,
+                  '&.MuiButtonBase-root:hover': {
+                    bgcolor: theme.buttonBackground,
+                    transform: 'scale(105%)',
+                  },
+                }}
+                onClick={() => {
+                  setThemeName(themeListItem);
+                  localStorage.setItem(
+                    'typer-theme',
+                    JSON.stringify(themeListItem)
+                  );
+                }}
+              >
+                {themeListItem}
+              </Button>
+            </div>
           );
         })}
       </DialogContent>

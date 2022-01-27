@@ -41,9 +41,11 @@ const App = () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: 40,
+          fontSize: '1.5em',
+          color: theme.headings || theme.currentWord,
         }}
       >
-        Typer
+        typer
       </Box>
       <Container
         sx={{
@@ -84,7 +86,11 @@ const App = () => {
           onClick={() => setDialogOpen(true)}
           sx={{
             cursor: 'pointer',
-            backgroundImage: 'linear-gradient(90deg, red, blue)',
+            backgroundImage: `linear-gradient(90deg, ${
+              (theme.gradientUnderline && theme.gradientUnderline[0]) || 'red'
+            }, ${
+              (theme.gradientUnderline && theme.gradientUnderline[1]) || 'blue'
+            })`,
             backgroundSize: `${dialogOpen ? 100 : 0}% 3px`,
             backgroundPosition: 'left bottom',
             backgroundRepeat: 'no-repeat',
@@ -92,6 +98,8 @@ const App = () => {
             '&:hover': {
               backgroundSize: '100% 3px',
             },
+            fontSize: '1.2em',
+            color: theme.headings || theme.currentWord,
           }}
         >
           themes

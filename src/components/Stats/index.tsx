@@ -144,7 +144,9 @@ const Stats = () => {
         flexDirection: 'column',
       }}
     >
-      <Container sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Container
+        sx={{ color: theme.headings, display: 'flex', flexDirection: 'column' }}
+      >
         <Box textAlign="center" fontSize="1.5em">
           wpm:
         </Box>
@@ -153,7 +155,12 @@ const Stats = () => {
         </Box>
       </Container>
       <Container
-        sx={{ display: 'flex', flexDirection: 'column', marginBottom: '1em' }}
+        sx={{
+          color: theme.headings,
+          display: 'flex',
+          flexDirection: 'column',
+          marginBottom: '1em',
+        }}
       >
         <Box textAlign="center" fontSize="1.5em">
           accuracy:
@@ -167,14 +174,23 @@ const Stats = () => {
       <Container
         sx={{
           backgroundColor: theme.wordBoxBackground,
-          padding: '1em',
+          padding: '2em 1em',
           borderRadius: 2,
         }}
       >
         <ResponsiveContainer width={'100%'} height={250}>
           <ComposedChart margin={{ right: 20 }} data={wpmData}>
             <CartesianGrid />
-            <XAxis dataKey="wordNum" />
+            <XAxis
+              label={{
+                value: 'words',
+                dy: 15,
+                fill: theme.graphText || theme.words,
+                position: 'insideBottom',
+                offset: 10,
+              }}
+              dataKey="wordNum"
+            />
             <YAxis
               yAxisId="left"
               label={{
@@ -223,21 +239,34 @@ const Stats = () => {
         sx={{
           display: 'flex',
           padding: 0,
+          marginTop: '1em',
         }}
       >
-        <Container sx={{ width: 'fit-content' }}>
+        <Container sx={{ color: theme.headings, width: 'fit-content' }}>
           <Box fontSize="1.1em">characters:</Box>
           <MuiTooltip title="total / incorrect / missing / extra" arrow>
             <Box fontSize="1.5em">{`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}</Box>
           </MuiTooltip>
         </Container>
-        <Container sx={{ width: 'fit-content', marginBottom: '1em' }}>
+        <Container
+          sx={{
+            color: theme.headings,
+            width: 'fit-content',
+            marginBottom: '1em',
+          }}
+        >
           <Box fontSize="1.1em">time:</Box>
           <Box fontSize="1.5em">{`${timer}s`}</Box>
         </Container>
       </Container>
-      <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Button onClick={handleReset}>
+      <Container
+        sx={{
+          color: theme.currentWord,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Button sx={{ color: theme.currentWord }} onClick={handleReset}>
           <ReplayIcon />
         </Button>
       </Container>
