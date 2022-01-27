@@ -1,7 +1,7 @@
 import { useMemo, Fragment, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { WordContext } from 'WordContext';
+import { WordContext } from 'providers/WordProvider';
 
 const WordOptions = () => {
   const values = useContext(WordContext);

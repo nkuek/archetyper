@@ -5,7 +5,7 @@ interface IProps {
   children?: React.ReactNode;
 }
 
-type TReactSetState<T> = React.Dispatch<React.SetStateAction<T>>;
+export type TReactSetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
 interface ITimeStepData {
   wordNum: number;

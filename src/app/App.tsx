@@ -1,13 +1,20 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import { WordContext } from 'WordContext';
+import { WordContext } from 'providers/WordProvider';
 import Stats from 'components/Stats';
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
+import Themes from 'components/Themes';
 
 const App = () => {
   const { wpmData, wordCount, setFocused } = useContext(WordContext);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+  };
 
   // handle pressing escape
   useEffect(() => {
@@ -71,8 +78,24 @@ const App = () => {
           height: 40,
         }}
       >
-        themes
+        <Typography
+          onClick={() => setDialogOpen(true)}
+          sx={{
+            cursor: 'pointer',
+            backgroundImage: 'linear-gradient(90deg, red, blue)',
+            backgroundSize: `${dialogOpen ? 100 : 0}% 3px`,
+            backgroundPosition: 'left bottom',
+            backgroundRepeat: 'no-repeat',
+            transition: 'background-size 300ms ease-in-out',
+            '&:hover': {
+              backgroundSize: '100% 3px',
+            },
+          }}
+        >
+          themes
+        </Typography>
       </Box>
+      <Themes open={dialogOpen} onClose={closeDialog} />
     </Container>
   );
 };

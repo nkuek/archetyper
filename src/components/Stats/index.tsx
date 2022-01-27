@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Container, Button } from '@mui/material';
-import { WordContext } from 'WordContext';
+import { WordContext } from 'providers/WordProvider';
 import { Box } from '@mui/system';
 import randomizeWords from 'words';
 import ReplayIcon from '@mui/icons-material/Replay';

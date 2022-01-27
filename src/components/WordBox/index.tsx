@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import useStyles from './styles';
 import randomizeWords from 'words';
-import { WordContext } from 'WordContext';
+import { WordContext } from 'providers/WordProvider';
 import Replay from '@mui/icons-material/Replay';
 
 const calculateWpm = (charCount: number, timer: number) =>
@@ -354,6 +354,7 @@ const WordBox = () => {
               alignItems: 'center',
               textAlign: 'center',
               background: 'white',
+              cursor: 'pointer',
             }}
           >
             Click here to start typing
