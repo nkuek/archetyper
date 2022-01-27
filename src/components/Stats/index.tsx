@@ -16,6 +16,7 @@ import {
   Layer,
 } from 'recharts';
 import { Tooltip as MuiTooltip } from '@mui/material';
+import { ThemeContext } from 'providers';
 
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
@@ -87,6 +88,8 @@ const Stats = () => {
     timer,
     setFocused,
   } = values;
+
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (timerId) {
@@ -162,44 +165,60 @@ const Stats = () => {
           )}%`}</Box>
         </MuiTooltip>
       </Container>
-      <ResponsiveContainer width={'100%'} height={250}>
-        <ComposedChart margin={{ right: 20 }} data={wpmData}>
-          <CartesianGrid />
-          <XAxis dataKey="wordNum" />
-          <YAxis
-            yAxisId="left"
-            label={{
-              value: 'words per minute',
-              angle: -90,
-              dx: -15,
-            }}
-            dataKey="wpm"
-            type="number"
-          />
-          <YAxis
-            yAxisId="right"
-            orientation="right"
-            label={{
-              value: 'errors',
-              angle: 90,
-              dx: 15,
-            }}
-            dataKey="errors"
-            domain={[0, 'dataMax + 1']}
-            allowDecimals={false}
-            type="number"
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Line yAxisId="left" type="monotone" dataKey="wpm" dot={false} />
-          <Scatter
-            yAxisId="right"
-            type="monotone"
-            dataKey="errors"
-            fill="red"
-            shape={<CustomX />}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+      <Container
+        sx={{
+          backgroundColor: theme.wordBoxBackground,
+          padding: '1em',
+          borderRadius: 2,
+        }}
+      >
+        <ResponsiveContainer width={'100%'} height={250}>
+          <ComposedChart margin={{ right: 20 }} data={wpmData}>
+            <CartesianGrid />
+            <XAxis dataKey="wordNum" />
+            <YAxis
+              yAxisId="left"
+              label={{
+                value: 'words per minute',
+                angle: -90,
+                dx: -15,
+                fill: theme.graphText || theme.words,
+              }}
+              dataKey="wpm"
+              type="number"
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              label={{
+                value: 'errors',
+                angle: 90,
+                dx: 15,
+                fill: theme.graphText || theme.words,
+              }}
+              dataKey="errors"
+              domain={[0, 'dataMax + 1']}
+              allowDecimals={false}
+              type="number"
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Line
+              yAxisId="left"
+              type="monotone"
+              dataKey="wpm"
+              dot={false}
+              fill={theme.lineColor}
+            />
+            <Scatter
+              yAxisId="right"
+              type="monotone"
+              dataKey="errors"
+              fill="red"
+              shape={<CustomX />}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </Container>
       <Container
         sx={{
           display: 'flex',

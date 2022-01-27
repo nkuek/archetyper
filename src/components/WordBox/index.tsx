@@ -44,7 +44,6 @@ const WordBox = () => {
   const [incorrectChars, setIncorrectChars] = useState(0);
 
   const classes = useStyles({ theme });
-  console.log(classes);
 
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLDivElement>(null);
@@ -77,9 +76,8 @@ const WordBox = () => {
         extraWords.forEach((word) => word.remove());
         for (const word of words) {
           for (const char of word.children) {
-            char.classList.remove(classes.correct);
-            char.classList.remove(classes.incorrect);
-            char.classList.remove(classes.currentChar);
+            char.classList.remove(...classes.correct.split(' '));
+            char.classList.remove(...classes.incorrect.split(' '));
           }
         }
       }
@@ -156,7 +154,10 @@ const WordBox = () => {
         ) {
           for (let i = currentCharIndex; i < currentWord.children.length; i++) {
             const child = currentWord.children[i];
-            child.classList.remove(classes.currentChar);
+            child.classList.remove(
+              ...classes.currentChar.split(' '),
+              classes.animation
+            );
             child.classList.add(classes.incorrect);
           }
         }
@@ -195,19 +196,27 @@ const WordBox = () => {
         if (e.target.value.length === 0) {
           for (let i = 0; i < currentWord.children.length; i++) {
             const child = currentWord.children[i];
-            child.classList.remove(classes.correct);
-            child.classList.remove(classes.incorrect);
-            child.classList.remove(classes.currentChar);
-            currentWord.children[0].classList.add(classes.currentChar);
+            child.classList.remove(...classes.correct.split(' '));
+            child.classList.remove(...classes.incorrect.split(' '));
+            child.classList.remove(
+              ...classes.currentChar.split(' '),
+              classes.animation
+            );
+            currentWord.children[0].classList.add(
+              ...classes.currentChar.split(' ')
+            );
           }
           // if user deletes character from input, remove that character's styling
         }
         // move to next character
         if (currentCharIndex < charList[currentWordIndex].length) {
           const currentChar = currentWord.children[currentCharIndex];
-          currentChar.classList.remove(classes.currentChar);
-          currentChar.classList.remove(classes.correct);
-          currentChar.classList.remove(classes.incorrect);
+          currentChar.classList.remove(
+            ...classes.currentChar.split(' '),
+            classes.animation
+          );
+          currentChar.classList.remove(...classes.correct.split(' '));
+          currentChar.classList.remove(...classes.incorrect.split(' '));
         }
         if (e.target.value.length <= charList[currentWordIndex].length) {
           setCurrentCharIndex(e.target.value.length);
@@ -257,23 +266,26 @@ const WordBox = () => {
 
       if (currentCharIndex < charList[currentWordIndex].length) {
         currentWord.children[currentCharIndex].classList.add(
-          classes.currentChar
+          ...classes.currentChar.split(' '),
+          classes.animation
         );
       }
 
       if (correct) {
         currentWord.children[currentCharIndex - 1].classList.add(
-          classes.correct
+          ...classes.correct.split(' ')
         );
         currentWord.children[currentCharIndex - 1].classList.remove(
-          classes.currentChar
+          ...classes.currentChar.split(' '),
+          classes.animation
         );
       } else if (!correct) {
         currentWord.children[currentCharIndex - 1].classList.add(
-          classes.incorrect
+          ...classes.incorrect.split(' ')
         );
         currentWord.children[currentCharIndex - 1].classList.remove(
-          classes.currentChar
+          ...classes.currentChar.split(' '),
+          classes.animation
         );
         setIncorrectChars((prev) => prev + 1);
       }
@@ -290,7 +302,7 @@ const WordBox = () => {
       if (currentCharIndex < charList[currentWordIndex].length) {
         wordRef.current.children[currentWordIndex].children[
           currentCharIndex
-        ].classList.add(classes.currentChar);
+        ].classList.add(...classes.currentChar.split(' '), classes.animation);
       }
     }
     if (
@@ -307,6 +319,7 @@ const WordBox = () => {
       sx={{
         borderRadius: 5,
         fontSize: '1.5em',
+        backgroundColor: theme.wordBoxBackground,
       }}
       onClick={handleFocus}
     >
@@ -321,8 +334,10 @@ const WordBox = () => {
         }}
         disableGutters
       >
-        <Box>{`${currentWordIndex} / ${wordCount}`}</Box>
-        <Box>{`${timer}s`}</Box>
+        <Box
+          sx={{ color: theme.words }}
+        >{`${currentWordIndex} / ${wordCount}`}</Box>
+        <Box sx={{ color: theme.words }}>{`${timer}s`}</Box>
       </Container>
       <Box
         sx={{

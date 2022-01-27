@@ -2,11 +2,17 @@ import { useMemo, Fragment, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { WordContext } from 'providers/WordProvider';
+import { ThemeContext } from 'providers';
 
 const WordOptions = () => {
   const values = useContext(WordContext);
   const { wpm, setWordCount, wordCount, setFocused } = values;
+
+  const { theme } = useContext(ThemeContext);
+
   const options = useMemo(() => [10, 25, 50], []);
+  const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
+
   return (
     <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Container sx={{ display: 'flex', padding: 0, marginBottom: '.5em' }}>
@@ -17,7 +23,9 @@ const WordOptions = () => {
                 margin: '0em .5em',
                 marginLeft: idx === 0 ? '0' : '.5em',
                 cursor: 'pointer',
-                borderBottom: option === wordCount ? '1px solid black' : 'none',
+                borderBottom:
+                  option === wordCount ? `1px solid ${textColor}` : 'none',
+                color: textColor,
               }}
               key={option + idx}
               onClick={(e) => {
@@ -31,12 +39,14 @@ const WordOptions = () => {
             >
               {option}
             </Box>
-            <Box key={'spacer' + idx}>{idx !== options.length - 1 && '/'}</Box>
+            <Box sx={{ color: textColor }} key={'spacer' + idx}>
+              {idx !== options.length - 1 && '/'}
+            </Box>
           </Fragment>
         ))}
       </Container>
-      <Box>{'WPM: '}</Box>
-      <Box>{wpm || ''}</Box>
+      <Box sx={{ color: textColor }}>{'WPM: '}</Box>
+      <Box sx={{ color: textColor }}>{wpm || ''}</Box>
     </Container>
   );
 };

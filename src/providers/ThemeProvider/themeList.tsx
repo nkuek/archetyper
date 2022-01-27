@@ -6,6 +6,9 @@ export interface ITheme {
   currentChar: string;
   words: string;
   correct: string;
+  wordsContrast?: string;
+  graphText?: string;
+  lineColor?: string;
 }
 export interface IThemeList {
   [key: string]: ITheme;
@@ -21,6 +24,9 @@ const themeList: IThemeList = {
     currentChar: 'hsl(28deg 94% 30%)',
     words: '#66d2bc',
     correct: 'hsl(45deg 72% 60%)',
+    wordsContrast: 'black',
+    graphText: 'hsl(45deg 72% 58%)',
+    lineColor: '#66d2bc',
   },
   default: {
     buttonBackground: 'white',

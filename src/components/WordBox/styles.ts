@@ -17,8 +17,10 @@ const useStyles = makeStyles({
   incorrect: {
     color: 'red',
   },
-  currentChar: {
-    color: 'darkmagenta',
+  currentChar: (props) => ({
+    color: props.theme.currentChar,
+  }),
+  animation: {
     animation: `$caretFlash 1.5s linear infinite`,
   },
   extra: {

@@ -35,8 +35,6 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
     return theme;
   }, [themeName]);
 
-  console.log(getTheme());
-
   const value = useMemo(
     () => ({
       themeName,
