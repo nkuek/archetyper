@@ -1,4 +1,9 @@
 import { makeStyles } from '@mui/styles';
+import { ITheme } from 'providers/ThemeProvider/themeList';
+
+interface IProps {
+  theme: ITheme;
+}
 
 const useStyles = makeStyles({
   '@keyframes caretFlash': {
@@ -6,14 +11,11 @@ const useStyles = makeStyles({
       opacity: 0.25,
     },
   },
-  correct: {
-    color: 'green',
-  },
+  correct: ({ theme }: IProps) => ({
+    color: theme.correct,
+  }),
   incorrect: {
     color: 'red',
-  },
-  currentWord: {
-    color: 'plum',
   },
   currentChar: {
     color: 'darkmagenta',

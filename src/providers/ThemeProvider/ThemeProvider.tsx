@@ -1,6 +1,13 @@
 import { TReactSetState } from 'providers/WordProvider';
-import { createContext, useState, FC, useMemo } from 'react';
-import themeList from './themeList';
+import {
+  createContext,
+  useState,
+  FC,
+  useMemo,
+  useCallback,
+  useEffect,
+} from 'react';
+import themeList, { ITheme } from './themeList';
 
 interface IProps {
   children?: React.ReactNode;
@@ -9,23 +16,34 @@ interface IProps {
 interface IThemeContext {
   themeName: string;
   setThemeName: TReactSetState<string>;
+  theme: ITheme;
 }
 
 export const ThemeContext = createContext<IThemeContext>(undefined!);
 
 const ThemeProvider: FC<IProps> = ({ children }) => {
   const [themeName, setThemeName] = useState('default');
-  const theme = useMemo(
-    () => themeList[themeName as keyof typeof themeList],
-    [themeName]
-  );
+
+  useEffect(() => {
+    if (localStorage.getItem('typer-theme')) {
+      setThemeName(JSON.parse(localStorage.getItem('typer-theme') || ''));
+    }
+  }, []);
+
+  const getTheme = useCallback(() => {
+    const theme = themeList[themeName];
+    return theme;
+  }, [themeName]);
+
+  console.log(getTheme());
+
   const value = useMemo(
     () => ({
       themeName,
       setThemeName,
-      theme,
+      theme: getTheme(),
     }),
-    [themeName, setThemeName, theme]
+    [themeName, setThemeName, getTheme]
   );
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

@@ -2,13 +2,14 @@ import { useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import { WordContext } from 'providers/WordProvider';
+import { WordContext, ThemeContext } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
 import Themes from 'components/Themes';
 
 const App = () => {
   const { wpmData, wordCount, setFocused } = useContext(WordContext);
+  const { theme } = useContext(ThemeContext);
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -30,6 +31,7 @@ const App = () => {
     <Container
       sx={{
         fontFamily: 'Roboto',
+        background: theme.pageBackground,
       }}
       onClick={() => setFocused(false)}
     >

@@ -14,6 +14,7 @@ import useStyles from './styles';
 import randomizeWords from 'words';
 import { WordContext } from 'providers/WordProvider';
 import Replay from '@mui/icons-material/Replay';
+import { ThemeContext } from 'providers';
 
 const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
@@ -34,13 +35,16 @@ const WordBox = () => {
     setFocused,
   } = useContext(WordContext);
 
+  const { theme } = useContext(ThemeContext);
+
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
 
-  const classes = useStyles();
+  const classes = useStyles({ theme });
+  console.log(classes);
 
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLDivElement>(null);
@@ -333,7 +337,9 @@ const WordBox = () => {
       >
         {charList.map((word, wordIdx) => (
           <Box
-            color={wordIdx === currentWordIndex ? 'plum' : 'black'}
+            color={
+              wordIdx === currentWordIndex ? theme.currentWord : theme.words
+            }
             key={wordIdx}
             sx={{ display: 'flex', margin: '0.25em' }}
           >
@@ -355,6 +361,8 @@ const WordBox = () => {
               textAlign: 'center',
               background: 'white',
               cursor: 'pointer',
+              color: theme.words,
+              backgroundColor: theme.wordBoxBackground,
             }}
           >
             Click here to start typing
@@ -371,7 +379,6 @@ const WordBox = () => {
       >
         <TextField
           sx={{ width: 0, opacity: 0, boxSizing: 'border-box' }}
-          variant="outlined"
           value={userInput}
           onChange={handleUserInput}
           autoFocus

@@ -1,12 +1,14 @@
-interface IThemeList {
-  [key: string]: {
-    buttonBackground: string;
-    pageBackground: string;
-    wordBoxBackground: string;
-    currentWord: string;
-    currentChar: string;
-    words: string;
-  };
+export interface ITheme {
+  buttonBackground: string;
+  pageBackground: string;
+  wordBoxBackground: string;
+  currentWord: string;
+  currentChar: string;
+  words: string;
+  correct: string;
+}
+export interface IThemeList {
+  [key: string]: ITheme;
 }
 const themeList: IThemeList = {
   1976: {
@@ -18,6 +20,7 @@ const themeList: IThemeList = {
     currentWord: 'hsl(28deg 94% 58%)',
     currentChar: 'hsl(28deg 94% 30%)',
     words: '#66d2bc',
+    correct: 'hsl(45deg 72% 60%)',
   },
   default: {
     buttonBackground: 'white',
@@ -26,6 +29,7 @@ const themeList: IThemeList = {
     currentWord: 'plum',
     currentChar: 'darkmagenta',
     words: 'black',
+    correct: 'green',
   },
 };
 export default themeList;

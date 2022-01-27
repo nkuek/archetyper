@@ -25,7 +25,10 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
             <Button
               key={themeName}
               sx={{ background: theme.buttonBackground, color: theme.words }}
-              onClick={() => setThemeName(themeName)}
+              onClick={() => {
+                setThemeName(themeName);
+                localStorage.setItem('typer-theme', JSON.stringify(themeName));
+              }}
             >
               {themeName}
             </Button>
@@ -34,9 +37,6 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
-        <Button variant="contained" onClick={onClose}>
-          Save
-        </Button>
       </DialogActions>
     </Dialog>
   );
