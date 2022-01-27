@@ -13,7 +13,6 @@ import {
   CartesianGrid,
   ComposedChart,
   Scatter,
-  Layer,
 } from 'recharts';
 import { Tooltip as MuiTooltip } from '@mui/material';
 import { ThemeContext } from 'providers';
@@ -207,7 +206,8 @@ const Stats = () => {
               type="monotone"
               dataKey="wpm"
               dot={false}
-              fill={theme.lineColor}
+              stroke={theme.lineColor}
+              strokeWidth={2}
             />
             <Scatter
               yAxisId="right"
