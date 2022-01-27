@@ -17,12 +17,13 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
   const { themeName, setThemeName } = useContext(ThemeContext);
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Theme</DialogTitle>
+      <DialogTitle>themes</DialogTitle>
       <DialogContent sx={{ display: 'flex' }}>
         {Object.keys(themeList).map((themeListItem) => {
           const theme = themeList[themeListItem];
           return (
             <div
+              key={themeListItem}
               style={{
                 padding: '.5em',
                 display: 'flex',
@@ -41,6 +42,9 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
                     bgcolor: theme.buttonBackground,
                     transform: 'scale(105%)',
                   },
+                  textTransform: 'lowercase',
+                  border: theme.border || '',
+                  width: 100,
                 }}
                 onClick={() => {
                   setThemeName(themeListItem);

@@ -13,6 +13,7 @@ import {
   CartesianGrid,
   ComposedChart,
   Scatter,
+  Label,
 } from 'recharts';
 import { Tooltip as MuiTooltip } from '@mui/material';
 import { ThemeContext } from 'providers';
@@ -180,17 +181,14 @@ const Stats = () => {
       >
         <ResponsiveContainer width={'100%'} height={250}>
           <ComposedChart margin={{ right: 20 }} data={wpmData}>
-            <CartesianGrid />
-            <XAxis
-              label={{
-                value: 'words',
-                dy: 15,
-                fill: theme.graphText || theme.words,
-                position: 'insideBottom',
-                offset: 10,
-              }}
-              dataKey="wordNum"
-            />
+            <CartesianGrid stroke={theme.cartesian || theme.words} />
+            <XAxis height={40} dataKey="wordNum" stroke={theme.cartesian}>
+              <Label
+                value="words"
+                fill={theme.graphText || theme.words}
+                position="insideBottom"
+              />
+            </XAxis>
             <YAxis
               yAxisId="left"
               label={{
@@ -201,6 +199,7 @@ const Stats = () => {
               }}
               dataKey="wpm"
               type="number"
+              stroke={theme.cartesian}
             />
             <YAxis
               yAxisId="right"
@@ -208,13 +207,14 @@ const Stats = () => {
               label={{
                 value: 'errors',
                 angle: 90,
-                dx: 15,
+                dx: 5,
                 fill: theme.graphText || theme.words,
               }}
               dataKey="errors"
               domain={[0, 'dataMax + 1']}
               allowDecimals={false}
               type="number"
+              stroke={theme.cartesian}
             />
             <Tooltip content={<CustomTooltip />} />
             <Line
@@ -266,7 +266,7 @@ const Stats = () => {
           justifyContent: 'center',
         }}
       >
-        <Button sx={{ color: theme.currentWord }} onClick={handleReset}>
+        <Button sx={{ color: theme.buttonText }} onClick={handleReset}>
           <ReplayIcon />
         </Button>
       </Container>
