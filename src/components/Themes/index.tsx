@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import {
   Button,
   Dialog,
@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material';
-import themeList from 'providers/ThemeProvider/themeList';
+import { themeList, ThemeContext } from 'providers';
 
 interface IProps {
   open: boolean;
@@ -14,18 +14,23 @@ interface IProps {
 }
 
 const Themes: FC<IProps> = ({ open, onClose }) => {
+  const { setThemeName } = useContext(ThemeContext);
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Theme</DialogTitle>
       <DialogContent>
-        {Object.keys(themeList).map((theme) => (
-          <Button
-            key={theme}
-            sx={{ background: themeList[theme].buttonBackground }}
-          >
-            {theme}
-          </Button>
-        ))}
+        {Object.keys(themeList).map((themeName) => {
+          const theme = themeList[themeName];
+          return (
+            <Button
+              key={themeName}
+              sx={{ background: theme.buttonBackground, color: theme.words }}
+              onClick={() => setThemeName(themeName)}
+            >
+              {themeName}
+            </Button>
+          );
+        })}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>

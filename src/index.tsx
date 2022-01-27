@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
-import WordContextProvider from './providers/WordProvider';
+import { WordProvider, ThemeProvider } from './providers/';
 
 ReactDOM.render(
   <React.StrictMode>
-    <WordContextProvider>
-      <App />
-    </WordContextProvider>
+    <WordProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </WordProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

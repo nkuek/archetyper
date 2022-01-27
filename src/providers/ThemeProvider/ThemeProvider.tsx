@@ -31,3 +31,5 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };
+
+export default ThemeProvider;
