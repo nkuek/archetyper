@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { Container, Button } from '@mui/material';
 import { WordContext } from 'providers/WordProvider';
 import { Box } from '@mui/system';
