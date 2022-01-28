@@ -2,7 +2,6 @@ import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Container, Button } from '@mui/material';
 import { WordContext } from 'providers/WordProvider';
 import { Box } from '@mui/system';
-import randomizeWords from 'words';
 import ReplayIcon from '@mui/icons-material/Replay';
 import {
   Line,
@@ -77,19 +76,7 @@ const CustomTooltip = (props: any) => {
 
 const Stats = () => {
   const values = useContext(WordContext);
-  const {
-    wpm,
-    setWordList,
-    setWpmData,
-    wpmData,
-    wordList,
-    setWpm,
-    setTimer,
-    setTimerId,
-    timerId,
-    timer,
-    setFocused,
-  } = values;
+  const { wpm, wpmData, wordList, timerId, timer } = values;
 
   const { theme } = useContext(ThemeContext);
 
