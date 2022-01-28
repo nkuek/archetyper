@@ -331,6 +331,7 @@ const WordBox = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: 0,
+          fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
         }}
         disableGutters
       >
@@ -347,6 +348,7 @@ const WordBox = () => {
           zIndex: 1,
           height: 100,
           overflow: 'hidden',
+          fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
         }}
         ref={wordRef}
       >

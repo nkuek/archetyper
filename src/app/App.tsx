@@ -28,8 +28,8 @@ const App = () => {
   }, []);
 
   return (
-    <Container
-      sx={{
+    <div
+      style={{
         fontFamily: 'Roboto',
         background: theme.pageBackground,
       }}
@@ -41,7 +41,9 @@ const App = () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: 40,
-          fontSize: '1.5em',
+          fontSize: 'clamp(2rem, 5vw + .5rem, 3rem)',
+          top: '1rem',
+          position: 'relative',
           color: theme.headings || theme.currentWord,
         }}
       >
@@ -98,15 +100,17 @@ const App = () => {
             '&:hover': {
               backgroundSize: '100% 3px',
             },
-            fontSize: '1.2em',
+            fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
             color: theme.headings || theme.currentWord,
+            position: 'relative',
+            bottom: '1rem',
           }}
         >
           themes
         </Typography>
       </Box>
       <Themes open={dialogOpen} onClose={closeDialog} />
-    </Container>
+    </div>
   );
 };
 

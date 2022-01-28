@@ -18,7 +18,7 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>themes</DialogTitle>
-      <DialogContent sx={{ display: 'flex' }}>
+      <DialogContent sx={{ display: 'flex', flexWrap: 'wrap' }}>
         {Object.keys(themeList).map((themeListItem) => {
           const theme = themeList[themeListItem];
           return (
