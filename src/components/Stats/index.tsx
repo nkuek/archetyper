@@ -17,6 +17,7 @@ import {
 } from 'recharts';
 import { Tooltip as MuiTooltip } from '@mui/material';
 import { ThemeContext } from 'providers';
+import { useReset } from 'hooks';
 
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
@@ -98,19 +99,7 @@ const Stats = () => {
     }
   }, [timerId]);
 
-  const handleReset = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.stopPropagation();
-      setWordList(randomizeWords());
-      setWpmData([]);
-      setWpm(0);
-
-      setTimer(1);
-      setTimerId(null);
-      setFocused(true);
-    },
-    [setWpmData, setWordList, setWpm, setTimer, setTimerId, setFocused]
-  );
+  const handleReset = useReset();
 
   const totalChars = useMemo(
     () => wordList.reduce((acc, word) => acc + word.length, 0),

@@ -49,7 +49,11 @@ export const WordContext = createContext<IWordContext>(undefined!);
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
   const [wordList, setWordList] = useState<string[]>([]);
-  const [wordCount, setWordCount] = useState(25);
+  const [wordCount, setWordCount] = useState(
+    localStorage.getItem('typer-word-count')
+      ? JSON.parse(localStorage.getItem('typer-word-count') || '')
+      : 25
+  );
   const [wpm, setWpm] = useState(0);
   const [timerId, setTimerId] = useState<null | NodeJS.Timeout>(null);
   const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);

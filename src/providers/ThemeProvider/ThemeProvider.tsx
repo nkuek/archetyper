@@ -1,12 +1,5 @@
 import { TReactSetState } from '../general/types';
-import {
-  createContext,
-  useState,
-  FC,
-  useMemo,
-  useCallback,
-  useEffect,
-} from 'react';
+import { createContext, useState, FC, useMemo, useCallback } from 'react';
 import themeList, { ITheme } from './themeList';
 
 interface IProps {
@@ -22,13 +15,11 @@ interface IThemeContext {
 export const ThemeContext = createContext<IThemeContext>(undefined!);
 
 const ThemeProvider: FC<IProps> = ({ children }) => {
-  const [themeName, setThemeName] = useState('default');
-
-  useEffect(() => {
-    if (localStorage.getItem('typer-theme')) {
-      setThemeName(JSON.parse(localStorage.getItem('typer-theme') || ''));
-    }
-  }, []);
+  const [themeName, setThemeName] = useState(
+    localStorage.getItem('typer-theme')
+      ? JSON.parse(localStorage.getItem('typer-theme') || '')
+      : 'default'
+  );
 
   const getTheme = useCallback(() => {
     const theme = themeList[themeName];

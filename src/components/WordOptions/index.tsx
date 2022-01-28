@@ -36,6 +36,10 @@ const WordOptions = () => {
                 setWordCount(option);
                 reset();
                 setFocused(true);
+                localStorage.setItem(
+                  'typer-word-count',
+                  JSON.stringify(option)
+                );
               }}
             >
               {option}
