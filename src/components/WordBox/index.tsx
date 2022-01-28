@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import useStyles from './styles';
 import { WordContext } from 'providers/WordProvider';
 import Replay from '@mui/icons-material/Replay';
 import { ThemeContext } from 'providers';
@@ -39,9 +38,7 @@ const WordBox = () => {
     textFieldRef,
   } = useContext(WordContext);
 
-  const { theme } = useContext(ThemeContext);
-
-  const classes = useStyles({ theme });
+  const { theme, classes } = useContext(ThemeContext);
 
   const charList = useMemo(() => {
     const charList = [];

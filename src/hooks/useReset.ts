@@ -1,13 +1,8 @@
-import useStyles from 'components/WordBox/styles';
 import { WordContext, ThemeContext } from 'providers';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
 
 const useReset = (randomize = true) => {
-  const { theme } = useContext(ThemeContext);
-
-  const classes = useStyles({ theme });
-
   const {
     wordRef,
     textFieldRef,
@@ -27,6 +22,8 @@ const useReset = (randomize = true) => {
     setUserInput,
   } = useContext(WordContext);
 
+  const { classes } = useContext(ThemeContext);
+
   return useCallback(() => {
     if (wordRef.current && textFieldRef.current) {
       if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
@@ -35,11 +32,14 @@ const useReset = (randomize = true) => {
         const words = wordRef.current.children;
         const extraWords = document.querySelectorAll(`.${classes.extra}`);
         extraWords.forEach((word) => word.remove());
-        for (const word of words) {
+        for (let i = 0; i <= currentWordIndex; i++) {
+          const word = words[i];
           for (const char of word.children) {
-            char.classList.remove(...classes.correct.split(' '));
-            char.classList.remove(...classes.incorrect.split(' '));
-            char.classList.remove(...classes.currentChar.split(' '));
+            char.classList.remove(
+              ...classes.correct.split(' '),
+              ...classes.incorrect.split(' '),
+              ...classes.currentChar.split(' ')
+            );
           }
         }
       }
@@ -75,7 +75,7 @@ const useReset = (randomize = true) => {
     setCurrentWordIndex,
     setIncorrectChars,
     setUserInput,
-    randomize
+    randomize,
   ]);
 };
 
