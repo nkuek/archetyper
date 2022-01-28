@@ -3,10 +3,13 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { WordContext } from 'providers/WordProvider';
 import { ThemeContext } from 'providers';
+import { useReset } from 'hooks';
 
 const WordOptions = () => {
   const values = useContext(WordContext);
   const { wpm, setWordCount, wordCount, setFocused } = values;
+
+  const reset = useReset(false);
 
   const { theme } = useContext(ThemeContext);
 
@@ -31,9 +34,7 @@ const WordOptions = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 setWordCount(option);
-                if (option === wordCount) {
-                  document.getElementsByTagName('button')[0].click();
-                }
+                reset();
                 setFocused(true);
               }}
             >

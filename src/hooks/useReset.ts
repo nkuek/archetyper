@@ -3,7 +3,7 @@ import { WordContext, ThemeContext } from 'providers';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
 
-const useReset = () => {
+const useReset = (randomize = true) => {
   const { theme } = useContext(ThemeContext);
 
   const classes = useStyles({ theme });
@@ -29,7 +29,7 @@ const useReset = () => {
 
   return useCallback(() => {
     if (wordRef.current && textFieldRef.current) {
-      if (!userInput && !currentWordIndex && !currentCharIndex) {
+      if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
         setWordList(randomizeWords());
       } else {
         const words = wordRef.current.children;
@@ -75,6 +75,7 @@ const useReset = () => {
     setCurrentWordIndex,
     setIncorrectChars,
     setUserInput,
+    randomize
   ]);
 };
 

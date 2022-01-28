@@ -15,7 +15,6 @@ const calculateWpm = (charCount: number, timer: number) =>
 const WordBox = () => {
   const {
     wordList,
-    setWordList,
     wordCount,
     setWpm,
     timerId,
