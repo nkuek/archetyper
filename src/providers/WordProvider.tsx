@@ -1,11 +1,10 @@
-import { createContext, useState, FC, useEffect, useMemo } from 'react';
+import { createContext, useState, FC, useEffect, useMemo, useRef } from 'react';
 import randomizedWords from 'words';
+import { TReactSetState } from './general/types';
 
 interface IProps {
   children?: React.ReactNode;
 }
-
-export type TReactSetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
 interface ITimeStepData {
   wordNum: number;
@@ -32,6 +31,18 @@ interface IWordContext {
   setTimer: TReactSetState<number>;
   focused: boolean;
   setFocused: TReactSetState<boolean>;
+  currentWordIndex: number;
+  setCurrentWordIndex: TReactSetState<number>;
+  currentCharIndex: number;
+  setCurrentCharIndex: TReactSetState<number>;
+  charCount: number;
+  setCharCount: TReactSetState<number>;
+  incorrectChars: number;
+  setIncorrectChars: TReactSetState<number>;
+  userInput: string;
+  setUserInput: TReactSetState<string>;
+  wordRef: React.RefObject<HTMLDivElement>;
+  textFieldRef: React.RefObject<HTMLDivElement>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -44,6 +55,14 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);
   const [timer, setTimer] = useState(1);
   const [focused, setFocused] = useState(true);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [charCount, setCharCount] = useState(0);
+  const [incorrectChars, setIncorrectChars] = useState(0);
+
+  const wordRef = useRef<HTMLDivElement>(null);
+  const textFieldRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setWordList(randomizedWords());
@@ -65,6 +84,18 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setTimer,
       focused,
       setFocused,
+      currentCharIndex,
+      setCurrentCharIndex,
+      currentWordIndex,
+      setCurrentWordIndex,
+      userInput,
+      setUserInput,
+      charCount,
+      setCharCount,
+      incorrectChars,
+      setIncorrectChars,
+      wordRef,
+      textFieldRef,
     }),
     [
       wordList,
@@ -81,6 +112,18 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setTimer,
       focused,
       setFocused,
+      currentCharIndex,
+      setCurrentCharIndex,
+      currentWordIndex,
+      setCurrentWordIndex,
+      userInput,
+      setUserInput,
+      charCount,
+      setCharCount,
+      incorrectChars,
+      setIncorrectChars,
+      wordRef,
+      textFieldRef,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;

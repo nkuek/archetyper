@@ -46,7 +46,7 @@ const App = () => {
           height: 40,
           fontSize: 'clamp(2rem, 5vw + .5rem, 3rem)',
           color: theme.headings || theme.currentWord,
-          paddingTop: '1rem',
+          padding: '1rem 0',
         }}
       >
         typer

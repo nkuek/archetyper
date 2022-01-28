@@ -1,4 +1,4 @@
-import { TReactSetState } from 'providers/WordProvider';
+import { TReactSetState } from '../general/types';
 import {
   createContext,
   useState,

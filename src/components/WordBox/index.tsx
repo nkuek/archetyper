@@ -1,20 +1,13 @@
-import {
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useContext,
-} from 'react';
+import { useMemo, useEffect, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import useStyles from './styles';
-import randomizeWords from 'words';
 import { WordContext } from 'providers/WordProvider';
 import Replay from '@mui/icons-material/Replay';
 import { ThemeContext } from 'providers';
+import { useReset } from 'hooks';
 
 const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
@@ -33,20 +26,23 @@ const WordBox = () => {
     setTimer,
     focused,
     setFocused,
+    currentCharIndex,
+    setCurrentCharIndex,
+    currentWordIndex,
+    setCurrentWordIndex,
+    userInput,
+    setUserInput,
+    charCount,
+    setCharCount,
+    incorrectChars,
+    setIncorrectChars,
+    wordRef,
+    textFieldRef,
   } = useContext(WordContext);
 
   const { theme } = useContext(ThemeContext);
 
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [userInput, setUserInput] = useState('');
-  const [charCount, setCharCount] = useState(0);
-  const [incorrectChars, setIncorrectChars] = useState(0);
-
   const classes = useStyles({ theme });
-
-  const wordRef = useRef<HTMLDivElement>(null);
-  const textFieldRef = useRef<HTMLDivElement>(null);
 
   const charList = useMemo(() => {
     const charList = [];
@@ -66,49 +62,7 @@ const WordBox = () => {
     }
   };
 
-  const handleReset = useCallback(() => {
-    if (wordRef.current && textFieldRef.current) {
-      if (!userInput && !currentWordIndex && !currentCharIndex) {
-        setWordList(randomizeWords());
-      } else {
-        const words = wordRef.current.children;
-        const extraWords = document.querySelectorAll(`.${classes.extra}`);
-        extraWords.forEach((word) => word.remove());
-        for (const word of words) {
-          for (const char of word.children) {
-            char.classList.remove(...classes.correct.split(' '));
-            char.classList.remove(...classes.incorrect.split(' '));
-          }
-        }
-      }
-      setUserInput('');
-      setCurrentCharIndex(0);
-      setCurrentWordIndex(0);
-      setIncorrectChars(0);
-      setWpm(0);
-      setWpmData([]);
-      if (timerId) {
-        clearInterval(timerId);
-        setTimerId(null);
-        setTimer(1);
-        setCharCount(0);
-      }
-    }
-    document.getElementsByTagName('input')[0].focus();
-  }, [
-    wordRef,
-    textFieldRef,
-    setWordList,
-    userInput,
-    currentWordIndex,
-    currentCharIndex,
-    classes,
-    setTimerId,
-    timerId,
-    setTimer,
-    setWpm,
-    setWpmData,
-  ]);
+  const handleReset = useReset();
 
   // Timer for WPM
   useEffect(() => {
@@ -389,7 +343,6 @@ const WordBox = () => {
       <Box
         sx={{
           display: 'flex',
-          height: 60,
           alignItems: 'center',
           justifyContent: 'center',
         }}
