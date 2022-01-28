@@ -38,11 +38,12 @@ const CustomX = (props: any) => {
 
 const CustomTooltip = (props: any) => {
   const { payload } = props;
+  const { theme } = useContext(ThemeContext);
 
   return (
     <div
       style={{
-        border: '#bbb 1.5px solid',
+        backgroundColor: theme.pageBackground,
       }}
     >
       <p
@@ -194,7 +195,7 @@ const Stats = () => {
               label={{
                 value: 'words per minute',
                 angle: -90,
-                dx: -15,
+                dx: -20,
                 fill: theme.graphText || theme.words,
               }}
               dataKey="wpm"

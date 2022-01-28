@@ -14,11 +14,26 @@ interface IProps {
 }
 
 const Themes: FC<IProps> = ({ open, onClose }) => {
-  const { themeName, setThemeName } = useContext(ThemeContext);
+  const { theme, themeName, setThemeName } = useContext(ThemeContext);
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>themes</DialogTitle>
-      <DialogContent sx={{ display: 'flex', flexWrap: 'wrap' }}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          backgroundColor: theme.pageBackground,
+          color: theme.headings,
+          borderRadius: 3,
+        },
+      }}
+    >
+      <DialogTitle sx={{}}>themes</DialogTitle>
+      <DialogContent
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+        }}
+      >
         {Object.keys(themeList).map((themeListItem) => {
           const theme = themeList[themeListItem];
           return (
@@ -61,7 +76,9 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
         })}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
+        <Button sx={{ color: theme.headings }} onClick={onClose}>
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );

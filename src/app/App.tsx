@@ -32,6 +32,9 @@ const App = () => {
       style={{
         fontFamily: 'Roboto',
         background: theme.pageBackground,
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
       }}
       onClick={() => setFocused(false)}
     >
@@ -42,16 +45,15 @@ const App = () => {
           alignItems: 'center',
           height: 40,
           fontSize: 'clamp(2rem, 5vw + .5rem, 3rem)',
-          top: '1rem',
-          position: 'relative',
           color: theme.headings || theme.currentWord,
+          paddingTop: '1rem',
         }}
       >
         typer
       </Box>
       <Container
         sx={{
-          minHeight: 'calc(100vh - 80px)',
+          height: 'calc(100vh - 80px)',
           display: 'flex',
           alignItems: wpmData.length === wordCount ? 'start' : 'center',
           justifyContent: 'center',
@@ -76,7 +78,7 @@ const App = () => {
           </Box>
         )}
       </Container>
-      <Box
+      <Container
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -102,13 +104,11 @@ const App = () => {
             },
             fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
             color: theme.headings || theme.currentWord,
-            position: 'relative',
-            bottom: '1rem',
           }}
         >
           themes
         </Typography>
-      </Box>
+      </Container>
       <Themes open={dialogOpen} onClose={closeDialog} />
     </div>
   );
