@@ -112,21 +112,20 @@ const App = () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: 40,
-          cursor: 'pointer',
           fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
           color: theme.headings || theme.currentWord,
         }}
       >
         <Typography
           onClick={() => setThemeDialogOpen(true)}
-          sx={gradientUnderline(themeDialogOpen)}
+          sx={{ ...gradientUnderline(themeDialogOpen), cursor: 'pointer' }}
         >
           themes
         </Typography>
         <Typography sx={{ margin: '0 .5em' }}>/</Typography>
         <Typography
           onClick={() => setAboutMeOpen(true)}
-          sx={gradientUnderline(aboutMeOpen)}
+          sx={{ ...gradientUnderline(themeDialogOpen), cursor: 'pointer' }}
         >
           about me
         </Typography>
