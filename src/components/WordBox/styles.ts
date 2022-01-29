@@ -14,9 +14,9 @@ const useStyles = makeStyles({
   correct: ({ theme }: IProps) => ({
     color: theme.correct,
   }),
-  incorrect: {
-    color: 'red',
-  },
+  incorrect: ({ theme }) => ({
+    color: theme.incorrect || 'red',
+  }),
   currentChar: (props) => ({
     color: props.theme.currentChar,
   }),

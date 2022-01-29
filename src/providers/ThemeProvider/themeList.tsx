@@ -14,6 +14,7 @@ export interface ITheme {
   gradientUnderline?: string[];
   cartesian?: string;
   border?: string;
+  incorrect?: string;
 }
 export interface IThemeList {
   [key: string]: ITheme;
@@ -98,6 +99,22 @@ const themeList: IThemeList = {
     cartesian: '#eed484',
     graphText: '#eed484',
     gradientUnderline: ['#2e1a47', '#eed484'],
+  },
+  jade: {
+    buttonBackground: '#1B4B43',
+    buttonText: '#f5d680',
+    pageBackground: '#1B4B43',
+    wordBoxBackground: '#4A756E',
+    currentWord: 'hsl(44deg, 85%, 73%)',
+    currentChar: 'hsl(44deg, 85%, 43%)',
+    words: '#cdcdcd',
+    correct: '#CAB19B',
+    headings: '#cdcdcd',
+    wordsContrast: '#cdcdcd',
+    graphText: 'hsl(44deg, 85%, 73%)',
+    cartesian: '#CAB19B',
+    lineColor: 'hsl(44deg, 85%, 73%)',
+    gradientUnderline: ['#4A756E', 'hsl(44deg, 85%, 73%)'],
   },
   default: {
     buttonBackground: 'white',

@@ -108,7 +108,7 @@ const WordBox = () => {
               ...classes.currentChar.split(' '),
               classes.animation
             );
-            child.classList.add(classes.incorrect);
+            child.classList.add(...classes.incorrect.split(' '));
           }
         }
 
