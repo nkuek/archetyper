@@ -1,7 +1,6 @@
 import { TReactSetState } from '../general/types';
 import { createContext, useState, FC, useMemo, useCallback } from 'react';
 import themeList, { ITheme } from './themeList';
-import { ClassNameMap } from '@mui/styles';
 import useStyles from 'components/WordBox/styles';
 
 interface IProps {
@@ -29,6 +28,9 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
     return theme;
   }, [themeName]);
 
+  // if you instantiate useStyles in different files,
+  // MUI will give them different classNames
+  // instantiating styles in context so that multiple files can access and remove classes
   const classes = useStyles({ theme: getTheme() });
 
   const value = useMemo(

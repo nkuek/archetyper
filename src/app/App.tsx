@@ -8,13 +8,21 @@ import { Container, Typography } from '@mui/material';
 import Themes from 'components/Themes';
 
 const App = () => {
-  const { wpmData, wordCount, setFocused } = useContext(WordContext);
+  const { wpmData, wordCount, setFocused, textFieldRef } =
+    useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const closeDialog = () => {
+  const closeDialog = (
+    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>
+  ) => {
+    e.stopPropagation();
     setDialogOpen(false);
+    if (textFieldRef.current) {
+      setFocused(true);
+      textFieldRef.current.focus();
+    }
   };
 
   // handle pressing escape

@@ -34,7 +34,7 @@ const WordOptions = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 setWordCount(option);
-                reset();
+                reset(e);
                 setFocused(true);
                 localStorage.setItem(
                   'typer-word-count',

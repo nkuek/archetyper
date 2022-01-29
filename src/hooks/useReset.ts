@@ -20,26 +20,30 @@ const useReset = (randomize = true) => {
     setCurrentWordIndex,
     setIncorrectChars,
     setUserInput,
+    setFocused,
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
 
-  return useCallback(() => {
-    if (wordRef.current && textFieldRef.current) {
-      if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
-        setWordList(randomizeWords());
-      } else {
-        const words = wordRef.current.children;
-        const extraWords = document.querySelectorAll(`.${classes.extra}`);
-        extraWords.forEach((word) => word.remove());
-        for (let i = 0; i <= currentWordIndex; i++) {
-          const word = words[i];
-          for (const char of word.children) {
-            char.classList.remove(
-              ...classes.correct.split(' '),
-              ...classes.incorrect.split(' '),
-              ...classes.currentChar.split(' ')
-            );
+  return useCallback(
+    (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+      e.stopPropagation();
+      if (wordRef.current && textFieldRef.current) {
+        if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
+          setWordList(randomizeWords());
+        } else {
+          const words = wordRef.current.children;
+          const extraWords = document.querySelectorAll(`.${classes.extra}`);
+          extraWords.forEach((word) => word.remove());
+          for (let i = 0; i <= currentWordIndex; i++) {
+            const word = words[i];
+            for (const char of word.children) {
+              char.classList.remove(
+                ...classes.correct.split(' '),
+                ...classes.incorrect.split(' '),
+                ...classes.currentChar.split(' ')
+              );
+            }
           }
         }
       }
@@ -49,34 +53,36 @@ const useReset = (randomize = true) => {
       setIncorrectChars(0);
       setWpm(0);
       setWpmData([]);
+      setFocused(true);
       if (timerId) {
         clearInterval(timerId);
         setTimerId(null);
         setTimer(1);
         setCharCount(0);
       }
-    }
-    document.getElementsByTagName('input')[0].focus();
-  }, [
-    wordRef,
-    textFieldRef,
-    setWordList,
-    userInput,
-    currentWordIndex,
-    currentCharIndex,
-    classes,
-    setTimerId,
-    timerId,
-    setTimer,
-    setWpm,
-    setWpmData,
-    setCharCount,
-    setCurrentCharIndex,
-    setCurrentWordIndex,
-    setIncorrectChars,
-    setUserInput,
-    randomize,
-  ]);
+    },
+    [
+      wordRef,
+      textFieldRef,
+      setWordList,
+      userInput,
+      currentWordIndex,
+      currentCharIndex,
+      classes,
+      setTimerId,
+      timerId,
+      setTimer,
+      setWpm,
+      setWpmData,
+      setCharCount,
+      setCurrentCharIndex,
+      setCurrentWordIndex,
+      setIncorrectChars,
+      setUserInput,
+      randomize,
+      setFocused,
+    ]
+  );
 };
 
 export default useReset;

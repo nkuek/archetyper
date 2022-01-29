@@ -10,7 +10,7 @@ import { themeList, ThemeContext } from 'providers';
 
 interface IProps {
   open: boolean;
-  onClose: () => void;
+  onClose: (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => void;
 }
 
 const Themes: FC<IProps> = ({ open, onClose }) => {
@@ -27,7 +27,7 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
         },
       }}
     >
-      <DialogTitle sx={{}}>themes</DialogTitle>
+      <DialogTitle>themes</DialogTitle>
       <DialogContent
         sx={{
           display: 'flex',
