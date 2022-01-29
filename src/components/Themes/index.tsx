@@ -76,7 +76,12 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
         })}
       </DialogContent>
       <DialogActions>
-        <Button sx={{ color: theme.headings }} onClick={onClose}>
+        <Button
+          sx={{ color: theme.headings }}
+          onClick={(e) => {
+            onClose(e);
+          }}
+        >
           Close
         </Button>
       </DialogActions>

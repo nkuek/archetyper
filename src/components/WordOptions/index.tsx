@@ -18,7 +18,7 @@ const WordOptions = () => {
 
   return (
     <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Container sx={{ display: 'flex', padding: 0, marginBottom: '.5em' }}>
+      <div style={{ display: 'flex', padding: 0, marginBottom: '.5em' }}>
         {options.map((option, idx) => (
           <Fragment key={'box' + idx}>
             <Box
@@ -49,9 +49,11 @@ const WordOptions = () => {
             </Box>
           </Fragment>
         ))}
-      </Container>
-      <Box sx={{ color: textColor }}>{'WPM: '}</Box>
-      <Box sx={{ color: textColor }}>{wpm || ''}</Box>
+      </div>
+      <div style={{ display: 'flex' }}>
+        <Box sx={{ color: textColor, marginRight: '.25em' }}>{'wpm: '}</Box>
+        <Box sx={{ color: textColor }}>{wpm || ''}</Box>
+      </div>
     </Container>
   );
 };

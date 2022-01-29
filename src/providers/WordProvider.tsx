@@ -42,7 +42,7 @@ interface IWordContext {
   userInput: string;
   setUserInput: TReactSetState<string>;
   wordRef: React.RefObject<HTMLDivElement>;
-  textFieldRef: React.RefObject<HTMLDivElement>;
+  textFieldRef: React.RefObject<HTMLInputElement>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -66,7 +66,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [incorrectChars, setIncorrectChars] = useState(0);
 
   const wordRef = useRef<HTMLDivElement>(null);
-  const textFieldRef = useRef<HTMLDivElement>(null);
+  const textFieldRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setWordList(randomizedWords());

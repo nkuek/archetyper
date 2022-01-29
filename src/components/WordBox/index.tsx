@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useContext } from 'react';
+import { useMemo, useEffect, useContext, useLayoutEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -76,11 +76,11 @@ const WordBox = () => {
   }, [timer, charCount, setWpm]);
 
   // focus on input field whenever charList changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (charList.length > 0) {
-      document.getElementsByTagName('input')[0].focus();
+      textFieldRef.current!.focus();
     }
-  }, [charList]);
+  }, [charList, textFieldRef]);
 
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,7 +332,7 @@ const WordBox = () => {
               backgroundColor: theme.wordBoxBackground,
             }}
           >
-            Click here to start typing
+            click here to start typing
           </Box>
         )}
       </Box>

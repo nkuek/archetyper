@@ -21,7 +21,7 @@ const App = () => {
     setDialogOpen(false);
     if (textFieldRef.current) {
       setFocused(true);
-      textFieldRef.current.focus();
+      setTimeout(() => textFieldRef.current!.focus(), 1);
     }
   };
 
@@ -57,7 +57,7 @@ const App = () => {
           padding: '1rem 0',
         }}
       >
-        typer
+        archetyper
       </Box>
       <Container
         sx={{

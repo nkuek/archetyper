@@ -41,7 +41,8 @@ const useReset = (randomize = true) => {
               char.classList.remove(
                 ...classes.correct.split(' '),
                 ...classes.incorrect.split(' '),
-                ...classes.currentChar.split(' ')
+                ...classes.currentChar.split(' '),
+                classes.animation
               );
             }
           }
