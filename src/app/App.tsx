@@ -125,7 +125,7 @@ const App = () => {
         <Typography sx={{ margin: '0 .5em' }}>/</Typography>
         <Typography
           onClick={() => setAboutMeOpen(true)}
-          sx={{ ...gradientUnderline(themeDialogOpen), cursor: 'pointer' }}
+          sx={{ ...gradientUnderline(aboutMeOpen), cursor: 'pointer' }}
         >
           about me
         </Typography>
