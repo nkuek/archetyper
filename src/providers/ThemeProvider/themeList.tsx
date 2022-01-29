@@ -93,7 +93,7 @@ const themeList: IThemeList = {
     currentChar: 'hsl(269deg 67% 46%)',
     words: '#eed484',
     correct: '#68b723',
-    lineColor: 'lightpurple',
+    lineColor: '#966FD6',
     headings: '#eed484',
     wordsContrast: '#eed484',
     cartesian: '#eed484',
