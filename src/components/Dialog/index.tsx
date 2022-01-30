@@ -30,14 +30,7 @@ const Dialog: FC<IProps> = ({ open, onClose, title, children }) => {
       }}
     >
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-        }}
-      >
-        {children}
-      </DialogContent>
+      <DialogContent>{children}</DialogContent>
       <DialogActions>
         <Button sx={{ color: theme.headings }} onClick={onClose}>
           Close
