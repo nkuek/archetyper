@@ -203,33 +203,43 @@ const words = [
   'line',
 ];
 
-const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-'];
 
-const randomizeWords = (settings: ISettings) => {
-  const { capitalChars, specialChars } = settings;
-  const randomized = [];
-  while (randomized.length < 50) {
-    let word = words[Math.floor(Math.random() * 200)];
-    if (capitalChars) {
-      const shouldCapitalize = Math.floor(Math.random() * 5) > 2;
-      word = shouldCapitalize ? word[0].toUpperCase() + word.slice(1) : word;
-    }
-    if (specialChars) {
-      const shouldAddSpecial = Math.floor(Math.random() * 5) > 2;
+const maxWords = 50;
 
-      if (shouldAddSpecial) {
-        const specialChar = specialCharsList[Math.floor(Math.random() * 8)];
-        switch (specialChar) {
-          case '"':
-            word = `"${word}"`;
-            break;
-          case '(':
-            word = `(${word})`;
-            break;
-          default:
-            word += specialChar;
+const randomizeWords = (settings: ISettings) => {
+  const { capitalChars, specialChars, numbers } = settings;
+  const randomized = [];
+  while (randomized.length < maxWords) {
+    let word = '';
+    const shouldAddNumbers = Math.random() > 0.7;
+    if (shouldAddNumbers) {
+      const length = Math.random() * 6;
+      for (let i = 0; i < length; i++) {
+        word += numbersList[Math.floor(Math.random() * 10)];
+      }
+    } else {
+      word = words[Math.floor(Math.random() * 200)];
+      if (capitalChars) {
+        const shouldCapitalize = Math.random() > 0.6;
+        word = shouldCapitalize ? word[0].toUpperCase() + word.slice(1) : word;
+      }
+      if (specialChars) {
+        const shouldAddSpecial = Math.random() > 0.4;
+        if (shouldAddSpecial) {
+          const specialChar = specialCharsList[Math.floor(Math.random() * 8)];
+          switch (specialChar) {
+            case '"':
+              word = `"${word}"`;
+              break;
+            case '(':
+              word = `(${word})`;
+              break;
+            default:
+              word += specialChar;
+          }
         }
       }
     }
