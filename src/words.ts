@@ -213,34 +213,36 @@ const randomizeWords = (settings: ISettings) => {
   const { capitalChars, specialChars, numbers } = settings;
   const randomized = [];
   while (randomized.length < maxWords) {
-    let word = '';
-    const shouldAddNumbers = Math.random() > 0.7;
-    if (shouldAddNumbers) {
-      const length = Math.random() * 6;
-      for (let i = 0; i < length; i++) {
-        word += numbersList[Math.floor(Math.random() * 10)];
-      }
-    } else {
-      word = words[Math.floor(Math.random() * 200)];
-      if (capitalChars) {
-        const shouldCapitalize = Math.random() > 0.6;
-        word = shouldCapitalize ? word[0].toUpperCase() + word.slice(1) : word;
-      }
-      if (specialChars) {
-        const shouldAddSpecial = Math.random() > 0.4;
-        if (shouldAddSpecial) {
-          const specialChar = specialCharsList[Math.floor(Math.random() * 8)];
-          switch (specialChar) {
-            case '"':
-              word = `"${word}"`;
-              break;
-            case '(':
-              word = `(${word})`;
-              break;
-            default:
-              word += specialChar;
-          }
+    let word = words[Math.floor(Math.random() * 200)];
+    if (capitalChars) {
+      const shouldCapitalize = Math.random() > 0.6;
+      word = shouldCapitalize ? word[0].toUpperCase() + word.slice(1) : word;
+    }
+    if (specialChars) {
+      const shouldAddSpecial = Math.random() > 0.4;
+      if (shouldAddSpecial) {
+        const specialChar = specialCharsList[Math.floor(Math.random() * 8)];
+        switch (specialChar) {
+          case '"':
+            word = `"${word}"`;
+            break;
+          case '(':
+            word = `(${word})`;
+            break;
+          default:
+            word += specialChar;
         }
+      }
+    }
+    if (numbers) {
+      const shouldAddNumbers = Math.random() > 0.7;
+      if (shouldAddNumbers) {
+        const length = Math.random() * 6;
+        let number = '';
+        for (let i = 0; i < length; i++) {
+          number += numbersList[Math.floor(Math.random() * 10)];
+        }
+        word = number;
       }
     }
     randomized.push(word);
