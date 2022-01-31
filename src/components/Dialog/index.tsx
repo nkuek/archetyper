@@ -16,7 +16,6 @@ interface IProps {
 
 const Dialog: FC<IProps> = ({ open, onClose, title, children }) => {
   const { theme } = useContext(ThemeContext);
-
   return (
     <MUIDialog
       open={open}
@@ -29,7 +28,7 @@ const Dialog: FC<IProps> = ({ open, onClose, title, children }) => {
         },
       }}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle sx={{ fontSize: '1.5rem' }}>{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
         <Button sx={{ color: theme.headings }} onClick={onClose}>

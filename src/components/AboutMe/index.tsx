@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { IProps } from '../Themes/';
+import { IProps } from '../Settings';
 import Dialog from 'components/Dialog';
 import { Button } from '@mui/material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';

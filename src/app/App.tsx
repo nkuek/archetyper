@@ -5,7 +5,7 @@ import WordOptions from '../components/WordOptions';
 import { WordContext, ThemeContext } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
-import Themes from 'components/Themes';
+import Settings from 'components/Settings';
 import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 
@@ -14,7 +14,7 @@ const App = () => {
     useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
-  const [themeDialogOpen, setThemeDialogOpen] = useState(false);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
 
   const closeDialog = (
@@ -117,10 +117,10 @@ const App = () => {
         }}
       >
         <Typography
-          onClick={() => setThemeDialogOpen(true)}
-          sx={{ ...gradientUnderline(themeDialogOpen), cursor: 'pointer' }}
+          onClick={() => setSettingsDialogOpen(true)}
+          sx={{ ...gradientUnderline(settingsDialogOpen), cursor: 'pointer' }}
         >
-          themes
+          settings
         </Typography>
         <Typography sx={{ margin: '0 .5em' }}>/</Typography>
         <Typography
@@ -130,9 +130,9 @@ const App = () => {
           about me
         </Typography>
       </Container>
-      <Themes
-        open={themeDialogOpen}
-        onClose={(e) => closeDialog(e, setThemeDialogOpen)}
+      <Settings
+        open={settingsDialogOpen}
+        onClose={(e) => closeDialog(e, setSettingsDialogOpen)}
       />
       <AboutMe
         open={aboutMeOpen}

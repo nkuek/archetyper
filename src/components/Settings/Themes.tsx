@@ -1,17 +1,13 @@
-import React, { FC, useContext } from 'react';
-import { Button, Grid } from '@mui/material';
-import { themeList, ThemeContext } from 'providers';
-import Dialog from 'components/Dialog';
+import { Button, Grid, Typography } from '@mui/material';
+import { ThemeContext, themeList } from 'providers';
+import React, { useContext } from 'react';
 
-export interface IProps {
-  open: boolean;
-  onClose: (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => void;
-}
-
-const Themes: FC<IProps> = ({ open, onClose }) => {
+const Themes = () => {
   const { themeName, setThemeName } = useContext(ThemeContext);
+
   return (
-    <Dialog open={open} onClose={onClose} title="themes">
+    <>
+      <Typography sx={{ fontSize: '1.25rem' }}>themes</Typography>
       <Grid container spacing={0}>
         {Object.keys(themeList).map((themeListItem) => {
           const theme = themeList[themeListItem];
@@ -57,7 +53,7 @@ const Themes: FC<IProps> = ({ open, onClose }) => {
           );
         })}
       </Grid>
-    </Dialog>
+    </>
   );
 };
 

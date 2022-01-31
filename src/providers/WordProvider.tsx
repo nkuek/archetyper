@@ -16,6 +16,11 @@ interface ITimeStepData {
   incorrectChars: number;
 }
 
+interface ISettings {
+  specialChars: boolean;
+  capitalChars: boolean;
+}
+
 interface IWordContext {
   wordList: string[];
   setWordList: TReactSetState<string[]>;
