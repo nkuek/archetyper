@@ -210,7 +210,7 @@ const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-'];
 const randomizeWords = (settings: ISettings) => {
   const { capitalChars, specialChars } = settings;
   const randomized = [];
-  while (randomized.length < 200) {
+  while (randomized.length < 50) {
     let word = words[Math.floor(Math.random() * 200)];
     if (capitalChars) {
       const shouldCapitalize = Math.floor(Math.random() * 5) > 2;

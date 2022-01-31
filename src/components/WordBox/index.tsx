@@ -138,7 +138,7 @@ const WordBox = () => {
         setCharCount((prev) => prev + 1);
         setIncorrectChars(0);
         setUserInput('');
-        wordRef.current.children[currentWordIndex + 1].scrollIntoView({
+        wordRef.current.children[currentWordIndex + 1]?.scrollIntoView({
           block: 'center',
         });
       } else {
