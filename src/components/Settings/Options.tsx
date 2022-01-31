@@ -6,17 +6,17 @@ import {
   Typography,
 } from '@mui/material';
 import { WordContext } from 'providers';
-
-const options = [
-  { name: 'capital letters', value: 'capitalChars' },
-  { name: 'special characters', value: 'specialChars' },
-];
+import { options } from 'providers/WordProvider';
+import randomizeWords from 'words';
 
 const Options = () => {
-  const { settings, setSettings } = useContext(WordContext);
+  const { settings, setSettings, setWordList } = useContext(WordContext);
 
   const handleChange = (checked: boolean, option: string) => {
-    setSettings((prev) => ({ ...prev, [option]: checked }));
+    const newSettings = { ...settings, [option]: checked };
+    setSettings(newSettings);
+    localStorage.setItem('typer-settings', JSON.stringify(newSettings));
+    setWordList(randomizeWords(newSettings));
   };
 
   return (

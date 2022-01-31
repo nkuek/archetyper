@@ -16,9 +16,10 @@ interface ITimeStepData {
   incorrectChars: number;
 }
 
-interface ISettings {
+export interface ISettings {
   specialChars: boolean;
   capitalChars: boolean;
+  numbers: boolean;
 }
 
 interface IWordContext {
@@ -54,6 +55,12 @@ interface IWordContext {
 
 export const WordContext = createContext<IWordContext>(undefined!);
 
+export const options = [
+  { name: 'capital letters', value: 'capitalChars' },
+  { name: 'special characters', value: 'specialChars' },
+  { name: 'numbers', value: 'numbers' },
+];
+
 const WordContextProvider: FC<IProps> = ({ children }) => {
   const [wordList, setWordList] = useState<string[]>([]);
   const [wordCount, setWordCount] = useState(
@@ -71,17 +78,18 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [userInput, setUserInput] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
-  const [settings, setSettings] = useState<ISettings>({
-    specialChars: false,
-    capitalChars: false,
-  });
+  const [settings, setSettings] = useState<ISettings>(
+    localStorage.getItem('typer-settings')
+      ? JSON.parse(localStorage.getItem('typer-settings') || '')
+      : options.reduce((obj, option) => ({ ...obj, [option.value]: false }), {})
+  );
 
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setWordList(randomizedWords());
-  }, [wordCount, setWordList]);
+    setWordList(randomizedWords(settings));
+  }, [wordCount, setWordList, settings]);
 
   const value = useMemo(
     () => ({

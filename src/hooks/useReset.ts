@@ -21,6 +21,7 @@ const useReset = (randomize = true) => {
     setIncorrectChars,
     setUserInput,
     setFocused,
+    settings,
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
@@ -30,7 +31,7 @@ const useReset = (randomize = true) => {
       e.stopPropagation();
       if (wordRef.current && textFieldRef.current) {
         if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
-          setWordList(randomizeWords());
+          setWordList(randomizeWords(settings));
         } else {
           const words = wordRef.current.children;
           const extraWords = document.querySelectorAll(`.${classes.extra}`);
@@ -82,6 +83,7 @@ const useReset = (randomize = true) => {
       setUserInput,
       randomize,
       setFocused,
+      settings,
     ]
   );
 };

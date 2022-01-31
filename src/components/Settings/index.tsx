@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import Dialog from 'components/Dialog';
 import Themes from './Themes';
 import Options from './Options';
