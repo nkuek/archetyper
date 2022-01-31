@@ -48,6 +48,8 @@ interface IWordContext {
   setUserInput: TReactSetState<string>;
   wordRef: React.RefObject<HTMLDivElement>;
   textFieldRef: React.RefObject<HTMLInputElement>;
+  settings: ISettings;
+  setSettings: TReactSetState<ISettings>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -69,6 +71,10 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [userInput, setUserInput] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
+  const [settings, setSettings] = useState<ISettings>({
+    specialChars: false,
+    capitalChars: false,
+  });
 
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
@@ -105,6 +111,8 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setIncorrectChars,
       wordRef,
       textFieldRef,
+      settings,
+      setSettings,
     }),
     [
       wordList,
@@ -133,6 +141,8 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setIncorrectChars,
       wordRef,
       textFieldRef,
+      settings,
+      setSettings,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;
