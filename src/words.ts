@@ -205,9 +205,10 @@ const words = [
 
 const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-'];
+const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-', "'"];
 
 const maxWords = 50;
+const maxNumLength = 6;
 
 const randomizeWords = (settings: ISettings) => {
   const { capitalChars, specialChars, numbers } = settings;
@@ -221,10 +222,12 @@ const randomizeWords = (settings: ISettings) => {
     if (specialChars) {
       const shouldAddSpecial = Math.random() > 0.4;
       if (shouldAddSpecial) {
-        const specialChar = specialCharsList[Math.floor(Math.random() * 8)];
+        const specialChar =
+          specialCharsList[Math.floor(Math.random() * specialCharsList.length)];
         switch (specialChar) {
           case '"':
-            word = `"${word}"`;
+          case "'":
+            word = `${specialChar}${word}${specialChar}`;
             break;
           case '(':
             word = `(${word})`;
@@ -237,7 +240,7 @@ const randomizeWords = (settings: ISettings) => {
     if (numbers) {
       const shouldAddNumbers = Math.random() > 0.7;
       if (shouldAddNumbers) {
-        const length = Math.random() * 6;
+        const length = Math.random() * maxNumLength;
         let number = '';
         for (let i = 0; i < length; i++) {
           number += numbersList[Math.floor(Math.random() * 10)];
