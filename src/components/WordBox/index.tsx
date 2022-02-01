@@ -269,7 +269,6 @@ const WordBox = () => {
         borderRadius: 5,
         fontSize: '1.5em',
         backgroundColor: theme.wordBoxBackground,
-        minWidth: '70vw',
       }}
       onClick={handleFocus}
     >
