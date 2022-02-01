@@ -12,6 +12,8 @@ interface IWordListContext {
   setWordCount: TReactSetState<number>;
   loading: boolean;
   setLoading: TReactSetState<boolean>;
+  author: string | null;
+  setAuthor: TReactSetState<null | string>;
 }
 
 export const WordListContext = createContext<IWordListContext>(undefined!);
@@ -24,6 +26,7 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       : 25
   );
   const [loading, setLoading] = useState(false);
+  const [author, setAuthor] = useState<null | string>(null);
   const value = useMemo(
     () => ({
       wordList,
@@ -32,8 +35,19 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       setWordCount,
       loading,
       setLoading,
+      author,
+      setAuthor,
     }),
-    [wordList, setWordList, wordCount, setWordCount, loading, setLoading]
+    [
+      wordList,
+      setWordList,
+      wordCount,
+      setWordCount,
+      loading,
+      setLoading,
+      author,
+      setAuthor,
+    ]
   );
   return (
     <WordListContext.Provider value={value}>

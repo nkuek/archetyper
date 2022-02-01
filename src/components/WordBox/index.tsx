@@ -12,7 +12,7 @@ const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
 
 const WordBox = () => {
-  const { wordList, wordCount, loading } = useContext(WordListContext);
+  const { wordList, wordCount, loading, author } = useContext(WordListContext);
   const {
     setWpm,
     timerId,
@@ -289,66 +289,81 @@ const WordBox = () => {
         >{`${currentWordIndex} / ${wordCount}`}</Box>
         <Box sx={{ color: theme.words }}>{`${timer}s`}</Box>
       </Container>
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          position: 'relative',
-          zIndex: 1,
-          height: 100,
-          overflow: 'hidden',
-          fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
-          width: '100%',
-        }}
-        ref={wordRef}
-      >
-        {loading ? (
+      {loading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: 100,
+          }}
+        >
+          <CircularProgress sx={{ color: theme.headings }} />
+        </Box>
+      ) : (
+        <>
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <CircularProgress sx={{ color: theme.headings }} />
-          </Box>
-        ) : (
-          charList.map((word, wordIdx) => (
-            <Box
-              color={
-                wordIdx === currentWordIndex ? theme.currentWord : theme.words
-              }
-              key={wordIdx}
-              sx={{ display: 'flex', margin: '0.25em' }}
-            >
-              {word.map((char, charIdx) => (
-                <Box key={char + charIdx}>{char}</Box>
-              ))}
-            </Box>
-          ))
-        )}
-        {!focused && (
-          <Box
-            sx={{
-              position: 'absolute',
-              zIndex: 2,
-              height: '100%',
+              position: 'relative',
+              zIndex: 1,
+              height: 100,
+              overflow: 'hidden',
+              fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
               width: '100%',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              background: 'white',
-              cursor: 'pointer',
-              color: theme.words,
-              backgroundColor: theme.wordBoxBackground,
+              flexWrap: 'wrap',
             }}
+            ref={wordRef}
           >
-            click here to start typing
+            {charList.map((word, wordIdx) => (
+              <Box
+                color={
+                  wordIdx === currentWordIndex ? theme.currentWord : theme.words
+                }
+                key={wordIdx}
+                sx={{ display: 'flex', margin: '0.25em' }}
+              >
+                {word.map((char, charIdx) => (
+                  <Box key={char + charIdx}>{char}</Box>
+                ))}
+              </Box>
+            ))}
+            {author && (
+              <Box
+                sx={{
+                  color: theme.words,
+                  filter: 'brightness(70%)',
+                  margin: '0.25em',
+                  fontStyle: 'italic',
+                }}
+              >
+                &#8212;{author}
+              </Box>
+            )}
+            {!focused && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  zIndex: 2,
+                  height: '100%',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  background: 'white',
+                  cursor: 'pointer',
+                  color: theme.words,
+                  backgroundColor: theme.wordBoxBackground,
+                }}
+              >
+                click here to start typing
+              </Box>
+            )}
           </Box>
-        )}
-      </Box>
+        </>
+      )}
       <Box
         sx={{
           display: 'flex',

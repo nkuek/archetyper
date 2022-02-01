@@ -94,7 +94,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   );
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const getQuote = useQuote();
+  const { getQuote } = useQuote();
 
   useEffect(() => {
     if (!settings.quotes) setWordList(randomizedWords(settings));
@@ -110,7 +110,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
           : 25
       );
     }
-  }, [settings.quotes, setWordList]);
+  }, [settings.quotes, setWordList, getQuote, setWordCount]);
 
   const value = useMemo(
     () => ({

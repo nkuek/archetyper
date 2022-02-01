@@ -27,33 +27,32 @@ const useReset = (randomize = true) => {
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
-  const setQuote = useQuote();
+  const { getQuote } = useQuote();
 
   return useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
       e.stopPropagation();
       if (wordRef.current && textFieldRef.current) {
-        if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
-          if (settings.quotes) {
-            setQuote();
-          } else {
-            setWordList(randomizeWords(settings));
+        const words = wordRef.current.children;
+        const extraWords = document.querySelectorAll(`.${classes.extra}`);
+        extraWords.forEach((word) => word.remove());
+        for (let i = 0; i <= currentWordIndex; i++) {
+          const word = words[i];
+          for (const char of word.children) {
+            char.classList.remove(
+              ...classes.correct.split(' '),
+              ...classes.incorrect.split(' '),
+              ...classes.currentChar.split(' '),
+              classes.animation
+            );
           }
+        }
+      }
+      if (!userInput && (!currentWordIndex || !currentCharIndex) && randomize) {
+        if (settings.quotes) {
+          getQuote();
         } else {
-          const words = wordRef.current.children;
-          const extraWords = document.querySelectorAll(`.${classes.extra}`);
-          extraWords.forEach((word) => word.remove());
-          for (let i = 0; i <= currentWordIndex; i++) {
-            const word = words[i];
-            for (const char of word.children) {
-              char.classList.remove(
-                ...classes.correct.split(' '),
-                ...classes.incorrect.split(' '),
-                ...classes.currentChar.split(' '),
-                classes.animation
-              );
-            }
-          }
+          setWordList(randomizeWords(settings));
         }
       }
       setUserInput('');
@@ -91,6 +90,7 @@ const useReset = (randomize = true) => {
       randomize,
       setFocused,
       settings,
+      getQuote,
     ]
   );
 };

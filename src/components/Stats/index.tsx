@@ -87,7 +87,7 @@ const Stats = () => {
     }
   }, [timerId]);
 
-  const handleReset = useReset();
+  const handleReset = useReset(true);
 
   const totalChars = useMemo(
     () => wordList.reduce((acc, word) => acc + word.length, 0),
