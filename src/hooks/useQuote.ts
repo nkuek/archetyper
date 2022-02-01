@@ -1,5 +1,5 @@
 import { WordListContext } from 'providers';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 
 interface IQuote {
   content: string;
@@ -21,7 +21,7 @@ const useQuote = () => {
         setWordCount(quoteContent.length);
         setLoading(false);
       });
-  }, [setWordList, setWordCount, setLoading]);
+  }, [setWordList, setWordCount, setLoading, setAuthor]);
   return useMemo(
     () => ({
       getQuote,
