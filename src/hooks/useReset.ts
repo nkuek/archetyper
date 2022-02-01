@@ -5,7 +5,7 @@ import randomizeWords from 'words';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { setWordList } = useContext(WordListContext);
+  const { setWordList, setAuthor } = useContext(WordListContext);
   const {
     wordRef,
     textFieldRef,
@@ -46,12 +46,16 @@ const useReset = (randomize = false) => {
             );
           }
         }
+        wordRef.current.children[0]?.scrollIntoView({
+          block: 'center',
+        });
       }
       if ((!timerId && !currentWordIndex && !currentCharIndex) || randomize) {
         if (settings.quotes) {
           getQuote();
         } else {
           setWordList(randomizeWords(settings));
+          setAuthor(null);
         }
       }
       setUserInput('');

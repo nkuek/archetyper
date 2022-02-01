@@ -15,6 +15,7 @@ export interface ITheme {
   cartesian?: string;
   border?: string;
   incorrect?: string;
+  disabled?: string;
 }
 export interface IThemeList {
   [key: string]: ITheme;
@@ -37,6 +38,7 @@ const themeList: IThemeList = {
     headings: 'black',
     gradientUnderline: ['#d73811', '#e1ba45'],
     cartesian: 'hsl(45deg 72% 58%)',
+    disabled: '#ddd',
   },
   8008: {
     buttonBackground: 'hsl(215deg 18% 29%)',
@@ -126,6 +128,7 @@ const themeList: IThemeList = {
     correct: 'green',
     headings: 'black',
     border: '1px solid black',
+    disabled: '#ddd',
   },
 };
 export default themeList;

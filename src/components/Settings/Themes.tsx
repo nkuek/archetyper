@@ -8,7 +8,7 @@ const Themes = () => {
   return (
     <>
       <Typography sx={{ fontSize: '1.25rem' }}>themes</Typography>
-      <Grid container spacing={0} sx={{ margin: '.5em 0' }}>
+      <Grid container spacing={0} sx={{ margin: '1em 0' }}>
         {Object.keys(themeList).map((themeListItem) => {
           const theme = themeList[themeListItem];
           return (

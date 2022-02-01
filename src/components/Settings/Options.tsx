@@ -1,18 +1,37 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
+  Button,
   Checkbox,
   FormControlLabel,
   FormGroup,
   Typography,
 } from '@mui/material';
-import { WordContext } from 'providers';
+import { ThemeContext, WordContext } from 'providers';
 import { defaultSettings, options } from 'providers/WordProvider';
 import randomizeWords from 'words';
 import { WordListContext } from 'providers/WordListProvider';
+import { Box } from '@mui/system';
 
 const Options = () => {
   const { setWordList } = useContext(WordListContext);
   const { settings, setSettings } = useContext(WordContext);
+  const { theme } = useContext(ThemeContext);
+
+  const [disableClear, setDisableClear] = useState(
+    Object.keys(settings).every(
+      (key) => !settings[key as keyof typeof settings]
+    )
+  );
+
+  useEffect(() => {
+    if (
+      Object.keys(settings).every(
+        (key) => !settings[key as keyof typeof settings]
+      )
+    ) {
+      setTimeout(() => setDisableClear(true), 300);
+    }
+  }, [settings]);
 
   const handleChange = (checked: boolean, option: string) => {
     let newSettings = { ...settings, [option]: checked };
@@ -22,13 +41,47 @@ const Options = () => {
     setSettings(newSettings);
     localStorage.setItem('typer-settings', JSON.stringify(newSettings));
     setWordList(randomizeWords(newSettings));
+    setDisableClear(false);
+  };
+
+  const clearSelection = () => {
+    setSettings(defaultSettings);
+    localStorage.setItem('typer-settings', JSON.stringify(defaultSettings));
+    setWordList(randomizeWords(defaultSettings));
   };
 
   return (
     <FormGroup>
-      <Typography sx={{ fontSize: '1.25rem', marginBottom: '.5em' }}>
-        options
-      </Typography>
+      <Box sx={{ display: 'flex', marginBottom: '.5em' }}>
+        <Typography sx={{ fontSize: '1.25rem', marginRight: '.75em' }}>
+          options
+        </Typography>
+        <Button
+          variant="outlined"
+          sx={{
+            color: theme.headings,
+            borderColor: theme.headings,
+            textTransform: 'lowercase',
+            padding: '0 1.5em',
+            '&:hover': {
+              transition: 'all 150ms ease-in-out',
+              filter: 'brightness(80%)',
+              opacity: 0.8,
+              borderColor: theme.headings,
+            },
+            '&.Mui-disabled': {
+              transition: 'all 300ms ease-in-out',
+              filter: 'brightness(60%)',
+              borderColor: theme.disabled || theme.headings,
+              color: theme.disabled || theme.headings,
+            },
+          }}
+          disabled={disableClear}
+          onClick={clearSelection}
+        >
+          clear all
+        </Button>
+      </Box>
       {options.map((option) => (
         <FormControlLabel
           control={
