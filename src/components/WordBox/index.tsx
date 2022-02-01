@@ -346,7 +346,7 @@ const WordBox = () => {
                 sx={{
                   position: 'absolute',
                   zIndex: 2,
-                  height: '100%',
+                  height: 110,
                   width: '100%',
                   display: 'flex',
                   justifyContent: 'center',
