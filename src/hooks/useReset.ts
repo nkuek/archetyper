@@ -93,6 +93,7 @@ const useReset = (randomize = false) => {
       setFocused,
       settings,
       getQuote,
+      setAuthor,
     ]
   );
 };
