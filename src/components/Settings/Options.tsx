@@ -34,13 +34,34 @@ const Options = () => {
           control={
             <Checkbox
               checked={settings[option.value as keyof typeof settings]}
-              sx={{ color: 'inherit', '&.Mui-checked': { color: 'inherit' } }}
+              sx={{
+                color: 'inherit',
+                '&.Mui-checked': { color: 'inherit' },
+                '&.Mui-disabled': {
+                  color: 'inherit',
+                  filter: 'brightness(60%)',
+                },
+              }}
               disabled={option.value !== 'quotes' && settings.quotes}
             />
           }
           label={`${option.name}?`}
           key={option.name}
-          sx={{ margin: 0 }}
+          sx={{
+            margin: 0,
+            color: 'inherit',
+          }}
+          componentsProps={{
+            typography: {
+              sx: {
+                '&.Mui-disabled': {
+                  color: 'inherit !important',
+                  filter: 'brightness(60%)',
+                  cursor: 'not-allowed',
+                },
+              },
+            },
+          }}
           value={option.value}
           onChange={(_, checked) => handleChange(checked, option.value)}
         />
