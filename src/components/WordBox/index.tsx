@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useContext, useLayoutEffect } from 'react';
+import { useMemo, useEffect, useContext, useLayoutEffect, FC } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -6,12 +6,17 @@ import Button from '@mui/material/Button';
 import Replay from '@mui/icons-material/Replay';
 import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
+import { TReactSetState } from 'providers/general/types';
 
 const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
 
-const WordBox = () => {
+interface IProps {
+  setShowTip: TReactSetState<boolean>;
+}
+
+const WordBox: FC<IProps> = ({ setShowTip }) => {
   const { wordList, wordCount, loading, author } = useContext(WordListContext);
   const {
     setWpm,
@@ -38,6 +43,9 @@ const WordBox = () => {
   } = useContext(WordContext);
 
   const { theme, classes } = useContext(ThemeContext);
+  const muiTheme = useTheme();
+
+  const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
   const charList = useMemo(() => {
     const charList = [];
@@ -377,10 +385,14 @@ const WordBox = () => {
           onChange={handleUserInput}
           autoFocus
           inputRef={textFieldRef}
+          inputProps={{ autoCapitalize: 'none' }}
         />
         <Button
           sx={{ color: theme.currentWord, height: '95%', width: '20%' }}
-          onClick={handleReset}
+          onClick={(e) => {
+            handleReset(e);
+            if (!mobileDevice) setShowTip(true);
+          }}
         >
           <Replay />
         </Button>

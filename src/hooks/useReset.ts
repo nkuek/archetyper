@@ -9,7 +9,6 @@ const useReset = (randomize = false) => {
   const {
     wordRef,
     textFieldRef,
-    userInput,
     currentWordIndex,
     currentCharIndex,
     setTimerId,
@@ -48,7 +47,7 @@ const useReset = (randomize = false) => {
           }
         }
       }
-      if ((!userInput && !currentWordIndex && !currentCharIndex) || randomize) {
+      if ((!timerId && !currentWordIndex && !currentCharIndex) || randomize) {
         if (settings.quotes) {
           getQuote();
         } else {
@@ -73,7 +72,6 @@ const useReset = (randomize = false) => {
       wordRef,
       textFieldRef,
       setWordList,
-      userInput,
       currentWordIndex,
       currentCharIndex,
       classes,

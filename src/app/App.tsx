@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
@@ -16,6 +16,7 @@ const App = () => {
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
+  const [showTip, setShowTip] = useState(false);
 
   const closeDialog = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
@@ -34,10 +35,11 @@ const App = () => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape')
         document.getElementsByTagName('button')[0].click();
+      setShowTip(false);
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
+  }, [setShowTip]);
 
   const gradientUnderline = useCallback(
     (dialogOpen) => ({
@@ -81,7 +83,7 @@ const App = () => {
       </Box>
       <Container
         sx={{
-          height: 'calc(100vh - 80px)',
+          height: 'calc(100% - 80px)',
           display: 'flex',
           alignItems: wpmData.length === wordCount ? 'start' : 'center',
           justifyContent: 'center',
@@ -97,12 +99,35 @@ const App = () => {
               flexDirection: 'column',
               width: '75%',
               minHeight: '30%',
+              position: 'relative',
             }}
           >
-            <>
-              <WordOptions />
-              <WordBox />
-            </>
+            <WordOptions />
+            <WordBox setShowTip={setShowTip} />
+            {showTip && (
+              <Container
+                sx={{
+                  color: theme.headings,
+                  filter: 'brightness(70%)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Typography
+                  sx={{
+                    cursor: 'pointer',
+                    position: 'absolute',
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowTip(false);
+                    textFieldRef.current?.focus();
+                  }}
+                >
+                  tip: press esc at any time to restart
+                </Typography>
+              </Container>
+            )}
           </Box>
         )}
       </Container>
