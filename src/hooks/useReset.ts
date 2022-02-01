@@ -4,7 +4,7 @@ import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
 import useQuote from './useQuote';
 
-const useReset = (randomize = true) => {
+const useReset = (randomize = false) => {
   const { setWordList } = useContext(WordListContext);
   const {
     wordRef,
@@ -48,7 +48,7 @@ const useReset = (randomize = true) => {
           }
         }
       }
-      if (!userInput && (!currentWordIndex || !currentCharIndex) && randomize) {
+      if ((!userInput && !currentWordIndex && !currentCharIndex) || randomize) {
         if (settings.quotes) {
           getQuote();
         } else {

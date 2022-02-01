@@ -9,7 +9,7 @@ const WordOptions = () => {
   const values = useContext(WordContext);
   const { wpm, setFocused, settings } = values;
 
-  const reset = useReset(false);
+  const reset = useReset();
 
   const { theme } = useContext(ThemeContext);
 
