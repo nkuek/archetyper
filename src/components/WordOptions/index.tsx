@@ -1,13 +1,13 @@
 import { useMemo, Fragment, useContext } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { WordContext } from 'providers/WordProvider';
-import { ThemeContext } from 'providers';
+import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
 
 const WordOptions = () => {
+  const { setWordCount, wordCount } = useContext(WordListContext);
   const values = useContext(WordContext);
-  const { wpm, setWordCount, wordCount, setFocused } = values;
+  const { wpm, setFocused, settings } = values;
 
   const reset = useReset(false);
 
@@ -15,6 +15,8 @@ const WordOptions = () => {
 
   const options = useMemo(() => [10, 25, 50], []);
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
+
+  if (settings.quotes) return null;
 
   return (
     <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>

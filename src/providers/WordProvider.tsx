@@ -1,6 +1,16 @@
-import { createContext, useState, FC, useEffect, useMemo, useRef } from 'react';
+import { useQuote } from 'hooks';
+import {
+  createContext,
+  useState,
+  FC,
+  useEffect,
+  useMemo,
+  useRef,
+  useContext,
+} from 'react';
 import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
+import { WordListContext } from './WordListProvider';
 
 interface IProps {
   children?: React.ReactNode;
@@ -20,13 +30,10 @@ export interface ISettings {
   specialChars: boolean;
   capitalChars: boolean;
   numbers: boolean;
+  quotes: boolean;
 }
 
 interface IWordContext {
-  wordList: string[];
-  setWordList: TReactSetState<string[]>;
-  wordCount: number;
-  setWordCount: TReactSetState<number>;
   wpm: number;
   setWpm: TReactSetState<number>;
   timerId: null | NodeJS.Timeout;
@@ -56,18 +63,20 @@ interface IWordContext {
 export const WordContext = createContext<IWordContext>(undefined!);
 
 export const options = [
+  { name: 'quotes', value: 'quotes' },
   { name: 'capital letters', value: 'capitalChars' },
   { name: 'special characters', value: 'specialChars' },
   { name: 'numbers', value: 'numbers' },
 ];
 
+export const defaultSettings = options.reduce(
+  (obj, option) => ({ ...obj, [option.value]: false }),
+  {} as ISettings
+);
+
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const [wordList, setWordList] = useState<string[]>([]);
-  const [wordCount, setWordCount] = useState(
-    localStorage.getItem('typer-word-count')
-      ? JSON.parse(localStorage.getItem('typer-word-count') || '')
-      : 25
-  );
+  const { wordCount, setWordList } = useContext(WordListContext);
+
   const [wpm, setWpm] = useState(0);
   const [timerId, setTimerId] = useState<null | NodeJS.Timeout>(null);
   const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);
@@ -81,22 +90,24 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [settings, setSettings] = useState<ISettings>(
     localStorage.getItem('typer-settings')
       ? JSON.parse(localStorage.getItem('typer-settings') || '')
-      : options.reduce((obj, option) => ({ ...obj, [option.value]: false }), {})
+      : defaultSettings
   );
-
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
+  const { getQuote } = useQuote();
 
   useEffect(() => {
-    setWordList(randomizedWords(settings));
+    if (!settings.quotes) setWordList(randomizedWords(settings));
   }, [wordCount, setWordList, settings]);
+
+  useEffect(() => {
+    if (settings.quotes) {
+      getQuote();
+    }
+  }, [settings, setWordList]);
 
   const value = useMemo(
     () => ({
-      wordList,
-      setWordList,
-      wordCount,
-      setWordCount,
       wpm,
       setWpm,
       timerId,
@@ -123,10 +134,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setSettings,
     }),
     [
-      wordList,
-      setWordList,
-      wordCount,
-      setWordCount,
       wpm,
       setWpm,
       timerId,

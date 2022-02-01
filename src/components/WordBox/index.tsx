@@ -3,18 +3,16 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { WordContext } from 'providers/WordProvider';
 import Replay from '@mui/icons-material/Replay';
-import { ThemeContext } from 'providers';
+import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
 
 const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
 
 const WordBox = () => {
+  const { wordList, wordCount } = useContext(WordListContext);
   const {
-    wordList,
-    wordCount,
     setWpm,
     timerId,
     setTimerId,

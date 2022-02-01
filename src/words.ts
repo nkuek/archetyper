@@ -210,8 +210,14 @@ const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-', "'"];
 const maxWords = 50;
 const maxNumLength = 6;
 
+interface IQuote {
+  content: string;
+  author: string;
+}
+
 const randomizeWords = (settings: ISettings) => {
   const { capitalChars, specialChars, numbers } = settings;
+
   const randomized = [];
   while (randomized.length < maxWords) {
     let word = words[Math.floor(Math.random() * 200)];

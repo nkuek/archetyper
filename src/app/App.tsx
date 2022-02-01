@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import { WordContext, ThemeContext } from 'providers';
+import { WordContext, ThemeContext, WordListContext } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
 import Settings from 'components/Settings';
@@ -10,8 +10,8 @@ import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 
 const App = () => {
-  const { wpmData, wordCount, setFocused, textFieldRef } =
-    useContext(WordContext);
+  const { wordCount } = useContext(WordListContext);
+  const { wpmData, setFocused, textFieldRef } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);

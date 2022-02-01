@@ -6,14 +6,19 @@ import {
   Typography,
 } from '@mui/material';
 import { WordContext } from 'providers';
-import { options } from 'providers/WordProvider';
+import { defaultSettings, options } from 'providers/WordProvider';
 import randomizeWords from 'words';
+import { WordListContext } from 'providers/WordListProvider';
 
 const Options = () => {
-  const { settings, setSettings, setWordList } = useContext(WordContext);
+  const { setWordList } = useContext(WordListContext);
+  const { settings, setSettings } = useContext(WordContext);
 
   const handleChange = (checked: boolean, option: string) => {
-    const newSettings = { ...settings, [option]: checked };
+    let newSettings = { ...settings, [option]: checked };
+    if (option === 'quotes' && checked) {
+      newSettings = { ...defaultSettings, quotes: true };
+    }
     setSettings(newSettings);
     localStorage.setItem('typer-settings', JSON.stringify(newSettings));
     setWordList(randomizeWords(newSettings));
@@ -30,6 +35,7 @@ const Options = () => {
             <Checkbox
               checked={settings[option.value as keyof typeof settings]}
               sx={{ color: 'inherit', '&.Mui-checked': { color: 'inherit' } }}
+              disabled={option.value !== 'quotes' && settings.quotes}
             />
           }
           label={`${option.name}?`}

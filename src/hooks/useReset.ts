@@ -1,12 +1,13 @@
 import { WordContext, ThemeContext } from 'providers';
+import { WordListContext } from 'providers/WordListProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
 
 const useReset = (randomize = true) => {
+  const { setWordList } = useContext(WordListContext);
   const {
     wordRef,
     textFieldRef,
-    setWordList,
     userInput,
     currentWordIndex,
     currentCharIndex,
@@ -25,6 +26,7 @@ const useReset = (randomize = true) => {
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
+  const { getQuote };
 
   return useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
