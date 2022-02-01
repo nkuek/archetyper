@@ -298,6 +298,7 @@ const WordBox = () => {
           height: 100,
           overflow: 'hidden',
           fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
+          width: '100%',
         }}
         ref={wordRef}
       >

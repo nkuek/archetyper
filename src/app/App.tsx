@@ -95,7 +95,7 @@ const App = () => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              maxWidth: '75%',
+              width: '75%',
               minHeight: '30%',
             }}
           >
