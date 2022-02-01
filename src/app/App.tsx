@@ -118,14 +118,29 @@ const App = () => {
       >
         <Typography
           onClick={() => setSettingsDialogOpen(true)}
-          sx={{ ...gradientUnderline(settingsDialogOpen), cursor: 'pointer' }}
+          sx={{
+            ...gradientUnderline(settingsDialogOpen),
+            cursor: 'pointer',
+            fontSize: 'inherit',
+          }}
         >
           settings
         </Typography>
-        <Typography sx={{ margin: '0 .5em' }}>/</Typography>
+        <Typography
+          sx={{
+            margin: '0 .5em',
+            fontSize: 'inherit',
+          }}
+        >
+          /
+        </Typography>
         <Typography
           onClick={() => setAboutMeOpen(true)}
-          sx={{ ...gradientUnderline(aboutMeOpen), cursor: 'pointer' }}
+          sx={{
+            ...gradientUnderline(aboutMeOpen),
+            cursor: 'pointer',
+            fontSize: 'inherit',
+          }}
         >
           about me
         </Typography>
