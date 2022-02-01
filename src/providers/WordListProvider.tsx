@@ -10,6 +10,8 @@ interface IWordListContext {
   setWordList: TReactSetState<string[]>;
   wordCount: number;
   setWordCount: TReactSetState<number>;
+  loading: boolean;
+  setLoading: TReactSetState<boolean>;
 }
 
 export const WordListContext = createContext<IWordListContext>(undefined!);
@@ -21,14 +23,17 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       ? JSON.parse(localStorage.getItem('typer-word-count') || '')
       : 25
   );
+  const [loading, setLoading] = useState(false);
   const value = useMemo(
     () => ({
       wordList,
       setWordList,
       wordCount,
       setWordCount,
+      loading,
+      setLoading,
     }),
-    [wordList, setWordList, wordCount, setWordCount]
+    [wordList, setWordList, wordCount, setWordCount, loading, setLoading]
   );
   return (
     <WordListContext.Provider value={value}>

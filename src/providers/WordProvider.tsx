@@ -75,7 +75,7 @@ export const defaultSettings = options.reduce(
 );
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const { wordCount, setWordList } = useContext(WordListContext);
+  const { wordCount, setWordList, setWordCount } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState(0);
   const [timerId, setTimerId] = useState<null | NodeJS.Timeout>(null);
@@ -94,7 +94,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   );
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const { getQuote } = useQuote();
+  const getQuote = useQuote();
 
   useEffect(() => {
     if (!settings.quotes) setWordList(randomizedWords(settings));
@@ -103,8 +103,14 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   useEffect(() => {
     if (settings.quotes) {
       getQuote();
+    } else {
+      setWordCount(
+        localStorage.getItem('typer-word-count')
+          ? JSON.parse(localStorage.getItem('typer-word-count') || '')
+          : 25
+      );
     }
-  }, [settings, setWordList]);
+  }, [settings.quotes, setWordList]);
 
   const value = useMemo(
     () => ({

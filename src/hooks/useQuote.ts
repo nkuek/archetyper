@@ -1,5 +1,5 @@
 import { WordListContext } from 'providers';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext } from 'react';
 
 interface IQuote {
   content: string;
@@ -7,26 +7,19 @@ interface IQuote {
 }
 
 const useQuote = () => {
-  const { setWordList, setWordCount } = useContext(WordListContext);
-  const [loading, setLoading] = useState(false);
+  const { setWordList, setWordCount, setLoading } = useContext(WordListContext);
 
-  const getQuote = useCallback(() => {
+  return useCallback(() => {
     setLoading(true);
-    fetch('https://api.quotable.io/random?minLength=40')
+    fetch('https://api.quotable.io/random?minLength=100')
       .then((response) => response.json())
       .then((quote: IQuote) => {
-        setWordList(quote.content.split(' '));
+        const quoteContent = quote.content.split(' ');
+        setWordList(quoteContent);
+        setWordCount(quoteContent.length);
         setLoading(false);
       });
   }, [setWordList, setWordCount]);
-
-  return useMemo(
-    () => ({
-      loading,
-      getQuote,
-    }),
-    [loading, getQuote]
-  );
 };
 
 export default useQuote;

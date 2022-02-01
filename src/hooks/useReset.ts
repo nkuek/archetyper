@@ -2,6 +2,7 @@ import { WordContext, ThemeContext } from 'providers';
 import { WordListContext } from 'providers/WordListProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
+import useQuote from './useQuote';
 
 const useReset = (randomize = true) => {
   const { setWordList } = useContext(WordListContext);
@@ -26,14 +27,18 @@ const useReset = (randomize = true) => {
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
-  const { getQuote };
+  const setQuote = useQuote();
 
   return useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
       e.stopPropagation();
       if (wordRef.current && textFieldRef.current) {
         if (!userInput && !currentWordIndex && !currentCharIndex && randomize) {
-          setWordList(randomizeWords(settings));
+          if (settings.quotes) {
+            setQuote();
+          } else {
+            setWordList(randomizeWords(settings));
+          }
         } else {
           const words = wordRef.current.children;
           const extraWords = document.querySelectorAll(`.${classes.extra}`);

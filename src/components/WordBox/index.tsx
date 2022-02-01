@@ -6,12 +6,13 @@ import Button from '@mui/material/Button';
 import Replay from '@mui/icons-material/Replay';
 import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
+import { CircularProgress } from '@mui/material';
 
 const calculateWpm = (charCount: number, timer: number) =>
   Math.floor(charCount / 5 / (timer / 60));
 
 const WordBox = () => {
-  const { wordList, wordCount } = useContext(WordListContext);
+  const { wordList, wordCount, loading } = useContext(WordListContext);
   const {
     setWpm,
     timerId,
@@ -268,6 +269,7 @@ const WordBox = () => {
         borderRadius: 5,
         fontSize: '1.5em',
         backgroundColor: theme.wordBoxBackground,
+        minWidth: '70vw',
       }}
       onClick={handleFocus}
     >
@@ -300,19 +302,32 @@ const WordBox = () => {
         }}
         ref={wordRef}
       >
-        {charList.map((word, wordIdx) => (
+        {loading ? (
           <Box
-            color={
-              wordIdx === currentWordIndex ? theme.currentWord : theme.words
-            }
-            key={wordIdx}
-            sx={{ display: 'flex', margin: '0.25em' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+            }}
           >
-            {word.map((char, charIdx) => (
-              <Box key={char + charIdx}>{char}</Box>
-            ))}
+            <CircularProgress sx={{ color: theme.headings }} />
           </Box>
-        ))}
+        ) : (
+          charList.map((word, wordIdx) => (
+            <Box
+              color={
+                wordIdx === currentWordIndex ? theme.currentWord : theme.words
+              }
+              key={wordIdx}
+              sx={{ display: 'flex', margin: '0.25em' }}
+            >
+              {word.map((char, charIdx) => (
+                <Box key={char + charIdx}>{char}</Box>
+              ))}
+            </Box>
+          ))
+        )}
         {!focused && (
           <Box
             sx={{
