@@ -31,8 +31,11 @@ const Dialog: FC<IProps> = ({ open, onClose, title, children }) => {
       <DialogTitle sx={{ fontSize: '1.5rem' }}>{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
-        <Button sx={{ color: theme.headings }} onClick={onClose}>
-          Close
+        <Button
+          sx={{ color: theme.headings, textTransform: 'lowercase' }}
+          onClick={onClose}
+        >
+          close
         </Button>
       </DialogActions>
     </MUIDialog>

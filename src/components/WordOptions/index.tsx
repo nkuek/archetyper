@@ -23,6 +23,7 @@ const WordOptions = () => {
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: '.5em',
+        height: 25,
       }}
     >
       <div style={{ display: 'flex', padding: 0 }}>
@@ -39,9 +40,7 @@ const WordOptions = () => {
             <Box
               sx={{
                 padding: '0em .5em',
-                // marginLeft: idx === 0 ? '0' : '.5em',
                 cursor: 'pointer',
-
                 color: textColor,
               }}
               key={option + idx}
