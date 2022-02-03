@@ -254,7 +254,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     if (
       wordRef.current &&
       wordList.length > 0 &&
-      currentWordIndex < charList.length
+      currentWordIndex < charList.length &&
+      !loading
     ) {
       if (currentCharIndex < charList[currentWordIndex].length) {
         wordRef.current.children[currentWordIndex].children[
@@ -269,7 +270,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     ) {
       clearInterval(timerId);
     }
-  }, [currentWordIndex, wordRef.current, wordList, currentCharIndex]); //eslint-disable-line
+  }, [currentWordIndex, wordRef.current, wordList, currentCharIndex, loading]); //eslint-disable-line
 
   return (
     <Container
@@ -333,17 +334,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                 sx={{ display: 'flex', margin: '0.25em' }}
               >
                 {word.map((char, charIdx) => (
-                  <Box
-                    key={char + charIdx}
-                    className={
-                      wordIdx === currentWordIndex &&
-                      charIdx === currentCharIndex
-                        ? `${classes.animation} ${classes.currentChar}`
-                        : ''
-                    }
-                  >
-                    {char}
-                  </Box>
+                  <Box key={char + charIdx}>{char}</Box>
                 ))}
               </Box>
             ))}
