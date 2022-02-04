@@ -105,8 +105,6 @@ const Stats = () => {
   const values = useContext(WordContext);
   const { wpm, wpmData, timerId, timer } = values;
 
-  console.log(wpmData);
-
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {

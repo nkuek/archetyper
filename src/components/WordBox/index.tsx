@@ -21,8 +21,6 @@ const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const raw = Math.floor(charCount / 5 / timeToMins);
   const gross = raw - Math.floor(errors || 0 / timeToMins);
 
-  console.log({ errors });
-
   return {
     raw,
     gross,
