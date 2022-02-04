@@ -1,4 +1,11 @@
-import { useMemo, useEffect, useContext, useLayoutEffect, FC } from 'react';
+import {
+  useMemo,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+  FC,
+  useState,
+} from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -9,8 +16,18 @@ import { useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 
-const calculateWpm = (charCount: number, timer: number) =>
-  Math.floor(charCount / 5 / (timer / 60));
+const calculateWpm = (charCount: number, timer: number, errors: number) => {
+  const timeToMins = timer / 60;
+  const raw = Math.floor(charCount / 5 / timeToMins);
+  const gross = raw - Math.floor(errors || 0 / timeToMins);
+
+  console.log({ errors });
+
+  return {
+    raw,
+    gross,
+  };
+};
 
 interface IProps {
   setShowTip: TReactSetState<boolean>;
@@ -19,10 +36,10 @@ interface IProps {
 const WordBox: FC<IProps> = ({ setShowTip }) => {
   const { wordList, wordCount, loading, author } = useContext(WordListContext);
   const {
+    wpm,
     setWpm,
     timerId,
     setTimerId,
-    wpm,
     setWpmData,
     timer,
     setTimer,
@@ -46,6 +63,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   const muiTheme = useTheme();
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
+
+  const [totalErrors, setTotalErrors] = useState(0);
 
   const charList = useMemo(() => {
     const charList = [];
@@ -79,8 +98,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   }, [userInput, timerId]); // eslint-disable-line
 
   useEffect(() => {
-    setWpm(calculateWpm(charCount, timer));
-  }, [timer, charCount, setWpm]);
+    setWpm(calculateWpm(charCount, timer, totalErrors));
+  }, [timer, charCount, setWpm, totalErrors]);
 
   // focus on input field whenever charList changes
   useLayoutEffect(() => {
@@ -124,14 +143,20 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           e.target.value.length - 1 - charList[currentWordIndex].length > 0
             ? e.target.value.length - 1 - charList[currentWordIndex].length
             : 0;
+
         const missingChars =
           charList[currentWordIndex].length - currentCharIndex;
+
+        const totalWordErrors = extraChars + missingChars + incorrectChars;
+
+        setTotalErrors((prev) => prev + totalWordErrors);
+
         setWpmData((prev) => [
           ...prev,
           {
             word: wordList[currentWordIndex],
             wordNum: currentWordIndex + 1,
-            errors: missingChars + extraChars + incorrectChars,
+            errors: totalWordErrors,
             wpm,
             missingChars,
             extraChars,

@@ -62,7 +62,7 @@ const useReset = (randomize = false) => {
       setCurrentCharIndex(0);
       setCurrentWordIndex(0);
       setIncorrectChars(0);
-      setWpm(0);
+      setWpm({ gross: 0, raw: 0 });
       setWpmData([]);
       setFocused(true);
       if (timerId) {

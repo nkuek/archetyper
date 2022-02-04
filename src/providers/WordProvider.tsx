@@ -19,7 +19,7 @@ interface IProps {
 interface ITimeStepData {
   wordNum: number;
   word: string;
-  wpm: number;
+  wpm: IWpm;
   errors: number;
   missingChars: number;
   extraChars: number;
@@ -33,9 +33,14 @@ export interface ISettings {
   quotes: boolean;
 }
 
+interface IWpm {
+  raw: number;
+  gross: number;
+}
+
 interface IWordContext {
-  wpm: number;
-  setWpm: TReactSetState<number>;
+  wpm: IWpm;
+  setWpm: TReactSetState<IWpm>;
   timerId: null | NodeJS.Timeout;
   setTimerId: TReactSetState<null | NodeJS.Timeout>;
   wpmData: ITimeStepData[];
@@ -77,7 +82,7 @@ export const defaultSettings = options.reduce(
 const WordContextProvider: FC<IProps> = ({ children }) => {
   const { wordCount, setWordList, setWordCount } = useContext(WordListContext);
 
-  const [wpm, setWpm] = useState(0);
+  const [wpm, setWpm] = useState({ raw: 0, gross: 0 });
   const [timerId, setTimerId] = useState<null | NodeJS.Timeout>(null);
   const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);
   const [timer, setTimer] = useState(1);

@@ -13,10 +13,13 @@ import {
   ComposedChart,
   Scatter,
   Label,
+  Legend,
 } from 'recharts';
 import { Tooltip as MuiTooltip } from '@mui/material';
 import { ThemeContext } from 'providers';
 import { useReset } from 'hooks';
+import DataDisplay from './DataDisplay';
+import _ from 'lodash';
 
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
@@ -37,39 +40,62 @@ const CustomX = (props: any) => {
 };
 
 const CustomTooltip = (props: any) => {
-  const { payload } = props;
+  const { payload, active } = props;
   const { theme } = useContext(ThemeContext);
+
+  if (!active || !payload || !payload.length) return null;
 
   return (
     <div
       style={{
-        backgroundColor: theme.pageBackground,
+        background: theme.legendBackground || '#333',
+        borderRadius: 3,
+        padding: '.5em',
+        border: '1px solid #333',
       }}
     >
       <p
         style={{
           margin: '0 0',
           padding: '3px 7.5px',
-          backgroundColor: 'white',
           textAlign: 'center',
+          color: theme.currentWord,
         }}
       >
-        {payload[0] && payload[0].payload.word}
+        {payload[0].payload.word}
       </p>
+      {payload.map((data: any) => (
+        <p
+          key={data.name}
+          style={{
+            margin: '0 0',
+            padding: '3px 7.5px',
+            textAlign: 'center',
+            color: data.stroke || data.fill,
+          }}
+        >
+          {`${data.name}: ${_.get(payload[0].payload, data.dataKey)}`}
+        </p>
+      ))}
+      {/* <p
+        style={{
+          margin: '0 0',
+          padding: '3px 7.5px',
+          color: theme.lineColor2 || theme.headings,
+        }}
+      >{`raw wpm: ${payload[0].payload.wpm.raw}`}</p>
       <p
         style={{
           margin: '0 0',
           padding: '3px 7.5px',
-          backgroundColor: 'white',
         }}
-      >{`WPM: ${payload[0] && payload[0].payload.wpm}`}</p>
+      >{`wpm: ${payload[0].payload.wpm.gross}`}</p>
       <p
         style={{
           margin: '0 0',
           padding: '3px 7.5px',
-          backgroundColor: 'white',
         }}
-      >{`Errors: ${payload[0] && payload[0].payload.errors}`}</p>
+      >{`Errors: ${payload[0].payload.errors}`}</p> */}
     </div>
   );
 };
@@ -78,6 +104,8 @@ const Stats = () => {
   const { wordList } = useContext(WordListContext);
   const values = useContext(WordContext);
   const { wpm, wpmData, timerId, timer } = values;
+
+  console.log(wpmData);
 
   const { theme } = useContext(ThemeContext);
 
@@ -129,9 +157,11 @@ const Stats = () => {
         <Box textAlign="center" fontSize="1.5em">
           wpm:
         </Box>
-        <Box textAlign="center" fontSize="2em">
-          {wpm}
-        </Box>
+        <MuiTooltip title="wpm factoring in any mistakes you made" arrow>
+          <Box textAlign="center" fontSize="2em">
+            {wpm.gross}
+          </Box>
+        </MuiTooltip>
       </Container>
       <Container
         sx={{
@@ -158,7 +188,15 @@ const Stats = () => {
         }}
       >
         <ResponsiveContainer width={'100%'} height={250}>
-          <ComposedChart margin={{ right: 20 }} data={wpmData}>
+          <ComposedChart
+            margin={{
+              top: 5,
+              right: 30,
+              left: 30,
+              bottom: 5,
+            }}
+            data={wpmData}
+          >
             <CartesianGrid stroke={theme.cartesian || theme.words} />
             <XAxis height={40} dataKey="wordNum" stroke={theme.cartesian}>
               <Label
@@ -175,7 +213,6 @@ const Stats = () => {
                 dx: -20,
                 fill: theme.graphText || theme.words,
               }}
-              dataKey="wpm"
               type="number"
               stroke={theme.cartesian}
             />
@@ -195,15 +232,33 @@ const Stats = () => {
               stroke={theme.cartesian}
             />
             <Tooltip content={<CustomTooltip />} />
+            <Legend
+              verticalAlign="top"
+              wrapperStyle={{ paddingBottom: '1em' }}
+            />
             <Line
+              name="raw"
               yAxisId="left"
               type="monotone"
-              dataKey="wpm"
+              dataKey="wpm.raw"
+              dot={false}
+              stroke={theme.lineColor2 || theme.headings}
+              strokeWidth={2}
+              legendType="plainline"
+            />
+            <Line
+              name="wpm"
+              yAxisId="left"
+              type="monotone"
+              dataKey="wpm.gross"
               dot={false}
               stroke={theme.lineColor}
               strokeWidth={2}
+              legendType="plainline"
             />
             <Scatter
+              name="errors"
+              legendType="none"
               yAxisId="right"
               type="monotone"
               dataKey="errors"
@@ -218,24 +273,16 @@ const Stats = () => {
           display: 'flex',
           padding: 0,
           marginTop: '1em',
+          justifyContent: 'center',
         }}
       >
-        <Container sx={{ color: theme.headings, width: 'fit-content' }}>
-          <Box fontSize="1.1em">characters:</Box>
-          <MuiTooltip title="total / incorrect / missing / extra" arrow>
-            <Box fontSize="1.5em">{`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}</Box>
-          </MuiTooltip>
-        </Container>
-        <Container
-          sx={{
-            color: theme.headings,
-            width: 'fit-content',
-            marginBottom: '1em',
-          }}
-        >
-          <Box fontSize="1.1em">time:</Box>
-          <Box fontSize="1.5em">{`${timer}s`}</Box>
-        </Container>
+        <DataDisplay title="raw wpm" data={wpm.raw} />
+        <DataDisplay
+          title="characters"
+          tooltip="total / incorrect / misisng / extra"
+          data={`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
+        />
+        <DataDisplay title="time" data={timer} unit="s" />
       </Container>
       <Container
         sx={{

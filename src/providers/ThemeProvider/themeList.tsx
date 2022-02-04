@@ -10,12 +10,14 @@ export interface ITheme {
   wordsContrast?: string;
   graphText?: string;
   lineColor?: string;
+  lineColor2?: string;
   headings?: string;
   gradientUnderline?: string[];
   cartesian?: string;
   border?: string;
   incorrect?: string;
   disabled?: string;
+  legendBackground?: string;
 }
 export interface IThemeList {
   [key: string]: ITheme;
@@ -39,6 +41,7 @@ const themeList: IThemeList = {
     gradientUnderline: ['#d73811', '#e1ba45'],
     cartesian: 'hsl(45deg 72% 58%)',
     disabled: '#ddd',
+    lineColor2: 'hsl(45deg 72% 58%)',
   },
   8008: {
     buttonBackground: 'hsl(215deg 18% 29%)',
@@ -54,6 +57,8 @@ const themeList: IThemeList = {
     gradientUnderline: ['#6f7b8a', 'hsl(342deg 88% 63%)'],
     headings: 'hsl(342deg 88% 63%)',
     wordsContrast: 'hsl(342deg 88% 63%)',
+    lineColor2: 'hsl(215deg 18% 29%)',
+    legendBackground: 'white',
   },
   mizu: {
     buttonBackground: '#253746',
@@ -129,6 +134,8 @@ const themeList: IThemeList = {
     headings: 'black',
     border: '1px solid black',
     disabled: '#ddd',
+    lineColor2: 'darkmagenta',
+    legendBackground: 'white',
   },
 };
 export default themeList;
