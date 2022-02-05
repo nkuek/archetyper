@@ -274,10 +274,14 @@ const Stats = () => {
           justifyContent: 'center',
         }}
       >
-        <DataDisplay title="raw wpm" data={wpm.raw} />
+        <DataDisplay
+          title="raw wpm"
+          data={wpm.raw}
+          tooltip="wpm without factoring in errors"
+        />
         <DataDisplay
           title="characters"
-          tooltip="total / incorrect / misisng / extra"
+          tooltip="total / incorrect / missing / extra"
           data={`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
         />
         <DataDisplay title="time" data={timer} unit="s" />

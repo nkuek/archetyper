@@ -40,9 +40,7 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (favicon) {
-      favicon.href = `/${themeName}Favicon.ico`;
-    }
+    favicon!.href = `/${themeName}Favicon.ico`;
   }, [themeName]);
 
   // if you instantiate useStyles in different files,

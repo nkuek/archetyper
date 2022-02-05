@@ -14,13 +14,10 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
   const { theme } = useContext(ThemeContext);
   const renderContent = () => {
     const children = (
-      <>
-        <Box fontSize="1.1em">{title}</Box>
-        <Box fontSize="1.5em">
-          {data}
-          {unit || ''}
-        </Box>
-      </>
+      <Box fontSize="1.5em">
+        {data}
+        {unit || ''}
+      </Box>
     );
     if (tooltip) {
       return (
@@ -43,6 +40,7 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
         alignItems: 'center',
       }}
     >
+      <Box fontSize="1.1em">{title}</Box>
       {renderContent()}
     </Container>
   );
