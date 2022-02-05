@@ -42,7 +42,6 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
   useEffect(() => {
     if (favicon) {
       favicon.href = `/${themeName}Favicon.ico`;
-      console.log(favicon);
     }
   }, [themeName]);
 
