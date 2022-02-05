@@ -23,6 +23,7 @@ const useReset = (randomize = false) => {
     setUserInput,
     setFocused,
     settings,
+    setTotalErrors,
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
@@ -64,6 +65,7 @@ const useReset = (randomize = false) => {
       setIncorrectChars(0);
       setWpm({ gross: 0, raw: 0 });
       setWpmData([]);
+      setTotalErrors(0);
       setFocused(true);
       if (timerId) {
         clearInterval(timerId);

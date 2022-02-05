@@ -55,14 +55,14 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setIncorrectChars,
     wordRef,
     textFieldRef,
+    totalErrors,
+    setTotalErrors,
   } = useContext(WordContext);
 
   const { theme, classes } = useContext(ThemeContext);
   const muiTheme = useTheme();
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
-
-  const [totalErrors, setTotalErrors] = useState(0);
 
   const charList = useMemo(() => {
     const charList = [];

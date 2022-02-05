@@ -63,6 +63,8 @@ interface IWordContext {
   textFieldRef: React.RefObject<HTMLInputElement>;
   settings: ISettings;
   setSettings: TReactSetState<ISettings>;
+  totalErrors: number;
+  setTotalErrors: TReactSetState<number>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -92,6 +94,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [userInput, setUserInput] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
+  const [totalErrors, setTotalErrors] = useState(0);
   const [settings, setSettings] = useState<ISettings>(
     localStorage.getItem('typer-settings')
       ? JSON.parse(localStorage.getItem('typer-settings') || '')
@@ -143,6 +146,8 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       textFieldRef,
       settings,
       setSettings,
+      totalErrors,
+      setTotalErrors,
     }),
     [
       wpm,
@@ -169,6 +174,8 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       textFieldRef,
       settings,
       setSettings,
+      totalErrors,
+      setTotalErrors,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;
