@@ -1,5 +1,12 @@
 import { TReactSetState } from '../general/types';
-import { createContext, useState, FC, useMemo, useCallback } from 'react';
+import {
+  createContext,
+  useState,
+  FC,
+  useMemo,
+  useCallback,
+  useEffect,
+} from 'react';
 import themeList, { ITheme } from './themeList';
 import useStyles from 'components/WordBox/styles';
 
@@ -26,6 +33,17 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
   const getTheme = useCallback(() => {
     const theme = themeList[themeName];
     return theme;
+  }, [themeName]);
+
+  const favicon = useMemo(() => {
+    return document.getElementById('favicon') as HTMLLinkElement;
+  }, []);
+
+  useEffect(() => {
+    if (favicon) {
+      favicon.href = `/${themeName}Favicon.ico`;
+      console.log(favicon);
+    }
   }, [themeName]);
 
   // if you instantiate useStyles in different files,
