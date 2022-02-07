@@ -114,20 +114,24 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const { getQuote } = useQuote();
 
   useEffect(() => {
-    if (!settings.quotes) setWordList(randomizedWords(settings));
-  }, [wordCount, setWordList, settings]);
-
-  useEffect(() => {
-    if (settings.quotes) {
-      getQuote();
-    } else {
+    if (!settings.quotes) {
+      setWordList(randomizedWords(settings));
       setWordCount(
         localStorage.getItem('typer-word-count')
           ? JSON.parse(localStorage.getItem('typer-word-count') || '')
           : 25
       );
+    } else {
+      getQuote();
     }
-  }, [settings.quotes, setWordList, getQuote, setWordCount]);
+  }, [
+    wordCount,
+    setWordList,
+    settings,
+    settings.quotes,
+    getQuote,
+    setWordCount,
+  ]);
 
   const value = useMemo(
     () => ({
