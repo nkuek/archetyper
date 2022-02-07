@@ -38,33 +38,37 @@ interface IWpm {
   gross: number;
 }
 
+interface IWordBoxConfig {
+  focused: boolean;
+  currentWordIndex: number;
+  currentCharIndex: number;
+  charCount: number;
+  incorrectChars: number;
+  totalErrors: number;
+}
+
+interface ITimerConfig {
+  id?: null | NodeJS.Timeout;
+  time: number;
+}
+
 interface IWordContext {
   wpm: IWpm;
   setWpm: TReactSetState<IWpm>;
-  timerId: null | NodeJS.Timeout;
-  setTimerId: TReactSetState<null | NodeJS.Timeout>;
   wpmData: ITimeStepData[];
   setWpmData: TReactSetState<ITimeStepData[]>;
-  timer: number;
-  setTimer: TReactSetState<number>;
-  focused: boolean;
-  setFocused: TReactSetState<boolean>;
-  currentWordIndex: number;
-  setCurrentWordIndex: TReactSetState<number>;
-  currentCharIndex: number;
-  setCurrentCharIndex: TReactSetState<number>;
-  charCount: number;
-  setCharCount: TReactSetState<number>;
-  incorrectChars: number;
-  setIncorrectChars: TReactSetState<number>;
   userInput: string;
   setUserInput: TReactSetState<string>;
+  inputHistory: string[];
+  setInputHistory: TReactSetState<string[]>;
   wordRef: React.RefObject<HTMLDivElement>;
   textFieldRef: React.RefObject<HTMLInputElement>;
   settings: ISettings;
   setSettings: TReactSetState<ISettings>;
-  totalErrors: number;
-  setTotalErrors: TReactSetState<number>;
+  wordBoxConfig: IWordBoxConfig;
+  setWordBoxConfig: TReactSetState<IWordBoxConfig>;
+  timer: ITimerConfig;
+  setTimer: TReactSetState<ITimerConfig>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -81,20 +85,25 @@ export const defaultSettings = options.reduce(
   {} as ISettings
 );
 
+export const defaultWordBoxConfig = {
+  focused: true,
+  currentWordIndex: 0,
+  currentCharIndex: 0,
+  charCount: 0,
+  incorrectChars: 0,
+  totalErrors: 0,
+};
+
 const WordContextProvider: FC<IProps> = ({ children }) => {
   const { wordCount, setWordList, setWordCount } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, gross: 0 });
-  const [timerId, setTimerId] = useState<null | NodeJS.Timeout>(null);
+  const [timer, setTimer] = useState<ITimerConfig>({ id: null, time: 1 });
   const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);
-  const [timer, setTimer] = useState(1);
-  const [focused, setFocused] = useState(true);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [wordBoxConfig, setWordBoxConfig] =
+    useState<IWordBoxConfig>(defaultWordBoxConfig);
   const [userInput, setUserInput] = useState('');
-  const [charCount, setCharCount] = useState(0);
-  const [incorrectChars, setIncorrectChars] = useState(0);
-  const [totalErrors, setTotalErrors] = useState(0);
+  const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [settings, setSettings] = useState<ISettings>(
     localStorage.getItem('typer-settings')
       ? JSON.parse(localStorage.getItem('typer-settings') || '')
@@ -122,60 +131,40 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
 
   const value = useMemo(
     () => ({
-      wpm,
-      setWpm,
-      timerId,
-      setTimerId,
-      wpmData,
-      setWpmData,
+      wordBoxConfig,
+      setWordBoxConfig,
       timer,
       setTimer,
-      focused,
-      setFocused,
-      currentCharIndex,
-      setCurrentCharIndex,
-      currentWordIndex,
-      setCurrentWordIndex,
+      wpm,
+      setWpm,
+      wpmData,
+      setWpmData,
       userInput,
       setUserInput,
-      charCount,
-      setCharCount,
-      incorrectChars,
-      setIncorrectChars,
+      inputHistory,
+      setInputHistory,
       wordRef,
       textFieldRef,
       settings,
       setSettings,
-      totalErrors,
-      setTotalErrors,
     }),
     [
       wpm,
       setWpm,
-      timerId,
-      setTimerId,
       wpmData,
       setWpmData,
       timer,
       setTimer,
-      focused,
-      setFocused,
-      currentCharIndex,
-      setCurrentCharIndex,
-      currentWordIndex,
-      setCurrentWordIndex,
       userInput,
       setUserInput,
-      charCount,
-      setCharCount,
-      incorrectChars,
-      setIncorrectChars,
+      inputHistory,
+      setInputHistory,
       wordRef,
       textFieldRef,
       settings,
       setSettings,
-      totalErrors,
-      setTotalErrors,
+      wordBoxConfig,
+      setWordBoxConfig,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;

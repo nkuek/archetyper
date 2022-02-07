@@ -11,7 +11,7 @@ import AboutMe from 'components/AboutMe';
 
 const App = () => {
   const { wordCount } = useContext(WordListContext);
-  const { wpmData, setFocused, textFieldRef } = useContext(WordContext);
+  const { wpmData, setWordBoxConfig, textFieldRef } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
@@ -25,7 +25,7 @@ const App = () => {
     e.stopPropagation();
     setDialog(false);
     if (textFieldRef.current) {
-      setFocused(true);
+      setWordBoxConfig((prev) => ({ ...prev, focused: true }));
       setTimeout(() => textFieldRef.current!.focus(), 1);
     }
   };
@@ -66,7 +66,7 @@ const App = () => {
         display: 'flex',
         flexDirection: 'column',
       }}
-      onClick={() => setFocused(false)}
+      onClick={() => setWordBoxConfig((prev) => ({ ...prev, focused: false }))}
     >
       <Box
         sx={{

@@ -1,11 +1,4 @@
-import {
-  useMemo,
-  useEffect,
-  useContext,
-  useLayoutEffect,
-  FC,
-  useState,
-} from 'react';
+import { useMemo, useEffect, useContext, useLayoutEffect, FC } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -34,30 +27,29 @@ interface IProps {
 const WordBox: FC<IProps> = ({ setShowTip }) => {
   const { wordList, wordCount, loading, author } = useContext(WordListContext);
   const {
+    wordBoxConfig,
+    setWordBoxConfig,
     wpm,
     setWpm,
-    timerId,
-    setTimerId,
     setWpmData,
     timer,
     setTimer,
-    focused,
-    setFocused,
-    currentCharIndex,
-    setCurrentCharIndex,
-    currentWordIndex,
-    setCurrentWordIndex,
     userInput,
     setUserInput,
-    charCount,
-    setCharCount,
-    incorrectChars,
-    setIncorrectChars,
+    inputHistory,
+    setInputHistory,
     wordRef,
     textFieldRef,
-    totalErrors,
-    setTotalErrors,
   } = useContext(WordContext);
+
+  const {
+    charCount,
+    currentCharIndex,
+    currentWordIndex,
+    focused,
+    incorrectChars,
+    totalErrors,
+  } = wordBoxConfig;
 
   const { theme, classes } = useContext(ThemeContext);
   const muiTheme = useTheme();
@@ -78,7 +70,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     e.stopPropagation();
     if (textFieldRef.current) {
       textFieldRef.current.focus();
-      setFocused(true);
+      setWordBoxConfig((prev) => ({ ...prev, focused: true }));
     }
   };
 
@@ -86,18 +78,18 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
   // Timer for WPM
   useEffect(() => {
-    if (userInput.length > 0 && !timerId) {
+    if (userInput.length > 0 && !timer.id) {
       const intervalTimer = setInterval(
-        () => setTimer((prev) => prev + 1),
+        () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
         1000
       );
-      setTimerId(intervalTimer);
+      setTimer((prev) => ({ ...prev, id: intervalTimer }));
     }
-  }, [userInput, timerId]); // eslint-disable-line
+  }, [userInput, timer.id]); // eslint-disable-line
 
   useEffect(() => {
-    setWpm(calculateWpm(charCount, timer, totalErrors));
-  }, [timer, charCount, setWpm, totalErrors]);
+    setWpm(calculateWpm(charCount, timer.time, totalErrors));
+  }, [timer.time, charCount, setWpm, totalErrors]);
 
   // focus on input field whenever charList changes
   useLayoutEffect(() => {
@@ -108,8 +100,11 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+    // set char count based on user Input
+    // set char index based on user input length
+
     if (wordRef.current && currentWordIndex < charList.length) {
-      setUserInput(e.target.value);
       const currentWord = wordRef.current.children[currentWordIndex];
 
       const lastUserChar = e.target.value[e.target.value.length - 1];
@@ -147,8 +142,6 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
         const totalWordErrors = extraChars + missingChars + incorrectChars;
 
-        setTotalErrors((prev) => prev + totalWordErrors);
-
         setWpmData((prev) => [
           ...prev,
           {
@@ -163,11 +156,16 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         ]);
 
         // else move to next word
-        setCurrentCharIndex(0);
-        setCurrentWordIndex((prev) => prev + 1);
-        setCharCount((prev) => prev + 1);
-        setIncorrectChars(0);
+        setWordBoxConfig((prev) => ({
+          ...prev,
+          totalErrors: prev.totalErrors + totalWordErrors,
+          currentCharIndex: 0,
+          currentWordIndex: prev.currentWordIndex + 1,
+          charCount: prev.charCount + 1,
+          incorrectChars: 0,
+        }));
         setUserInput('');
+        setInputHistory((prev) => [...prev, e.target.value]);
         wordRef.current.children[currentWordIndex + 1]?.scrollIntoView({
           block: 'center',
         });
@@ -199,8 +197,11 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           currentChar.classList.remove(...classes.incorrect.split(' '));
         }
         if (e.target.value.length <= charList[currentWordIndex].length) {
-          setCurrentCharIndex(e.target.value.length);
-          setCharCount((prev) => prev + 1);
+          setWordBoxConfig((prev) => ({
+            ...prev,
+            currentCharIndex: e.target.value.length,
+            charCount: prev.charCount + 1,
+          }));
         }
 
         const extraChars = Array.from(currentWord.children).filter((child) =>
@@ -221,6 +222,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
             extraLetterEl.classList.add(classes.extra);
             currentWord.appendChild(extraLetterEl);
           }
+          // remove extra char if user deletes
         } else {
           extraChars.forEach((char) => currentWord.removeChild(char));
         }
@@ -267,7 +269,10 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           ...classes.currentChar.split(' '),
           classes.animation
         );
-        setIncorrectChars((prev) => prev + 1);
+        setWordBoxConfig((prev) => ({
+          ...prev,
+          incorrectChars: prev.incorrectChars + 1,
+        }));
       }
     }
   }, [currentCharIndex, userInput, currentWordIndex, wordRef]); // eslint-disable-line
@@ -289,11 +294,12 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     if (
       currentWordIndex === charList.length - 1 &&
       userInput === wordList[wordList.length - 1] &&
-      timerId
+      timer.id
     ) {
-      clearInterval(timerId);
+      clearInterval(timer.id);
     }
-  }, [currentWordIndex, wordRef.current, wordList, currentCharIndex, loading]); //eslint-disable-line
+    //eslint-disable-next-line
+  }, [currentWordIndex, wordList, currentCharIndex, loading, timer.id]);
 
   return (
     <Container
@@ -306,7 +312,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     >
       <Container
         sx={{
-          visibility: timerId ? 'visible' : 'hidden',
+          visibility: timer.id ? 'visible' : 'hidden',
           height: '2em',
           display: 'flex',
           justifyContent: 'space-between',
@@ -319,7 +325,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         <Box
           sx={{ color: theme.words }}
         >{`${currentWordIndex} / ${wordCount}`}</Box>
-        <Box sx={{ color: theme.words }}>{`${timer}s`}</Box>
+        <Box sx={{ color: theme.words }}>{`${timer.time}s`}</Box>
       </Container>
       {loading ? (
         <Box

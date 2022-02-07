@@ -8,7 +8,7 @@ import { Typography } from '@mui/material';
 const WordOptions = () => {
   const { setWordCount, wordCount } = useContext(WordListContext);
   const values = useContext(WordContext);
-  const { wpm, setFocused, settings } = values;
+  const { wpm, setWordBoxConfig, settings } = values;
 
   const reset = useReset();
 
@@ -48,7 +48,7 @@ const WordOptions = () => {
                 e.stopPropagation();
                 setWordCount(option);
                 reset(e);
-                setFocused(true);
+                setWordBoxConfig((prev) => ({ ...prev, focused: true }));
                 localStorage.setItem(
                   'typer-word-count',
                   JSON.stringify(option)

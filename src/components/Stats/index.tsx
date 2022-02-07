@@ -103,15 +103,15 @@ const CustomTooltip = (props: any) => {
 const Stats = () => {
   const { wordList } = useContext(WordListContext);
   const values = useContext(WordContext);
-  const { wpm, wpmData, timerId, timer } = values;
+  const { wpm, wpmData, timer } = values;
 
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
-    if (timerId) {
-      clearInterval(timerId);
+    if (timer.id) {
+      clearInterval(timer.id);
     }
-  }, [timerId]);
+  }, [timer.id]);
 
   const handleReset = useReset(true);
 
@@ -284,7 +284,7 @@ const Stats = () => {
           tooltip="total / incorrect / missing / extra"
           data={`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
         />
-        <DataDisplay title="time" data={timer} unit="s" />
+        <DataDisplay title="time" data={timer.time} unit="s" />
       </Container>
       <Container
         sx={{

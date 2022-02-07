@@ -41,7 +41,7 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
 
   useEffect(() => {
     favicon!.href = `/${themeName}Favicon.ico`;
-  }, [themeName]);
+  }, [themeName, favicon]);
 
   // if you instantiate useStyles in different files,
   // MUI will give them different classNames

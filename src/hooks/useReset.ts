@@ -1,5 +1,6 @@
 import { WordContext, ThemeContext } from 'providers';
 import { WordListContext } from 'providers/WordListProvider';
+import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
 import useQuote from './useQuote';
@@ -9,21 +10,15 @@ const useReset = (randomize = false) => {
   const {
     wordRef,
     textFieldRef,
-    currentWordIndex,
-    currentCharIndex,
-    setTimerId,
-    timerId,
+    timer,
     setTimer,
     setWpm,
     setWpmData,
-    setCharCount,
-    setCurrentCharIndex,
-    setCurrentWordIndex,
-    setIncorrectChars,
     setUserInput,
-    setFocused,
+    setInputHistory,
     settings,
-    setTotalErrors,
+    wordBoxConfig,
+    setWordBoxConfig,
   } = useContext(WordContext);
 
   const { classes } = useContext(ThemeContext);
@@ -32,6 +27,7 @@ const useReset = (randomize = false) => {
   return useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
       e.stopPropagation();
+      const { currentCharIndex, currentWordIndex } = wordBoxConfig;
       if (wordRef.current && textFieldRef.current) {
         const words = wordRef.current.children;
         const extraWords = document.querySelectorAll(`.${classes.extra}`);
@@ -51,7 +47,7 @@ const useReset = (randomize = false) => {
           block: 'center',
         });
       }
-      if ((!timerId && !currentWordIndex && !currentCharIndex) || randomize) {
+      if ((!timer.id && !currentWordIndex && !currentCharIndex) || randomize) {
         if (settings.quotes) {
           getQuote();
         } else {
@@ -60,42 +56,32 @@ const useReset = (randomize = false) => {
         }
       }
       setUserInput('');
-      setCurrentCharIndex(0);
-      setCurrentWordIndex(0);
-      setIncorrectChars(0);
+      setInputHistory([]);
+      setWordBoxConfig(defaultWordBoxConfig);
       setWpm({ gross: 0, raw: 0 });
       setWpmData([]);
-      setTotalErrors(0);
-      setFocused(true);
-      if (timerId) {
-        clearInterval(timerId);
-        setTimerId(null);
-        setTimer(1);
-        setCharCount(0);
+      if (timer.id) {
+        clearInterval(timer.id);
+        setTimer({ id: null, time: 1 });
       }
     },
     [
       wordRef,
       textFieldRef,
       setWordList,
-      currentWordIndex,
-      currentCharIndex,
       classes,
-      setTimerId,
-      timerId,
+      timer,
       setTimer,
       setWpm,
       setWpmData,
-      setCharCount,
-      setCurrentCharIndex,
-      setCurrentWordIndex,
-      setIncorrectChars,
       setUserInput,
       randomize,
-      setFocused,
       settings,
       getQuote,
       setAuthor,
+      setInputHistory,
+      wordBoxConfig,
+      setWordBoxConfig,
     ]
   );
 };
