@@ -59,7 +59,7 @@ const useReset = (randomize = false) => {
       setInputHistory([]);
       setWordBoxConfig(defaultWordBoxConfig);
       setWpm({ gross: 0, raw: 0 });
-      setWpmData([]);
+      setWpmData({});
       if (timer.id) {
         clearInterval(timer.id);
         setTimer({ id: null, time: 1 });

@@ -128,11 +128,11 @@ const Stats = () => {
       extraChars: 0,
     };
 
-    wpmData.forEach((dataPoint) => {
-      total.errors += dataPoint.errors;
-      total.missingChars += dataPoint.missingChars;
-      total.incorrectChars += dataPoint.incorrectChars;
-      total.extraChars += dataPoint.extraChars;
+    Object.values(wpmData).forEach((value) => {
+      total.errors += value.errors;
+      total.missingChars += value.missingChars;
+      total.incorrectChars += value.incorrectChars;
+      total.extraChars += value.extraChars;
     });
     return total;
   }, [wpmData]);
@@ -193,7 +193,7 @@ const Stats = () => {
               left: 30,
               bottom: 5,
             }}
-            data={wpmData}
+            data={Object.values(wpmData)}
           >
             <CartesianGrid stroke={theme.cartesian || theme.words} />
             <XAxis height={40} dataKey="wordNum" stroke={theme.cartesian}>

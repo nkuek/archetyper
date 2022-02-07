@@ -85,12 +85,13 @@ const App = () => {
         sx={{
           height: 'calc(100% - 80px)',
           display: 'flex',
-          alignItems: wpmData.length === wordCount ? 'start' : 'center',
+          alignItems:
+            Object.keys(wpmData).length === wordCount ? 'start' : 'center',
           justifyContent: 'center',
           padding: 0,
         }}
       >
-        {wpmData.length === wordCount ? (
+        {Object.keys(wpmData).length === wordCount ? (
           <Stats />
         ) : (
           <Box

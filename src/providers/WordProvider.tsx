@@ -26,6 +26,10 @@ interface ITimeStepData {
   incorrectChars: number;
 }
 
+interface IWPMData {
+  [key: number | string]: ITimeStepData;
+}
+
 export interface ISettings {
   specialChars: boolean;
   capitalChars: boolean;
@@ -55,8 +59,8 @@ interface ITimerConfig {
 interface IWordContext {
   wpm: IWpm;
   setWpm: TReactSetState<IWpm>;
-  wpmData: ITimeStepData[];
-  setWpmData: TReactSetState<ITimeStepData[]>;
+  wpmData: IWPMData;
+  setWpmData: TReactSetState<IWPMData>;
   userInput: string;
   setUserInput: TReactSetState<string>;
   inputHistory: string[];
@@ -99,7 +103,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
 
   const [wpm, setWpm] = useState({ raw: 0, gross: 0 });
   const [timer, setTimer] = useState<ITimerConfig>({ id: null, time: 1 });
-  const [wpmData, setWpmData] = useState<ITimeStepData[]>([]);
+  const [wpmData, setWpmData] = useState<IWPMData>({});
   const [wordBoxConfig, setWordBoxConfig] =
     useState<IWordBoxConfig>(defaultWordBoxConfig);
   const [userInput, setUserInput] = useState('');

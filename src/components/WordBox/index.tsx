@@ -104,6 +104,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     // set char count based on user Input
     // set char index based on user input length
 
+    console.log(currentCharIndex);
+
     if (wordRef.current && currentWordIndex < charList.length) {
       const currentWord = wordRef.current.children[currentWordIndex];
 
@@ -142,9 +144,9 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
         const totalWordErrors = extraChars + missingChars + incorrectChars;
 
-        setWpmData((prev) => [
+        setWpmData((prev) => ({
           ...prev,
-          {
+          [currentWordIndex + 1]: {
             word: wordList[currentWordIndex],
             wordNum: currentWordIndex + 1,
             errors: totalWordErrors,
@@ -153,7 +155,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
             extraChars,
             incorrectChars,
           },
-        ]);
+        }));
 
         // else move to next word
         setWordBoxConfig((prev) => ({
