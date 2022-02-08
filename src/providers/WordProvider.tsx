@@ -39,7 +39,7 @@ export interface ISettings {
 
 interface IWpm {
   raw: number;
-  gross: number;
+  net: number;
 }
 
 interface IWordBoxConfig {
@@ -49,6 +49,7 @@ interface IWordBoxConfig {
   charCount: number;
   incorrectChars: number;
   totalErrors: number;
+  uncorrectedErrors: number;
 }
 
 interface ITimerConfig {
@@ -96,12 +97,13 @@ export const defaultWordBoxConfig = {
   charCount: 0,
   incorrectChars: 0,
   totalErrors: 0,
+  uncorrectedErrors: 0,
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
   const { wordCount, setWordList, setWordCount } = useContext(WordListContext);
 
-  const [wpm, setWpm] = useState({ raw: 0, gross: 0 });
+  const [wpm, setWpm] = useState({ raw: 0, net: 0 });
   const [timer, setTimer] = useState<ITimerConfig>({ id: null, time: 1 });
   const [wpmData, setWpmData] = useState<IWPMData>({});
   const [wordBoxConfig, setWordBoxConfig] =

@@ -72,7 +72,7 @@ const WordOptions = () => {
       </div>
       <div style={{ display: 'flex' }}>
         <Box sx={{ color: textColor, marginRight: '.25em' }}>{'wpm: '}</Box>
-        <Box sx={{ color: textColor }}>{wpm.gross || ''}</Box>
+        <Box sx={{ color: textColor }}>{wpm.net || ''}</Box>
       </div>
     </Container>
   );

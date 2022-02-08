@@ -8,15 +8,17 @@ import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
+import classNames from 'classnames';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
   const raw = Math.floor(charCount / 5 / timeToMins);
-  const gross = raw - Math.floor(errors || 0 / timeToMins);
+  const uncorrectedErrors = Math.floor(errors / timeToMins);
+  const net = Math.max(raw - uncorrectedErrors, 0);
 
   return {
     raw,
-    gross,
+    net,
   };
 };
 
@@ -31,6 +33,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setWordBoxConfig,
     wpm,
     setWpm,
+    wpmData,
     setWpmData,
     timer,
     setTimer,
@@ -49,6 +52,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     focused,
     incorrectChars,
     totalErrors,
+    uncorrectedErrors,
   } = wordBoxConfig;
 
   const { theme, classes } = useContext(ThemeContext);
@@ -60,7 +64,15 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     const charList = [];
     if (wordList) {
       for (const word of wordList) {
-        charList.push([...word]);
+        const wordChars: {
+          [key: string]: any;
+          correct: null | boolean;
+          extra: boolean;
+        }[] = [];
+        for (const char of word) {
+          wordChars.push({ correct: null, char, extra: false });
+        }
+        charList.push(wordChars);
       }
     }
     return charList;
@@ -85,6 +97,13 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
       );
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     }
+    if (
+      currentWordIndex === wordCount - 1 &&
+      userInput === wordList[wordCount - 1] &&
+      timer.id
+    ) {
+      clearInterval(timer.id);
+    }
   }, [userInput, timer.id]); // eslint-disable-line
 
   useEffect(() => {
@@ -101,14 +120,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
-    // set char count based on user Input
-    // set char index based on user input length
-
-    console.log(currentCharIndex);
 
     if (wordRef.current && currentWordIndex < charList.length) {
-      const currentWord = wordRef.current.children[currentWordIndex];
-
       const lastUserChar = e.target.value[e.target.value.length - 1];
 
       // handle space
@@ -123,21 +136,20 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           currentCharIndex !== charList[currentWordIndex].length ||
           e.target.value.length - 1 > charList[currentWordIndex].length
         ) {
-          for (let i = currentCharIndex; i < currentWord.children.length; i++) {
-            const child = currentWord.children[i];
-            child.classList.remove(
-              ...classes.currentChar.split(' '),
-              classes.animation
-            );
-            child.classList.add(...classes.incorrect.split(' '));
+          for (
+            let i = currentCharIndex;
+            i < charList[currentWordIndex].length;
+            i++
+          ) {
+            charList[currentWordIndex][i].correct = false;
           }
         }
 
         // set wpm data timestep
-        const extraChars =
-          e.target.value.length - 1 - charList[currentWordIndex].length > 0
-            ? e.target.value.length - 1 - charList[currentWordIndex].length
-            : 0;
+        const extraChars = Math.max(
+          e.target.value.length - 1 - charList[currentWordIndex].length,
+          0
+        );
 
         const missingChars =
           charList[currentWordIndex].length - currentCharIndex;
@@ -146,7 +158,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
         setWpmData((prev) => ({
           ...prev,
-          [currentWordIndex + 1]: {
+          [currentWordIndex]: {
             word: wordList[currentWordIndex],
             wordNum: currentWordIndex + 1,
             errors: totalWordErrors,
@@ -172,136 +184,85 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           block: 'center',
         });
       } else {
-        // if the user completely clears input box, remove all classes
-        if (e.target.value.length === 0) {
-          for (let i = 0; i < currentWord.children.length; i++) {
-            const child = currentWord.children[i];
-            child.classList.remove(...classes.correct.split(' '));
-            child.classList.remove(...classes.incorrect.split(' '));
-            child.classList.remove(
-              ...classes.currentChar.split(' '),
-              classes.animation
-            );
-            currentWord.children[0].classList.add(
-              ...classes.currentChar.split(' ')
-            );
-          }
-          // if user deletes character from input, remove that character's styling
-        }
-        // move to next character
-        if (currentCharIndex < charList[currentWordIndex].length) {
-          const currentChar = currentWord.children[currentCharIndex];
-          currentChar.classList.remove(
-            ...classes.currentChar.split(' '),
-            classes.animation
-          );
-          currentChar.classList.remove(...classes.correct.split(' '));
-          currentChar.classList.remove(...classes.incorrect.split(' '));
-        }
-        if (e.target.value.length <= charList[currentWordIndex].length) {
+        // move to next or previous character
+        setWordBoxConfig((prev) => ({
+          ...prev,
+          currentCharIndex: e.target.value.length,
+          charCount:
+            e.target.value.length > userInput.length
+              ? prev.charCount + 1
+              : prev.charCount - 1,
+        }));
+
+        if (
+          e.target.value.length <= wordList[currentWordIndex].length &&
+          e.target.value.length > 0
+        ) {
+          const correct =
+            e.target.value.length - 1 <= wordList[currentWordIndex].length &&
+            lastUserChar ===
+              wordList[currentWordIndex][e.target.value.length - 1];
+
+          charList[currentWordIndex][e.target.value.length - 1].correct =
+            correct;
+
           setWordBoxConfig((prev) => ({
             ...prev,
-            currentCharIndex: e.target.value.length,
-            charCount: prev.charCount + 1,
+            incorrectChars: !correct
+              ? prev.incorrectChars + 1
+              : prev.incorrectChars,
           }));
         }
 
-        const extraChars = Array.from(currentWord.children).filter((child) =>
-          child.classList.contains(classes.extra)
-        );
-
         // append extra letters to words if user types more letters
-        if (e.target.value.length > wordList[currentWordIndex].length) {
+        else if (
+          e.target.value.length > wordList[currentWordIndex].length &&
+          userInput.length < e.target.value.length
+        ) {
           // userInput length is greater than target value length if user deletes a value since the userInput state will always be one state behind the target value
-          if (userInput.length > e.target.value.length) {
-            currentWord.removeChild(
-              currentWord.children[currentWord.children.length - 1]
-            );
-          } else {
-            const extraChar = e.target.value[e.target.value.length - 1];
-            const extraLetterEl = document.createElement('div');
-            extraLetterEl.innerHTML = extraChar;
-            extraLetterEl.classList.add(classes.extra);
-            currentWord.appendChild(extraLetterEl);
-          }
-          // remove extra char if user deletes
-        } else {
-          extraChars.forEach((char) => currentWord.removeChild(char));
+          charList[currentWordIndex].push({
+            char: lastUserChar,
+            correct: false,
+            extra: true,
+          });
         }
       }
     }
   };
 
-  // Verifying words logic
+  console.log(inputHistory);
+
   useEffect(() => {
-    if (
-      wordRef.current &&
-      userInput.length > 0 &&
-      currentWordIndex < charList.length
-    ) {
-      // if user types more chars than the current word's length, do nothing
-      if (userInput.length > charList[currentWordIndex].length) return;
-
-      const correct =
-        userInput[userInput.length - 1] ===
-        charList[currentWordIndex][currentCharIndex - 1];
-
-      const currentWord = wordRef.current.children[currentWordIndex];
-
-      if (currentCharIndex < charList[currentWordIndex].length) {
-        currentWord.children[currentCharIndex].classList.add(
-          ...classes.currentChar.split(' '),
-          classes.animation
-        );
+    const handleBackspace = (e: KeyboardEvent) => {
+      if (e.key === 'Backspace') {
+        if (currentCharIndex === 0 && currentWordIndex > 0) {
+          setWordBoxConfig((prev) => ({
+            ...prev,
+            currentWordIndex: prev.currentWordIndex - 1,
+            incorrectChars: wpmData[prev.currentWordIndex - 1].incorrectChars,
+          }));
+          setUserInput(inputHistory[currentWordIndex - 1]);
+          setInputHistory((prev) => {
+            prev.pop();
+            return prev;
+          });
+        }
+        if (currentCharIndex > wordList[currentWordIndex].length) {
+          charList[currentWordIndex] = charList[currentWordIndex].slice(
+            0,
+            charList[currentWordIndex].length - 1
+          );
+        } else {
+          charList[currentWordIndex][
+            Math.max(currentCharIndex - 1, 0)
+          ].correct = null;
+        }
       }
-
-      if (correct) {
-        currentWord.children[currentCharIndex - 1].classList.add(
-          ...classes.correct.split(' ')
-        );
-        currentWord.children[currentCharIndex - 1].classList.remove(
-          ...classes.currentChar.split(' '),
-          classes.animation
-        );
-      } else if (!correct) {
-        currentWord.children[currentCharIndex - 1].classList.add(
-          ...classes.incorrect.split(' ')
-        );
-        currentWord.children[currentCharIndex - 1].classList.remove(
-          ...classes.currentChar.split(' '),
-          classes.animation
-        );
-        setWordBoxConfig((prev) => ({
-          ...prev,
-          incorrectChars: prev.incorrectChars + 1,
-        }));
-      }
-    }
-  }, [currentCharIndex, userInput, currentWordIndex, wordRef]); // eslint-disable-line
-
-  // Current word logic
-  useEffect(() => {
-    if (
-      wordRef.current &&
-      wordList.length > 0 &&
-      currentWordIndex < charList.length &&
-      !loading
-    ) {
-      if (currentCharIndex < charList[currentWordIndex].length) {
-        wordRef.current.children[currentWordIndex].children[
-          currentCharIndex
-        ].classList.add(...classes.currentChar.split(' '), classes.animation);
-      }
-    }
-    if (
-      currentWordIndex === charList.length - 1 &&
-      userInput === wordList[wordList.length - 1] &&
-      timer.id
-    ) {
-      clearInterval(timer.id);
-    }
-    //eslint-disable-next-line
-  }, [currentWordIndex, wordList, currentCharIndex, loading, timer.id]);
+    };
+    document.addEventListener('keydown', handleBackspace);
+    return () => document.removeEventListener('keydown', handleBackspace);
+    // eslint-disable-next-line
+  }, [inputHistory, wordBoxConfig, wpmData, textFieldRef, currentCharIndex]);
 
   return (
     <Container
@@ -364,9 +325,27 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                 key={wordIdx}
                 sx={{ display: 'flex', margin: '0.25em' }}
               >
-                {word.map((char, charIdx) => (
-                  <Box key={char + charIdx}>{char}</Box>
-                ))}
+                {word.map((char, charIdx) => {
+                  return (
+                    <Box
+                      className={classNames({
+                        [`${classes.animation} ${classes.currentChar}`]:
+                          wordIdx === currentWordIndex &&
+                          charIdx === currentCharIndex &&
+                          charIdx < wordList[currentWordIndex].length,
+                        [classes.correct]: char.correct,
+                        [classes.incorrect]:
+                          char.correct !== null &&
+                          !char.correct &&
+                          charIdx < wordList[currentWordIndex].length,
+                        [classes.extra]: char.extra,
+                      })}
+                      key={char.char + charIdx}
+                    >
+                      {char.char}
+                    </Box>
+                  );
+                })}
               </Box>
             ))}
             {author && (

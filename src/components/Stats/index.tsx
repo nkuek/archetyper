@@ -77,33 +77,13 @@ const CustomTooltip = (props: any) => {
           {`${data.name}: ${_.get(payload[0].payload, data.dataKey)}`}
         </p>
       ))}
-      {/* <p
-        style={{
-          margin: '0 0',
-          padding: '3px 7.5px',
-          color: theme.lineColor2 || theme.headings,
-        }}
-      >{`raw wpm: ${payload[0].payload.wpm.raw}`}</p>
-      <p
-        style={{
-          margin: '0 0',
-          padding: '3px 7.5px',
-        }}
-      >{`wpm: ${payload[0].payload.wpm.gross}`}</p>
-      <p
-        style={{
-          margin: '0 0',
-          padding: '3px 7.5px',
-        }}
-      >{`Errors: ${payload[0].payload.errors}`}</p> */}
     </div>
   );
 };
 
 const Stats = () => {
-  const { wordList } = useContext(WordListContext);
   const values = useContext(WordContext);
-  const { wpm, wpmData, timer } = values;
+  const { wpm, wpmData, timer, wordBoxConfig } = values;
 
   const { theme } = useContext(ThemeContext);
 
@@ -114,11 +94,6 @@ const Stats = () => {
   }, [timer.id]);
 
   const handleReset = useReset(true);
-
-  const totalChars = useMemo(
-    () => wordList.reduce((acc, word) => acc + word.length, 0),
-    [wordList]
-  );
 
   const totalErrors = useMemo(() => {
     const total = {
@@ -138,8 +113,11 @@ const Stats = () => {
   }, [wpmData]);
 
   const accuracy = useMemo(() => {
-    return (totalChars - totalErrors.errors) / totalChars;
-  }, [totalChars, totalErrors]);
+    return Math.max(
+      (wordBoxConfig.charCount - totalErrors.errors) / wordBoxConfig.charCount,
+      0
+    );
+  }, [wordBoxConfig.charCount, totalErrors]);
 
   return (
     <Container
@@ -157,7 +135,7 @@ const Stats = () => {
         </Box>
         <MuiTooltip title="wpm factoring in any mistakes you made" arrow>
           <Box textAlign="center" fontSize="2em">
-            {wpm.gross}
+            {wpm.net}
           </Box>
         </MuiTooltip>
       </Container>
@@ -248,7 +226,7 @@ const Stats = () => {
               name="wpm"
               yAxisId="left"
               type="monotone"
-              dataKey="wpm.gross"
+              dataKey="wpm.net"
               dot={false}
               stroke={theme.lineColor}
               strokeWidth={2}
@@ -281,8 +259,8 @@ const Stats = () => {
         />
         <DataDisplay
           title="characters"
-          tooltip="total / incorrect / missing / extra"
-          data={`${totalChars} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
+          tooltip="total characters typed / incorrect / missing / extra"
+          data={`${wordBoxConfig.charCount} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
         />
         <DataDisplay title="time" data={timer.time} unit="s" />
       </Container>
