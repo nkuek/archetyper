@@ -13,7 +13,7 @@ import { WordListContext } from 'providers/WordListProvider';
 import { Box } from '@mui/system';
 
 const Options = () => {
-  const { setWordList } = useContext(WordListContext);
+  const { setWordList, wordCount } = useContext(WordListContext);
   const { settings, setSettings } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
@@ -40,14 +40,14 @@ const Options = () => {
     }
     setSettings(newSettings);
     localStorage.setItem('typer-settings', JSON.stringify(newSettings));
-    setWordList(randomizeWords(newSettings));
+    setWordList(randomizeWords(newSettings, wordCount));
     setDisableClear(false);
   };
 
   const clearSelection = () => {
     setSettings(defaultSettings);
     localStorage.setItem('typer-settings', JSON.stringify(defaultSettings));
-    setWordList(randomizeWords(defaultSettings));
+    setWordList(randomizeWords(defaultSettings, wordCount));
   };
 
   return (

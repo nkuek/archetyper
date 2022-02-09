@@ -59,7 +59,6 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setWordBoxConfig,
     wpm,
     setWpm,
-    wpmData,
     setWpmData,
     timer,
     setTimer,
@@ -162,12 +161,14 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
         // set wpm data timestep
         const extraChars = Math.max(
-          e.target.value.length - 1 - charList[currentWordIndex].chars.length,
+          e.target.value.length - 1 - wordList[currentWordIndex].length,
           0
         );
 
-        const missingChars =
-          wordList[currentWordIndex].length - currentCharIndex;
+        const missingChars = Math.max(
+          wordList[currentWordIndex].length - currentCharIndex,
+          0
+        );
 
         const totalWordErrors = missingChars + incorrectChars;
 

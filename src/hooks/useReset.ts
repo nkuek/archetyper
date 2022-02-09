@@ -6,7 +6,8 @@ import randomizeWords from 'words';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { wordList, setWordList, setAuthor } = useContext(WordListContext);
+  const { wordList, setWordList, setAuthor, wordCount } =
+    useContext(WordListContext);
   const {
     wordRef,
     textFieldRef,
@@ -37,7 +38,7 @@ const useReset = (randomize = false) => {
         if (settings.quotes) {
           getQuote();
         } else {
-          setWordList(randomizeWords(settings));
+          setWordList(randomizeWords(settings, wordCount));
           setAuthor(null);
         }
         // otherwise reset to the current word list

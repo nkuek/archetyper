@@ -119,12 +119,11 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
 
   useEffect(() => {
     if (!settings.quotes) {
-      setWordList(randomizedWords(settings));
-      setWordCount(
-        localStorage.getItem('typer-word-count')
-          ? JSON.parse(localStorage.getItem('typer-word-count') || '')
-          : 25
-      );
+      const wordCount = localStorage.getItem('typer-word-count')
+        ? JSON.parse(localStorage.getItem('typer-word-count') || '')
+        : 25;
+      setWordList(randomizedWords(settings, wordCount));
+      setWordCount(wordCount);
     } else {
       getQuote();
     }
