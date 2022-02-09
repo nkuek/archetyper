@@ -55,9 +55,12 @@ const App = () => {
       backgroundColor: theme.currentChar,
       animation: `${animation} 1.5s linear infinite`,
       zIndex: 5,
-      visibility: top > 0 && left > 0 ? 'visible' : 'hidden',
+      display:
+        top > 0 && left > 0 && Object.keys(wpmData).length !== wordCount
+          ? 'initial'
+          : 'none',
     } as const;
-  }, [theme, caretSpacing]);
+  }, [theme, caretSpacing, wordCount, wpmData]);
 
   // handle pressing escape
   useEffect(() => {

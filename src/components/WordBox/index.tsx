@@ -5,7 +5,6 @@ import {
   FC,
   KeyboardEvent,
   useMemo,
-  useState,
 } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -22,7 +21,6 @@ import { useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
-import { keyframes } from '@emotion/react';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;

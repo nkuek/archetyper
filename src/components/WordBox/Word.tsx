@@ -3,7 +3,6 @@ import { Box } from '@mui/system';
 import { IndexContext, ThemeContext } from 'providers';
 import { IChars } from '.';
 import Char from './Char';
-import { TReactSetState } from 'providers/general/types';
 
 interface IProps {
   wordIdx: number;

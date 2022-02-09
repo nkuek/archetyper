@@ -14,7 +14,7 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
   const { theme } = useContext(ThemeContext);
   const renderContent = () => {
     const children = (
-      <Box fontSize="1.5em">
+      <Box fontSize="1.5em" sx={{ textAlign: 'center' }}>
         {data}
         {unit || ''}
       </Box>
