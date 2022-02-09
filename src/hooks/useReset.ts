@@ -1,4 +1,4 @@
-import { TimeContext, WordContext } from 'providers';
+import { IndexContext, TimeContext, WordContext } from 'providers';
 import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
@@ -17,19 +17,22 @@ const useReset = (randomize = false) => {
     setInputHistory,
     settings,
     setWordBoxConfig,
-    currentCharIndex,
-    setCurrentCharIndex,
-    currentWordIndex,
-    setCurrentWordIndex,
   } = useContext(WordContext);
+
+  const {
+    currentCharIndex,
+    currentWordIndex,
+    setCurrentCharIndex,
+    setCurrentWordIndex,
+  } = useContext(IndexContext);
 
   const { timer, setTimer } = useContext(TimeContext);
 
   const { getQuote } = useQuote();
 
   return useCallback(
-    (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-      e.stopPropagation();
+    (e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+      e?.stopPropagation();
       if (wordRef.current && textFieldRef.current) {
         wordRef.current.children[0]?.scrollIntoView({
           block: 'center',

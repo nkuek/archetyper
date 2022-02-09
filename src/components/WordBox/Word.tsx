@@ -1,8 +1,9 @@
 import React, { FC, useContext } from 'react';
 import { Box } from '@mui/system';
-import { ThemeContext, WordContext } from 'providers';
+import { IndexContext, ThemeContext } from 'providers';
 import { IChars } from '.';
 import Char from './Char';
+import { TReactSetState } from 'providers/general/types';
 
 interface IProps {
   wordIdx: number;
@@ -12,7 +13,7 @@ interface IProps {
 const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
-  const { currentWordIndex, wordRef } = useContext(WordContext);
+  const { currentWordIndex } = useContext(IndexContext);
 
   return (
     <Box
@@ -24,8 +25,8 @@ const Word: FC<IProps> = (props) => {
         textDecoration: word.skipped
           ? `underline ${theme.incorrect || 'red'}`
           : 'none',
+        flexWrap: 'wrap',
       }}
-      ref={currentWordIndex === wordIdx ? wordRef : null}
     >
       {word.chars.map((char, charIdx) => (
         <Char

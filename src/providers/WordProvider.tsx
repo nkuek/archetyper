@@ -63,10 +63,6 @@ interface IWordContext {
   setSettings: TReactSetState<ISettings>;
   wordBoxConfig: IWordBoxConfig;
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
-  currentCharIndex: number;
-  setCurrentCharIndex: TReactSetState<number>;
-  currentWordIndex: number;
-  setCurrentWordIndex: TReactSetState<number>;
   focused: boolean;
   setFocused: TReactSetState<boolean>;
 }
@@ -92,7 +88,8 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const { setWordList, setWordCount, setAuthor } = useContext(WordListContext);
+  const { setWordList, setWordCount, setAuthor, wordCount } =
+    useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -107,8 +104,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       : defaultSettings
   );
   const [focused, setFocused] = useState(true);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
@@ -125,7 +120,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       getQuote();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.quotes]);
+  }, [settings.quotes, wordCount]);
 
   const value = useMemo(
     () => ({
@@ -143,10 +138,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       textFieldRef,
       settings,
       setSettings,
-      currentCharIndex,
-      setCurrentCharIndex,
-      currentWordIndex,
-      setCurrentWordIndex,
       focused,
       setFocused,
     }),
@@ -165,10 +156,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setSettings,
       wordBoxConfig,
       setWordBoxConfig,
-      currentCharIndex,
-      setCurrentCharIndex,
-      currentWordIndex,
-      setCurrentWordIndex,
       focused,
       setFocused,
     ]

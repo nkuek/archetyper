@@ -5,10 +5,10 @@ import {
   FC,
   KeyboardEvent,
   useMemo,
+  useState,
 } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Replay from '@mui/icons-material/Replay';
 import {
@@ -16,11 +16,13 @@ import {
   WordListContext,
   WordContext,
   TimeContext,
+  IndexContext,
 } from 'providers';
 import { useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
+import { keyframes } from '@emotion/react';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -67,20 +69,25 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setInputHistory,
     wordRef,
     textFieldRef,
-    currentCharIndex,
-    setCurrentCharIndex,
-    currentWordIndex,
-    setCurrentWordIndex,
+
     focused,
     setFocused,
   } = useContext(WordContext);
 
+  const {
+    currentCharIndex,
+    setCurrentCharIndex,
+    currentWordIndex,
+    setCurrentWordIndex,
+  } = useContext(IndexContext);
+
+  const muiTheme = useTheme();
+
+  const { theme } = useContext(ThemeContext);
+
   const { timer, setTimer } = useContext(TimeContext);
 
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
-
-  const { theme } = useContext(ThemeContext);
-  const muiTheme = useTheme();
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
@@ -115,10 +122,10 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
 
   // focus on input field whenever charList changes
   useLayoutEffect(() => {
-    if (Object.keys(charList).length > 0) {
+    if (wordList.length > 0) {
       textFieldRef.current!.focus();
     }
-  }, [charList, textFieldRef]);
+  }, [wordList, textFieldRef]);
 
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -277,7 +284,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!timer.id) {
+    if (!timer.id && userInput.length > 0) {
       const intervalTimer = setInterval(
         () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
         1000
@@ -285,7 +292,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     } else if (
       currentWordIndex === wordCount - 1 &&
-      e.key === wordList[wordCount - 1][wordList[wordCount - 1].length - 1]
+      e.key === wordList[wordCount - 1][wordList[wordCount - 1].length - 1] &&
+      timer.id
     ) {
       clearInterval(timer.id);
     }
@@ -346,6 +354,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
               display: 'flex',
               flexWrap: 'wrap',
             }}
+            ref={wordRef}
           >
             {Object.values(charList).map((word, wordIdx) => (
               <Word key={wordIdx} wordIdx={wordIdx} word={word} />
@@ -392,16 +401,21 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           justifyContent: 'center',
         }}
       >
-        <TextField
-          sx={{ width: 0, opacity: 0, boxSizing: 'border-box' }}
+        <input
           value={userInput}
           onChange={handleUserInput}
-          // autoFocus
-          inputRef={textFieldRef}
-          inputProps={{ autoCapitalize: 'none', onKeyDown: handleKeyDown }}
+          onKeyDown={handleKeyDown}
+          ref={textFieldRef}
+          style={{
+            position: 'absolute',
+            height: 0,
+            width: 0,
+            zIndex: -1,
+          }}
+          autoCapitalize="none"
         />
         <Button
-          sx={{ color: theme.currentWord, height: '95%', width: '20%' }}
+          sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
           onClick={(e) => {
             handleReset(e);
             if (!mobileDevice) setShowTip(true);

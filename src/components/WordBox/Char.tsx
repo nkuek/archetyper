@@ -1,7 +1,6 @@
-import { keyframes } from '@emotion/react';
+import React, { FC, useCallback, useContext } from 'react';
 import { Box } from '@mui/system';
-import { ThemeContext, WordContext, WordListContext } from 'providers';
-import React, { FC, useCallback, useContext, useState } from 'react';
+import { ThemeContext, IndexContext, WordListContext } from 'providers';
 import { TWordChar } from '.';
 
 interface IProps {
@@ -10,22 +9,12 @@ interface IProps {
   wordIdx: number;
 }
 
-const animation = keyframes`
-  50% {
-    opacity: 0.25
-  }
-`;
-
-const Char: FC<IProps> = ({ charIdx, char, wordIdx }) => {
+const Char: FC<IProps> = (props) => {
+  const { charIdx, char, wordIdx } = props;
   const { wordList } = useContext(WordListContext);
-  const { currentWordIndex, currentCharIndex } = useContext(WordContext);
+  const { currentWordIndex, currentCharIndex, setCaretSpacing } =
+    useContext(IndexContext);
   const { theme } = useContext(ThemeContext);
-
-  const charRef = useCallback((node: HTMLDivElement) => {
-    if (node) setCaretSpacing(node.scrollWidth);
-  }, []);
-
-  const [caretSpacing, setCaretSpacing] = useState(0);
 
   const displayExtraChar =
     wordIdx === currentWordIndex &&
@@ -36,44 +25,30 @@ const Char: FC<IProps> = ({ charIdx, char, wordIdx }) => {
   const currentChar =
     wordIdx === currentWordIndex && charIdx === currentCharIndex;
 
-  const caretStyling = (condition: boolean) =>
-    ({
-      height: '1.5em',
-      width: 3,
-      top: -5,
-      position: 'absolute',
-      backgroundColor: theme.currentChar,
-      display: condition ? 'initial' : 'none',
-      visibility: condition ? 'visible' : 'hidden',
-      animation: `${animation} 1.5s linear infinite`,
-    } as const);
+  const charRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (node) {
+        const position = node.getBoundingClientRect();
+        setCaretSpacing({
+          top: position.top,
+          left: position.left + (displayExtraChar ? position.width + 2 : 0),
+        });
+      }
+    },
+    [setCaretSpacing, displayExtraChar]
+  );
   return (
-    <Box key={char.char + charIdx} sx={{ position: 'relative' }}>
-      <Box
-        color={
-          (char.correct !== null && !char.correct) || char.extra
-            ? theme.incorrect || 'red'
-            : char.correct
-            ? theme.correct
-            : 'inherit'
-        }
-        ref={currentChar || displayExtraChar ? charRef : null}
-      >
-        {char.char}
-      </Box>
-      <Box
-        sx={{
-          ...caretStyling(currentChar),
-          right: caretSpacing,
-        }}
-      ></Box>
-      <Box
-        sx={{
-          ...caretStyling(displayExtraChar),
-          left: caretSpacing,
-          transformOrigin: 'top right',
-        }}
-      ></Box>
+    <Box
+      color={
+        (char.correct !== null && !char.correct) || char.extra
+          ? theme.incorrect || 'red'
+          : char.correct
+          ? theme.correct
+          : 'inherit'
+      }
+      ref={currentChar || displayExtraChar ? charRef : null}
+    >
+      {char.char}
     </Box>
   );
 };
