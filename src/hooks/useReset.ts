@@ -72,6 +72,7 @@ const useReset = (randomize = false) => {
       wordBoxConfig,
       setWordBoxConfig,
       wordList,
+      wordCount,
     ]
   );
 };

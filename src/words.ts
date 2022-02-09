@@ -207,7 +207,6 @@ const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-', "'"];
 
-const maxWords = 50;
 const maxNumLength = 6;
 
 const randomizeWords = (settings: ISettings, numWords: number) => {
