@@ -27,6 +27,7 @@ const WordListProvider: FC<IProps> = ({ children }) => {
   );
   const [loading, setLoading] = useState(false);
   const [author, setAuthor] = useState<null | string>(null);
+
   const value = useMemo(
     () => ({
       wordList,

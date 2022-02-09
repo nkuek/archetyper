@@ -59,6 +59,7 @@ const themeList: IThemeList = {
     wordsContrast: 'hsl(342deg 88% 63%)',
     lineColor2: 'hsl(215deg 18% 29%)',
     legendBackground: 'white',
+    incorrect: '#e00000',
   },
   mizu: {
     buttonBackground: '#253746',

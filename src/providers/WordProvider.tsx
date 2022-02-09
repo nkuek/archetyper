@@ -42,13 +42,12 @@ interface IWpm {
   net: number;
 }
 
-interface IWordBoxConfig {
+export interface IWordBoxConfig {
   focused: boolean;
   currentWordIndex: number;
   currentCharIndex: number;
   charCount: number;
   incorrectChars: number;
-  totalErrors: number;
   uncorrectedErrors: number;
 }
 
@@ -96,12 +95,11 @@ export const defaultWordBoxConfig = {
   currentCharIndex: 0,
   charCount: 0,
   incorrectChars: 0,
-  totalErrors: 0,
   uncorrectedErrors: 0,
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const { wordCount, setWordList, setWordCount } = useContext(WordListContext);
+  const { setWordList, setWordCount } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
   const [timer, setTimer] = useState<ITimerConfig>({ id: null, time: 1 });
@@ -130,14 +128,8 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     } else {
       getQuote();
     }
-  }, [
-    wordCount,
-    setWordList,
-    settings,
-    settings.quotes,
-    getQuote,
-    setWordCount,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.quotes]);
 
   const value = useMemo(
     () => ({

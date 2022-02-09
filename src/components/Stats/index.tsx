@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo } from 'react';
 import { Container, Button } from '@mui/material';
-import { WordContext, WordListContext } from 'providers';
+import { WordContext } from 'providers';
 import { Box } from '@mui/system';
 import ReplayIcon from '@mui/icons-material/Replay';
 import {
