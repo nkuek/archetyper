@@ -5,6 +5,7 @@ import {
   FC,
   KeyboardEvent,
   useMemo,
+  useRef,
 } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -78,6 +79,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     incorrectChars,
     uncorrectedErrors,
   } = wordBoxConfig;
+
+  const charRef = useRef<HTMLDivElement>(null);
 
   const { theme } = useContext(ThemeContext);
   const muiTheme = useTheme();
@@ -370,6 +373,18 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                   const currentChar =
                     wordIdx === currentWordIndex &&
                     charIdx === currentCharIndex;
+
+                  const caretStyling = (condition: boolean) =>
+                    ({
+                      height: '1.5em',
+                      width: 3,
+                      top: -4,
+                      position: 'absolute',
+                      backgroundColor: theme.currentChar,
+                      display: condition ? 'initial' : 'none',
+                      visibility: condition ? 'visible' : 'hidden',
+                      animation: `${animation} 1.5s linear infinite`,
+                    } as const);
                   return (
                     <Box
                       key={char.char + charIdx}
@@ -377,15 +392,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                     >
                       <Box
                         sx={{
-                          height: 30,
-                          width: 3,
-                          position: 'absolute',
-                          top: -1,
-                          left: -2,
-                          backgroundColor: theme.currentChar,
-                          display: currentChar ? 'initial' : 'none',
-                          visibility: currentChar ? 'visible' : 'hidden',
-                          animation: `${animation} 1.5s linear infinite`,
+                          ...caretStyling(currentChar),
+                          right: charRef.current?.scrollWidth,
                         }}
                       ></Box>
                       <Box
@@ -396,19 +404,15 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                             ? theme.correct
                             : 'inherit'
                         }
+                        ref={currentChar || displayExtraChar ? charRef : null}
                       >
                         {char.char}
                       </Box>
                       <Box
                         sx={{
-                          height: 30,
-                          width: 3,
-                          position: 'absolute',
-                          top: -1,
-                          left: 10,
-                          backgroundColor: theme.currentChar,
-                          display: displayExtraChar ? 'initial' : 'none',
-                          visibility: displayExtraChar ? 'visible' : 'hidden',
+                          ...caretStyling(displayExtraChar),
+                          left: charRef.current?.scrollWidth,
+                          transformOrigin: 'top right',
                         }}
                       ></Box>
                     </Box>
