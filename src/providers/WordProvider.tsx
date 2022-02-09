@@ -99,7 +99,8 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const { setWordList, setWordCount } = useContext(WordListContext);
+  const { setWordList, setWordCount, setAuthor, wordCount } =
+    useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
   const [timer, setTimer] = useState<ITimerConfig>({ id: null, time: 1 });
@@ -124,11 +125,12 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
         : 25;
       setWordList(randomizedWords(settings, wordCount));
       setWordCount(wordCount);
+      setAuthor(null);
     } else {
       getQuote();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.quotes]);
+  }, [settings, wordCount]);
 
   const value = useMemo(
     () => ({

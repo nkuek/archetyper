@@ -5,6 +5,8 @@ import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
 import { Typography } from '@mui/material';
 
+const options = [10, 25, 50, 100];
+
 const WordOptions = () => {
   const { setWordCount, wordCount } = useContext(WordListContext);
   const values = useContext(WordContext);
@@ -14,7 +16,6 @@ const WordOptions = () => {
 
   const { theme } = useContext(ThemeContext);
 
-  const options = useMemo(() => [10, 25, 50], []);
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
 
   return (

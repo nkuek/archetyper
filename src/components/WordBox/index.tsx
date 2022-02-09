@@ -5,7 +5,8 @@ import {
   FC,
   KeyboardEvent,
   useMemo,
-  useRef,
+  useCallback,
+  useState,
 } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -80,20 +81,23 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     uncorrectedErrors,
   } = wordBoxConfig;
 
-  const charRef = useRef<HTMLDivElement>(null);
-
   const { theme } = useContext(ThemeContext);
   const muiTheme = useTheme();
+  const [caretSpacing, setCaretSpacing] = useState(0);
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
   const handleFocus = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    if (textFieldRef.current) {
+    if (textFieldRef.current && !focused) {
       textFieldRef.current.focus();
       setWordBoxConfig((prev) => ({ ...prev, focused: true }));
     }
   };
+
+  const charRef = useCallback((node: HTMLDivElement) => {
+    if (node) setCaretSpacing(node.scrollWidth);
+  }, []);
 
   const handleReset = useReset();
 
@@ -370,6 +374,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                     charIdx >= wordList[currentWordIndex].length - 1 &&
                     charIdx === currentCharIndex - 1 &&
                     currentCharIndex >= wordList[currentWordIndex].length - 1;
+
                   const currentChar =
                     wordIdx === currentWordIndex &&
                     charIdx === currentCharIndex;
@@ -378,7 +383,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                     ({
                       height: '1.5em',
                       width: 3,
-                      top: -4,
+                      top: -5,
                       position: 'absolute',
                       backgroundColor: theme.currentChar,
                       display: condition ? 'initial' : 'none',
@@ -390,12 +395,6 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                       key={char.char + charIdx}
                       sx={{ position: 'relative' }}
                     >
-                      <Box
-                        sx={{
-                          ...caretStyling(currentChar),
-                          right: charRef.current?.scrollWidth,
-                        }}
-                      ></Box>
                       <Box
                         color={
                           (char.correct !== null && !char.correct) || char.extra
@@ -410,8 +409,14 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                       </Box>
                       <Box
                         sx={{
+                          ...caretStyling(currentChar),
+                          right: caretSpacing,
+                        }}
+                      ></Box>
+                      <Box
+                        sx={{
                           ...caretStyling(displayExtraChar),
-                          left: charRef.current?.scrollWidth,
+                          left: caretSpacing,
                           transformOrigin: 'top right',
                         }}
                       ></Box>
@@ -466,7 +471,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           sx={{ width: 0, opacity: 0, boxSizing: 'border-box' }}
           value={userInput}
           onChange={handleUserInput}
-          autoFocus
+          // autoFocus
           inputRef={textFieldRef}
           inputProps={{ autoCapitalize: 'none', onKeyDown: handleBackspace }}
         />
