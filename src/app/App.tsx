@@ -8,6 +8,7 @@ import { Container, Typography } from '@mui/material';
 import Settings from 'components/Settings';
 import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
+import Tip from 'components/Tip';
 
 const App = () => {
   const { wordCount } = useContext(WordListContext);
@@ -105,30 +106,7 @@ const App = () => {
           >
             <WordOptions />
             <WordBox setShowTip={setShowTip} />
-            {showTip && (
-              <Container
-                sx={{
-                  color: theme.headings,
-                  filter: 'brightness(70%)',
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography
-                  sx={{
-                    cursor: 'pointer',
-                    position: 'absolute',
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowTip(false);
-                    textFieldRef.current?.focus();
-                  }}
-                >
-                  tip: press esc at any time to restart
-                </Typography>
-              </Container>
-            )}
+            <Tip showTip={showTip} setShowTip={setShowTip} />
           </Box>
         )}
       </Container>

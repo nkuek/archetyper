@@ -1,4 +1,4 @@
-import { WordContext } from 'providers';
+import { TimeContext, WordContext } from 'providers';
 import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
@@ -11,23 +11,25 @@ const useReset = (randomize = false) => {
   const {
     wordRef,
     textFieldRef,
-    timer,
-    setTimer,
     setWpm,
     setWpmData,
     setUserInput,
     setInputHistory,
     settings,
-    wordBoxConfig,
     setWordBoxConfig,
+    currentCharIndex,
+    setCurrentCharIndex,
+    currentWordIndex,
+    setCurrentWordIndex,
   } = useContext(WordContext);
+
+  const { timer, setTimer } = useContext(TimeContext);
 
   const { getQuote } = useQuote();
 
   return useCallback(
     (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
       e.stopPropagation();
-      const { currentCharIndex, currentWordIndex } = wordBoxConfig;
       if (wordRef.current && textFieldRef.current) {
         wordRef.current.children[0]?.scrollIntoView({
           block: 'center',
@@ -48,6 +50,8 @@ const useReset = (randomize = false) => {
       setUserInput('');
       setInputHistory([]);
       setWordBoxConfig(defaultWordBoxConfig);
+      setCurrentCharIndex(0);
+      setCurrentWordIndex(0);
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
       if (timer.id) {
@@ -69,10 +73,13 @@ const useReset = (randomize = false) => {
       getQuote,
       setAuthor,
       setInputHistory,
-      wordBoxConfig,
       setWordBoxConfig,
       wordList,
       wordCount,
+      currentCharIndex,
+      setCurrentCharIndex,
+      currentWordIndex,
+      setCurrentWordIndex,
     ]
   );
 };

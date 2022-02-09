@@ -5,14 +5,14 @@ import { ThemeContext, WordListContext, WordContext } from 'providers';
 import { useReset } from 'hooks';
 import { Typography } from '@mui/material';
 
-const options = [10, 25, 50, 100];
+const options = [10, 25, 50];
 
 const WordOptions = () => {
   const { setWordCount, wordCount } = useContext(WordListContext);
   const values = useContext(WordContext);
-  const { wpm, setWordBoxConfig, settings } = values;
+  const { wpm, setFocused, settings } = values;
 
-  const reset = useReset();
+  const reset = useReset(true);
 
   const { theme } = useContext(ThemeContext);
 
@@ -49,7 +49,7 @@ const WordOptions = () => {
                 e.stopPropagation();
                 setWordCount(option);
                 reset(e);
-                setWordBoxConfig((prev) => ({ ...prev, focused: true }));
+                setFocused(true);
                 localStorage.setItem(
                   'typer-word-count',
                   JSON.stringify(option)

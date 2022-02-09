@@ -5,19 +5,22 @@ import {
   FC,
   KeyboardEvent,
   useMemo,
-  useCallback,
-  useState,
 } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Replay from '@mui/icons-material/Replay';
-import { ThemeContext, WordListContext, WordContext } from 'providers';
+import {
+  ThemeContext,
+  WordListContext,
+  WordContext,
+  TimeContext,
+} from 'providers';
 import { useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
-import { keyframes } from '@emotion/react';
+import Word from './Word';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -35,24 +38,20 @@ interface IProps {
   setShowTip: TReactSetState<boolean>;
 }
 
-type TWordChars = {
+export type TWordChar = {
   [key: string]: any;
   correct: null | boolean;
   extra: boolean;
-}[];
+};
 
-export interface ICharList {
-  [key: string | number]: {
-    chars: TWordChars;
-    skipped: boolean;
-  };
+export interface IChars {
+  chars: TWordChar[];
+  skipped: boolean;
 }
 
-const animation = keyframes`
-  50% {
-    opacity: 0.25
-  }
-`;
+export interface ICharList {
+  [key: string | number]: IChars;
+}
 
 const WordBox: FC<IProps> = ({ setShowTip }) => {
   const { wordList, wordCount, loading, author } = useContext(WordListContext);
@@ -62,42 +61,36 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     wpm,
     setWpm,
     setWpmData,
-    timer,
-    setTimer,
     userInput,
     setUserInput,
     inputHistory,
     setInputHistory,
     wordRef,
     textFieldRef,
+    currentCharIndex,
+    setCurrentCharIndex,
+    currentWordIndex,
+    setCurrentWordIndex,
+    focused,
+    setFocused,
   } = useContext(WordContext);
 
-  const {
-    charCount,
-    currentCharIndex,
-    currentWordIndex,
-    focused,
-    incorrectChars,
-    uncorrectedErrors,
-  } = wordBoxConfig;
+  const { timer, setTimer } = useContext(TimeContext);
+
+  const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const { theme } = useContext(ThemeContext);
   const muiTheme = useTheme();
-  const [caretSpacing, setCaretSpacing] = useState(0);
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
 
   const handleFocus = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    if (textFieldRef.current && !focused) {
+    if (textFieldRef.current) {
       textFieldRef.current.focus();
-      setWordBoxConfig((prev) => ({ ...prev, focused: true }));
+      setFocused(true);
     }
   };
-
-  const charRef = useCallback((node: HTMLDivElement) => {
-    if (node) setCaretSpacing(node.scrollWidth);
-  }, []);
 
   const handleReset = useReset();
 
@@ -106,7 +99,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     if (wordList.length && !loading) {
       for (let i = 0; i < wordList.length; i++) {
         const word = wordList[i];
-        const wordChars: TWordChars = [];
+        const wordChars: TWordChar[] = [];
         for (const char of word) {
           wordChars.push({ correct: null, char, extra: false });
         }
@@ -115,24 +108,6 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     }
     return charList;
   }, [wordList, loading]);
-
-  // Timer for WPM
-  useEffect(() => {
-    if (userInput.length > 0 && !timer.id) {
-      const intervalTimer = setInterval(
-        () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
-        1000
-      );
-      setTimer((prev) => ({ ...prev, id: intervalTimer }));
-    }
-    if (
-      currentWordIndex === wordCount - 1 &&
-      userInput === wordList[wordCount - 1] &&
-      timer.id
-    ) {
-      clearInterval(timer.id);
-    }
-  }, [userInput, timer.id]); // eslint-disable-line
 
   useEffect(() => {
     setWpm(calculateWpm(charCount, timer.time, uncorrectedErrors));
@@ -195,12 +170,12 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         // else move to next word
         setWordBoxConfig((prev) => ({
           ...prev,
-          currentCharIndex: 0,
-          currentWordIndex: prev.currentWordIndex + 1,
           charCount: prev.charCount + 1,
           incorrectChars: 0,
           uncorrectedErrors: prev.uncorrectedErrors + missingChars,
         }));
+        setCurrentCharIndex(0);
+        setCurrentWordIndex((prev) => prev + 1);
         setUserInput('');
         setInputHistory((prev) => [...prev, e.target.value]);
         wordRef.current.children[currentWordIndex + 1]?.scrollIntoView({
@@ -210,9 +185,9 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         // move to next or previous character
         setWordBoxConfig((prev) => ({
           ...prev,
-          currentCharIndex: e.target.value.length,
           charCount: prev.charCount + 1,
         }));
+        setCurrentCharIndex(e.target.value.length);
 
         // userInput is > target value only when deleting since userInput is one state behind
         if (userInput.length > e.target.value.length) return;
@@ -253,51 +228,70 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     }
   };
 
-  const handleBackspace = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace') {
-      const decrementErrors = () => {
-        setWordBoxConfig((prev) => ({
-          ...prev,
-          uncorrectedErrors: prev.uncorrectedErrors - 1,
-        }));
-      };
+  const handleBackspace = () => {
+    const decrementErrors = () => {
+      setWordBoxConfig((prev) => ({
+        ...prev,
+        uncorrectedErrors: prev.uncorrectedErrors - 1,
+      }));
+    };
 
-      if (currentCharIndex === 0 && currentWordIndex > 0) {
-        const previousWord = inputHistory[currentWordIndex - 1];
-
-        setWordBoxConfig((prev) => ({
-          ...prev,
-          currentWordIndex: prev.currentWordIndex - 1,
-          uncorrectedErrors:
-            prev.uncorrectedErrors -
-            // subtract 1 to account for the space
-            (charList[currentWordIndex - 1].chars.length -
-              (previousWord.length - 1)),
-        }));
-
-        setUserInput(inputHistory[currentWordIndex - 1]);
-
-        charList[currentWordIndex - 1].skipped = false;
-
-        setInputHistory((prev) => prev.slice(0, prev.length - 1));
-      } else if (currentCharIndex > wordList[currentWordIndex].length) {
-        charList[currentWordIndex].chars = charList[
-          currentWordIndex
-        ].chars.slice(0, charList[currentWordIndex].chars.length - 1);
-
-        decrementErrors();
-      } else if (currentCharIndex > 0) {
-        if (!charList[currentWordIndex].chars[currentCharIndex - 1].correct) {
-          decrementErrors();
-        }
-
-        charList[currentWordIndex].chars[currentCharIndex - 1].correct = null;
-      }
+    if (currentCharIndex === 0 && currentWordIndex > 0) {
+      const previousWord = inputHistory[currentWordIndex - 1];
 
       setWordBoxConfig((prev) => ({
         ...prev,
-        charCount: Math.max(prev.charCount - 1, 0),
+        uncorrectedErrors:
+          prev.uncorrectedErrors -
+          // subtract 1 to account for the space
+          (charList[currentWordIndex - 1].chars.length -
+            (previousWord.length - 1)),
       }));
+
+      setCurrentWordIndex((prev) => prev - 1);
+
+      setUserInput(inputHistory[currentWordIndex - 1]);
+
+      charList[currentWordIndex - 1].skipped = false;
+
+      setInputHistory((prev) => prev.slice(0, prev.length - 1));
+    } else if (currentCharIndex > wordList[currentWordIndex].length) {
+      charList[currentWordIndex].chars = charList[currentWordIndex].chars.slice(
+        0,
+        charList[currentWordIndex].chars.length - 1
+      );
+
+      decrementErrors();
+    } else if (currentCharIndex > 0) {
+      if (!charList[currentWordIndex].chars[currentCharIndex - 1].correct) {
+        decrementErrors();
+      }
+
+      charList[currentWordIndex].chars[currentCharIndex - 1].correct = null;
+    }
+
+    setWordBoxConfig((prev) => ({
+      ...prev,
+      charCount: Math.max(prev.charCount - 1, 0),
+    }));
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!timer.id) {
+      const intervalTimer = setInterval(
+        () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
+        1000
+      );
+      setTimer((prev) => ({ ...prev, id: intervalTimer }));
+    } else if (
+      currentWordIndex === wordCount - 1 &&
+      e.key === wordList[wordCount - 1][wordList[wordCount - 1].length - 1]
+    ) {
+      clearInterval(timer.id);
+    }
+
+    if (e.key === 'Backspace') {
+      handleBackspace();
     }
   };
 
@@ -352,78 +346,9 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
               display: 'flex',
               flexWrap: 'wrap',
             }}
-            ref={wordRef}
           >
             {Object.values(charList).map((word, wordIdx) => (
-              <Box
-                color={
-                  wordIdx === currentWordIndex ? theme.currentWord : theme.words
-                }
-                key={wordIdx}
-                sx={{
-                  display: 'flex',
-                  margin: '0.25em',
-                  textDecoration: word.skipped
-                    ? `underline ${theme.incorrect || 'red'}`
-                    : 'none',
-                }}
-              >
-                {word.chars.map((char, charIdx) => {
-                  const displayExtraChar =
-                    wordIdx === currentWordIndex &&
-                    charIdx >= wordList[currentWordIndex].length - 1 &&
-                    charIdx === currentCharIndex - 1 &&
-                    currentCharIndex >= wordList[currentWordIndex].length - 1;
-
-                  const currentChar =
-                    wordIdx === currentWordIndex &&
-                    charIdx === currentCharIndex;
-
-                  const caretStyling = (condition: boolean) =>
-                    ({
-                      height: '1.5em',
-                      width: 3,
-                      top: -5,
-                      position: 'absolute',
-                      backgroundColor: theme.currentChar,
-                      display: condition ? 'initial' : 'none',
-                      visibility: condition ? 'visible' : 'hidden',
-                      animation: `${animation} 1.5s linear infinite`,
-                    } as const);
-                  return (
-                    <Box
-                      key={char.char + charIdx}
-                      sx={{ position: 'relative' }}
-                    >
-                      <Box
-                        color={
-                          (char.correct !== null && !char.correct) || char.extra
-                            ? theme.incorrect || 'red'
-                            : char.correct
-                            ? theme.correct
-                            : 'inherit'
-                        }
-                        ref={currentChar || displayExtraChar ? charRef : null}
-                      >
-                        {char.char}
-                      </Box>
-                      <Box
-                        sx={{
-                          ...caretStyling(currentChar),
-                          right: caretSpacing,
-                        }}
-                      ></Box>
-                      <Box
-                        sx={{
-                          ...caretStyling(displayExtraChar),
-                          left: caretSpacing,
-                          transformOrigin: 'top right',
-                        }}
-                      ></Box>
-                    </Box>
-                  );
-                })}
-              </Box>
+              <Word key={wordIdx} wordIdx={wordIdx} word={word} />
             ))}
             {author && (
               <Box
@@ -473,7 +398,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           onChange={handleUserInput}
           // autoFocus
           inputRef={textFieldRef}
-          inputProps={{ autoCapitalize: 'none', onKeyDown: handleBackspace }}
+          inputProps={{ autoCapitalize: 'none', onKeyDown: handleKeyDown }}
         />
         <Button
           sx={{ color: theme.currentWord, height: '95%', width: '20%' }}

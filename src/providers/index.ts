@@ -4,3 +4,4 @@ export {
   default as WordListProvider,
   WordListContext,
 } from './WordListProvider';
+export { default as TimeProvider, TimeContext } from './TimeProvider';

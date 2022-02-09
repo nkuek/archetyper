@@ -43,17 +43,9 @@ interface IWpm {
 }
 
 export interface IWordBoxConfig {
-  focused: boolean;
-  currentWordIndex: number;
-  currentCharIndex: number;
   charCount: number;
   incorrectChars: number;
   uncorrectedErrors: number;
-}
-
-interface ITimerConfig {
-  id?: null | NodeJS.Timeout;
-  time: number;
 }
 
 interface IWordContext {
@@ -71,8 +63,12 @@ interface IWordContext {
   setSettings: TReactSetState<ISettings>;
   wordBoxConfig: IWordBoxConfig;
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
-  timer: ITimerConfig;
-  setTimer: TReactSetState<ITimerConfig>;
+  currentCharIndex: number;
+  setCurrentCharIndex: TReactSetState<number>;
+  currentWordIndex: number;
+  setCurrentWordIndex: TReactSetState<number>;
+  focused: boolean;
+  setFocused: TReactSetState<boolean>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -90,20 +86,16 @@ export const defaultSettings = options.reduce(
 );
 
 export const defaultWordBoxConfig = {
-  focused: true,
-  currentWordIndex: 0,
-  currentCharIndex: 0,
   charCount: 0,
   incorrectChars: 0,
   uncorrectedErrors: 0,
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const { setWordList, setWordCount, setAuthor, wordCount } =
-    useContext(WordListContext);
+  const { setWordList, setWordCount, setAuthor } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
-  const [timer, setTimer] = useState<ITimerConfig>({ id: null, time: 1 });
+
   const [wpmData, setWpmData] = useState<IWPMData>({});
   const [wordBoxConfig, setWordBoxConfig] =
     useState<IWordBoxConfig>(defaultWordBoxConfig);
@@ -114,6 +106,9 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       ? JSON.parse(localStorage.getItem('typer-settings') || '')
       : defaultSettings
   );
+  const [focused, setFocused] = useState(true);
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const wordRef = useRef<HTMLDivElement>(null);
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
@@ -130,14 +125,12 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       getQuote();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings, wordCount]);
+  }, [settings.quotes]);
 
   const value = useMemo(
     () => ({
       wordBoxConfig,
       setWordBoxConfig,
-      timer,
-      setTimer,
       wpm,
       setWpm,
       wpmData,
@@ -150,14 +143,18 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       textFieldRef,
       settings,
       setSettings,
+      currentCharIndex,
+      setCurrentCharIndex,
+      currentWordIndex,
+      setCurrentWordIndex,
+      focused,
+      setFocused,
     }),
     [
       wpm,
       setWpm,
       wpmData,
       setWpmData,
-      timer,
-      setTimer,
       userInput,
       setUserInput,
       inputHistory,
@@ -168,6 +165,12 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setSettings,
       wordBoxConfig,
       setWordBoxConfig,
+      currentCharIndex,
+      setCurrentCharIndex,
+      currentWordIndex,
+      setCurrentWordIndex,
+      focused,
+      setFocused,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;
