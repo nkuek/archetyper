@@ -133,7 +133,7 @@ const Stats = () => {
         <Box textAlign="center" fontSize="1.5em">
           wpm:
         </Box>
-        <MuiTooltip title="wpm factoring in any mistakes you made" arrow>
+        <MuiTooltip title="wpm factoring in uncorrected errors" arrow>
           <Box textAlign="center" fontSize="2em">
             {wpm.net}
           </Box>
@@ -255,7 +255,7 @@ const Stats = () => {
         <DataDisplay
           title="raw wpm"
           data={wpm.raw}
-          tooltip="wpm without factoring in errors"
+          tooltip="wpm without factoring in uncorrected errors"
         />
         <DataDisplay
           title="characters"
