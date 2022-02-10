@@ -1,34 +1,19 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import {
-  WordContext,
-  ThemeContext,
-  WordListContext,
-  IndexContext,
-} from 'providers';
+import { WordContext, ThemeContext, WordListContext } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
 import Settings from 'components/Settings';
 import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 import Tip from 'components/Tip';
-import { keyframes } from '@emotion/react';
-
-const animation = keyframes`
-  50% {
-    opacity: 0.25
-  }
-`;
 
 const App = () => {
-  const { wordCount, wordList } = useContext(WordListContext);
-  const { wpmData, focused, setFocused, textFieldRef } =
-    useContext(WordContext);
+  const { wordCount } = useContext(WordListContext);
+  const { wpmData, setFocused, textFieldRef } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
-  const { caretSpacing, currentWordIndex, currentCharIndex } =
-    useContext(IndexContext);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
@@ -45,27 +30,6 @@ const App = () => {
       setTimeout(() => textFieldRef.current!.focus(), 1);
     }
   };
-
-  const caretStyling = useMemo(() => {
-    const { top, left } = caretSpacing;
-    return {
-      height: '2rem',
-      width: 3,
-      top: top - 2,
-      left: left - 2,
-      position: 'absolute',
-      backgroundColor: theme.currentChar,
-      animation: `${animation} 1.5s linear infinite`,
-      zIndex: 5,
-      display:
-        top > 0 &&
-        left > 0 &&
-        Object.keys(wpmData).length !== wordCount &&
-        focused
-          ? 'initial'
-          : 'none',
-    } as const;
-  }, [theme, caretSpacing, wordCount, wpmData, focused]);
 
   // handle pressing escape
   useEffect(() => {
@@ -105,7 +69,6 @@ const App = () => {
       }}
       onClick={() => setFocused(false)}
     >
-      <Box sx={caretStyling}></Box>
       <Box
         sx={{
           display: 'flex',

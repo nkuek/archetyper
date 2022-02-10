@@ -18,9 +18,15 @@ import {
   IndexContext,
 } from 'providers';
 import { useReset } from 'hooks';
-import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
+import {
+  CircularProgress,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
+import { keyframes } from '@emotion/react';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -53,6 +59,12 @@ export interface ICharList {
   [key: string | number]: IChars;
 }
 
+const animation = keyframes`
+  50% {
+    opacity: 0.25
+  }
+`;
+
 const WordBox: FC<IProps> = ({ setShowTip }) => {
   const { wordList, wordCount, loading, author } = useContext(WordListContext);
   const {
@@ -60,6 +72,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setWordBoxConfig,
     wpm,
     setWpm,
+    wpmData,
     setWpmData,
     userInput,
     setUserInput,
@@ -67,7 +80,6 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setInputHistory,
     wordRef,
     textFieldRef,
-
     focused,
     setFocused,
   } = useContext(WordContext);
@@ -77,6 +89,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setCurrentCharIndex,
     currentWordIndex,
     setCurrentWordIndex,
+    caretSpacing,
   } = useContext(IndexContext);
 
   const muiTheme = useTheme();
@@ -98,6 +111,27 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   };
 
   const handleReset = useReset();
+
+  const caretStyling = useMemo(() => {
+    const { top, left } = caretSpacing;
+    return {
+      height: '2rem',
+      width: 3,
+      top: top - 2,
+      left: left - 2,
+      position: 'absolute',
+      backgroundColor: theme.currentChar,
+      animation: `${animation} 1.5s linear infinite`,
+      zIndex: 5,
+      display:
+        top > 0 &&
+        left > 0 &&
+        Object.keys(wpmData).length !== wordCount &&
+        focused
+          ? 'initial'
+          : 'none',
+    } as const;
+  }, [theme, caretSpacing, wordCount, wpmData, focused]);
 
   const charList = useMemo(() => {
     const charList: ICharList = {};
@@ -124,6 +158,13 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
       textFieldRef.current!.focus();
     }
   }, [wordList, textFieldRef]);
+
+  useEffect(() => {
+    if (wordRef.current)
+      wordRef.current.children[currentWordIndex]?.scrollIntoView({
+        block: 'center',
+      });
+  }, [wordRef, currentWordIndex]);
 
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,9 +224,6 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         setCurrentWordIndex((prev) => prev + 1);
         setUserInput('');
         setInputHistory((prev) => [...prev, e.target.value]);
-        wordRef.current.children[currentWordIndex + 1]?.scrollIntoView({
-          block: 'center',
-        });
       } else {
         // move to next or previous character
         setWordBoxConfig((prev) => ({
@@ -357,6 +395,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
             {Object.values(charList).map((word, wordIdx) => (
               <Word key={wordIdx} wordIdx={wordIdx} word={word} />
             ))}
+            <Box sx={caretStyling}></Box>
             {author && (
               <Box
                 sx={{
@@ -400,18 +439,13 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           padding: '.3em 0',
         }}
       >
-        <input
+        <TextField
+          sx={{ width: 0, opacity: 0, boxSizing: 'border-box' }}
           value={userInput}
           onChange={handleUserInput}
-          onKeyDown={handleKeyDown}
-          ref={textFieldRef}
-          style={{
-            position: 'absolute',
-            height: 0,
-            width: 0,
-            zIndex: -1,
-          }}
-          autoCapitalize="none"
+          autoFocus
+          inputRef={textFieldRef}
+          inputProps={{ autoCapitalize: 'none', onKeyDown: handleKeyDown }}
         />
         <Button
           sx={{ color: theme.currentWord, height: '100%', width: '20%' }}

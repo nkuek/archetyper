@@ -31,8 +31,8 @@ const useReset = (randomize = false) => {
   const { getQuote } = useQuote();
 
   return useCallback(
-    (e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-      e?.stopPropagation();
+    (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+      e.stopPropagation();
       if (wordRef.current && textFieldRef.current) {
         wordRef.current.children[0]?.scrollIntoView({
           block: 'center',
@@ -83,6 +83,7 @@ const useReset = (randomize = false) => {
       setCurrentCharIndex,
       currentWordIndex,
       setCurrentWordIndex,
+      setFocused,
     ]
   );
 };

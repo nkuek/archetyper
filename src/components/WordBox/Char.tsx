@@ -28,15 +28,15 @@ const Char: FC<IProps> = (props) => {
   const charRef = useCallback(
     (node: HTMLDivElement) => {
       if (node) {
-        const position = node.getBoundingClientRect();
         setCaretSpacing({
-          top: position.top,
-          left: position.left + (displayExtraChar ? position.width + 2 : 0),
+          top: node.offsetTop,
+          left: node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),
         });
       }
     },
     [setCaretSpacing, displayExtraChar]
   );
+
   return (
     <Box
       color={
