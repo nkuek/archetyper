@@ -26,13 +26,13 @@ const CustomX = (props: any) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width="40"
+      height="40"
       fill="red"
-      className="bi bi-x"
-      viewBox="0 0 16 16"
-      x={props.x - 4}
-      y={props.y + -4}
+      // className="bi bi-x"
+      viewBox="0 0 20 20"
+      x={props.x - 11}
+      y={props.y - 11}
     >
       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
     </svg>
@@ -48,10 +48,10 @@ const CustomTooltip = (props: any) => {
   return (
     <div
       style={{
-        background: theme.legendBackground || '#333',
+        background: theme.wordBoxBackground,
         borderRadius: 3,
         padding: '.5em',
-        border: '1px solid #333',
+        border: `1px solid ${theme.graphText || theme.words}`,
       }}
     >
       <p
@@ -65,17 +65,30 @@ const CustomTooltip = (props: any) => {
         {payload[0].payload.word}
       </p>
       {payload.map((data: any) => (
-        <p
-          key={data.name}
+        <div
           style={{
-            margin: '0 0',
-            padding: '3px 7.5px',
-            textAlign: 'center',
-            color: data.stroke || data.fill,
+            display: 'flex',
+            alignItems: 'center',
+            color: theme.words,
           }}
         >
-          {`${data.name}: ${_.get(payload[0].payload, data.dataKey)}`}
-        </p>
+          <div
+            style={{
+              backgroundColor: data.stroke || data.fill,
+              height: 10,
+              width: 10,
+            }}
+          ></div>
+          <p
+            key={data.name}
+            style={{
+              margin: '0 0',
+              padding: '3px 7.5px',
+            }}
+          >
+            {`${data.name}: ${_.get(payload[0].payload, data.dataKey)}`}
+          </p>
+        </div>
       ))}
     </div>
   );
@@ -189,7 +202,6 @@ const Stats = () => {
                 dx: -20,
                 fill: theme.graphText || theme.words,
               }}
-              type="number"
               stroke={theme.cartesian}
             />
             <YAxis
@@ -202,10 +214,9 @@ const Stats = () => {
                 fill: theme.graphText || theme.words,
               }}
               dataKey="errors"
-              domain={[0, 'dataMax + 1']}
               allowDecimals={false}
-              type="number"
               stroke={theme.cartesian}
+              interval={0}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend
@@ -253,7 +264,7 @@ const Stats = () => {
         }}
       >
         <DataDisplay
-          title="raw wpm"
+          title="raw"
           data={wpm.raw}
           tooltip="wpm without factoring in uncorrected errors"
         />
