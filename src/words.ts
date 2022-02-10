@@ -208,12 +208,13 @@ const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-', "'"];
 
 const maxNumLength = 6;
+const maxWords = 50;
 
-const randomizeWords = (settings: ISettings, numWords: number) => {
+const randomizeWords = (settings: ISettings) => {
   const { capitalChars, specialChars, numbers } = settings;
 
   const randomized = [];
-  while (randomized.length < numWords) {
+  while (randomized.length < maxWords) {
     let word = words[Math.floor(Math.random() * 200)];
     if (capitalChars) {
       const shouldCapitalize = Math.random() > 0.6;

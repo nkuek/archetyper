@@ -23,10 +23,12 @@ const animation = keyframes`
 `;
 
 const App = () => {
-  const { wordCount } = useContext(WordListContext);
-  const { wpmData, setFocused, textFieldRef } = useContext(WordContext);
+  const { wordCount, wordList } = useContext(WordListContext);
+  const { wpmData, focused, setFocused, textFieldRef } =
+    useContext(WordContext);
   const { theme } = useContext(ThemeContext);
-  const { caretSpacing } = useContext(IndexContext);
+  const { caretSpacing, currentWordIndex, currentCharIndex } =
+    useContext(IndexContext);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
@@ -56,11 +58,14 @@ const App = () => {
       animation: `${animation} 1.5s linear infinite`,
       zIndex: 5,
       display:
-        top > 0 && left > 0 && Object.keys(wpmData).length !== wordCount
+        top > 0 &&
+        left > 0 &&
+        Object.keys(wpmData).length !== wordCount &&
+        focused
           ? 'initial'
           : 'none',
     } as const;
-  }, [theme, caretSpacing, wordCount, wpmData]);
+  }, [theme, caretSpacing, wordCount, wpmData, focused]);
 
   // handle pressing escape
   useEffect(() => {
@@ -98,7 +103,7 @@ const App = () => {
         display: 'flex',
         flexDirection: 'column',
       }}
-      onClick={() => setFocused(true)}
+      onClick={() => setFocused(false)}
     >
       <Box sx={caretStyling}></Box>
       <Box
@@ -138,7 +143,11 @@ const App = () => {
           >
             <WordOptions />
             <WordBox setShowTip={setShowTip} />
-            <Tip showTip={showTip} setShowTip={setShowTip} />
+            <Tip
+              showTip={showTip}
+              setShowTip={setShowTip}
+              tip="press esc at any time to restart"
+            />
           </Box>
         )}
       </Container>

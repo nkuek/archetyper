@@ -6,8 +6,7 @@ import randomizeWords from 'words';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { wordList, setWordList, setAuthor, wordCount } =
-    useContext(WordListContext);
+  const { wordList, setWordList, setAuthor } = useContext(WordListContext);
   const {
     wordRef,
     textFieldRef,
@@ -17,6 +16,7 @@ const useReset = (randomize = false) => {
     setInputHistory,
     settings,
     setWordBoxConfig,
+    setFocused,
   } = useContext(WordContext);
 
   const {
@@ -43,7 +43,7 @@ const useReset = (randomize = false) => {
         if (settings.quotes) {
           getQuote();
         } else {
-          setWordList(randomizeWords(settings, wordCount));
+          setWordList(randomizeWords(settings));
           setAuthor(null);
         }
         // otherwise reset to the current word list
@@ -57,6 +57,7 @@ const useReset = (randomize = false) => {
       setCurrentWordIndex(0);
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
+      setFocused(true);
       if (timer.id) {
         clearInterval(timer.id);
         setTimer({ id: null, time: 1 });
@@ -78,7 +79,6 @@ const useReset = (randomize = false) => {
       setInputHistory,
       setWordBoxConfig,
       wordList,
-      wordCount,
       currentCharIndex,
       setCurrentCharIndex,
       currentWordIndex,

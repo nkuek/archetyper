@@ -374,7 +374,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
                 sx={{
                   position: 'absolute',
                   zIndex: 2,
-                  height: 110,
+                  height: '100%',
                   width: '100%',
                   display: 'flex',
                   justifyContent: 'center',
@@ -397,6 +397,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: '.3em 0',
         }}
       >
         <input

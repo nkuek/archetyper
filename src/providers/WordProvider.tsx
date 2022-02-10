@@ -113,7 +113,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       const wordCount = localStorage.getItem('typer-word-count')
         ? JSON.parse(localStorage.getItem('typer-word-count') || '')
         : 25;
-      setWordList(randomizedWords(settings, wordCount));
+      setWordList(randomizedWords(settings));
       setWordCount(wordCount);
       setAuthor(null);
     } else {

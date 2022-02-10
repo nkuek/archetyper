@@ -5,10 +5,11 @@ import { TReactSetState } from 'providers/general/types';
 
 interface IProps {
   showTip: boolean;
-  setShowTip: TReactSetState<boolean>;
+  setShowTip?: TReactSetState<boolean>;
+  tip: string;
 }
 
-const Tip: FC<IProps> = ({ showTip, setShowTip }) => {
+const Tip: FC<IProps> = ({ showTip, setShowTip, tip }) => {
   const { theme } = useContext(ThemeContext);
   const { textFieldRef } = useContext(WordContext);
 
@@ -30,11 +31,11 @@ const Tip: FC<IProps> = ({ showTip, setShowTip }) => {
         }}
         onClick={(e) => {
           e.stopPropagation();
-          setShowTip(false);
+          setShowTip && setShowTip(false);
           textFieldRef.current?.focus();
         }}
       >
-        tip: press esc at any time to restart
+        {`tip: ${tip}`}
       </Typography>
     </Container>
   );
