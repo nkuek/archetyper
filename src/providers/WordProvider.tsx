@@ -120,7 +120,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       getQuote();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.quotes, wordCount]);
+  }, [settings, wordCount]);
 
   const value = useMemo(
     () => ({
