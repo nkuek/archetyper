@@ -289,6 +289,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           // subtract 1 to account for the space
           (charList[currentWordIndex - 1].chars.length -
             (previousWord.length - 1)),
+        incorrectChars: wpmData[currentWordIndex - 1].incorrectChars,
       }));
 
       setCurrentWordIndex((prev) => prev - 1);
