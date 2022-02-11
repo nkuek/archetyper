@@ -1,26 +1,26 @@
 import React, { FC, useCallback, useContext } from 'react';
 import { Box } from '@mui/system';
-import { ThemeContext, IndexContext, WordListContext } from 'providers';
-import { TWordChar } from '.';
+import { ThemeContext, IndexContext } from 'providers';
+import { ICharList, TWordChar } from 'providers/WordListProvider';
 
 interface IProps {
   charIdx: number;
   char: TWordChar;
   wordIdx: number;
+  charList: ICharList;
 }
 
 const Char: FC<IProps> = (props) => {
-  const { charIdx, char, wordIdx } = props;
-  const { wordList } = useContext(WordListContext);
+  const { charIdx, char, wordIdx, charList } = props;
   const { currentWordIndex, currentCharIndex, setCaretSpacing } =
     useContext(IndexContext);
   const { theme } = useContext(ThemeContext);
 
   const displayExtraChar =
     wordIdx === currentWordIndex &&
-    charIdx >= wordList[currentWordIndex].length - 1 &&
+    charIdx >= charList[currentWordIndex].length - 1 &&
     charIdx === currentCharIndex - 1 &&
-    currentCharIndex >= wordList[currentWordIndex].length - 1;
+    currentCharIndex >= charList[currentWordIndex].length - 1;
 
   const currentChar =
     wordIdx === currentWordIndex && charIdx === currentCharIndex;

@@ -32,8 +32,9 @@ const WordOptions = () => {
           <div
             style={{
               display: 'flex',
-              opacity: settings.quotes ? 0 : 1,
-              visibility: settings.quotes ? 'hidden' : 'visible',
+              opacity: settings.quotes || settings.endless ? 0 : 1,
+              visibility:
+                settings.quotes || settings.endless ? 'hidden' : 'visible',
               transition: 'opacity 200ms ease-in-out, visibility 200ms linear',
             }}
             key={'box' + idx}

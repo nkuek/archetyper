@@ -5,6 +5,7 @@ import {
   FC,
   KeyboardEvent,
   useMemo,
+  useCallback,
 } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -27,6 +28,8 @@ import {
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { keyframes } from '@emotion/react';
+import randomizeWords from 'words';
+import { ICharList, TWordChar } from 'providers/WordListProvider';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -44,21 +47,6 @@ interface IProps {
   setShowTip: TReactSetState<boolean>;
 }
 
-export type TWordChar = {
-  [key: string]: any;
-  correct: null | boolean;
-  extra: boolean;
-};
-
-export interface IChars {
-  chars: TWordChar[];
-  skipped: boolean;
-}
-
-export interface ICharList {
-  [key: string | number]: IChars;
-}
-
 const animation = keyframes`
   50% {
     opacity: 0.25
@@ -66,7 +54,17 @@ const animation = keyframes`
 `;
 
 const WordBox: FC<IProps> = ({ setShowTip }) => {
-  const { wordList, wordCount, loading, author } = useContext(WordListContext);
+  const {
+    wordList,
+    wordCount,
+    loading,
+    author,
+    charList,
+    setCharList,
+    charListNumber,
+    setCharListNumber,
+  } = useContext(WordListContext);
+
   const {
     wordBoxConfig,
     setWordBoxConfig,
@@ -82,6 +80,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     textFieldRef,
     focused,
     setFocused,
+    settings,
   } = useContext(WordContext);
 
   const {
@@ -133,20 +132,47 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     } as const;
   }, [theme, caretSpacing, wordCount, wpmData, focused]);
 
-  const charList = useMemo(() => {
-    const charList: ICharList = {};
-    if (wordList.length && !loading) {
-      for (let i = 0; i < wordList.length; i++) {
-        const word = wordList[i];
-        const wordChars: TWordChar[] = [];
-        for (const char of word) {
-          wordChars.push({ correct: null, char, extra: false });
+  const generateCharList = useCallback(
+    (wordList: string[], startingIndex: number) => {
+      const charList: ICharList = {};
+      if (wordList.length && !loading) {
+        for (let i = 0; i < wordList.length; i++) {
+          const word = wordList[i];
+          const wordChars: TWordChar[] = [];
+          for (const char of word) {
+            wordChars.push({ correct: null, char, extra: false });
+          }
+          charList[i + startingIndex] = {
+            skipped: false,
+            chars: wordChars,
+            length: word.length,
+          };
         }
-        charList[i] = { skipped: false, chars: wordChars };
       }
+      return charList;
+    },
+    [loading]
+  );
+
+  useEffect(() => {
+    if (
+      settings.endless &&
+      currentWordIndex > 0 &&
+      currentWordIndex % 40 === 0
+    ) {
+      const newWords = randomizeWords(settings);
+      const newCharList = generateCharList(newWords, 50 * charListNumber);
+      setCharList((prev) => ({ ...prev, ...newCharList }));
+      setCharListNumber((prev) => prev + 1);
     }
-    return charList;
-  }, [wordList, loading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings, currentWordIndex]);
+
+  console.log(charListNumber);
+
+  useEffect(() => {
+    setCharList(generateCharList(wordList, 0));
+  }, [wordList, generateCharList]);
 
   useEffect(() => {
     setWpm(calculateWpm(charCount, timer.time, uncorrectedErrors));
@@ -186,20 +212,19 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         ) {
           charList[currentWordIndex].skipped = true;
         }
-
-        // set wpm data timestep
         const extraChars = Math.max(
-          e.target.value.length - 1 - wordList[currentWordIndex].length,
+          e.target.value.length - 1 - charList[currentWordIndex].length,
           0
         );
 
         const missingChars = Math.max(
-          wordList[currentWordIndex].length - currentCharIndex,
+          charList[currentWordIndex].length - currentCharIndex,
           0
         );
 
         const totalWordErrors = missingChars + incorrectChars;
 
+        // set wpm data timestep
         setWpmData((prev) => ({
           ...prev,
           [currentWordIndex]: {
@@ -216,6 +241,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         // else move to next word
         setWordBoxConfig((prev) => ({
           ...prev,
+          // add +1 for space
           charCount: prev.charCount + 1,
           incorrectChars: 0,
           uncorrectedErrors: prev.uncorrectedErrors + missingChars,
@@ -235,11 +261,11 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         // userInput is > target value only when deleting since userInput is one state behind
         if (userInput.length > e.target.value.length) return;
 
-        if (e.target.value.length <= wordList[currentWordIndex].length) {
+        if (e.target.value.length <= charList[currentWordIndex].length) {
           const correct =
-            e.target.value.length - 1 <= wordList[currentWordIndex].length &&
+            e.target.value.length <= charList[currentWordIndex].length &&
             lastUserChar ===
-              wordList[currentWordIndex][e.target.value.length - 1];
+              charList[currentWordIndex].chars[e.target.value.length - 1].char;
 
           charList[currentWordIndex].chars[e.target.value.length - 1].correct =
             correct;
@@ -254,7 +280,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         }
 
         // append extra letters to words if user types more letters
-        else if (e.target.value.length > wordList[currentWordIndex].length) {
+        else if (e.target.value.length > charList[currentWordIndex].length) {
           // userInput length is greater than target value length if user deletes a value since the userInput state will always be one state behind the target value
           charList[currentWordIndex].chars.push({
             char: lastUserChar,
@@ -299,7 +325,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
       charList[currentWordIndex - 1].skipped = false;
 
       setInputHistory((prev) => prev.slice(0, prev.length - 1));
-    } else if (currentCharIndex > wordList[currentWordIndex].length) {
+    } else if (currentCharIndex > charList[currentWordIndex].length) {
       charList[currentWordIndex].chars = charList[currentWordIndex].chars.slice(
         0,
         charList[currentWordIndex].chars.length - 1
@@ -328,6 +354,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
       );
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     } else if (
+      wordCount !== null &&
       currentWordIndex === wordCount - 1 &&
       e.key === wordList[wordCount - 1][wordList[wordCount - 1].length - 1] &&
       timer.id
@@ -361,9 +388,10 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
         }}
         disableGutters
       >
-        <Box
-          sx={{ color: theme.words }}
-        >{`${currentWordIndex} / ${wordCount}`}</Box>
+        <Box sx={{ color: theme.words }}>{`${currentWordIndex}${
+          wordCount !== null ? `/ ${wordCount}` : ''
+        }`}</Box>
+
         <Box sx={{ color: theme.words }}>{`${timer.time}s`}</Box>
       </Container>
       {loading ? (
@@ -394,7 +422,12 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
             ref={wordRef}
           >
             {Object.values(charList).map((word, wordIdx) => (
-              <Word key={wordIdx} wordIdx={wordIdx} word={word} />
+              <Word
+                key={wordIdx}
+                wordIdx={wordIdx}
+                word={word}
+                charList={charList}
+              />
             ))}
             <Box sx={caretStyling}></Box>
             {author && (

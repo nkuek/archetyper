@@ -31,6 +31,7 @@ interface IWPMData {
 }
 
 export interface ISettings {
+  endless: boolean;
   specialChars: boolean;
   capitalChars: boolean;
   numbers: boolean;
@@ -71,6 +72,7 @@ export const WordContext = createContext<IWordContext>(undefined!);
 
 export const options = [
   { name: 'quotes', value: 'quotes' },
+  { name: 'endless', value: 'endless' },
   { name: 'capital letters', value: 'capitalChars' },
   { name: 'special characters', value: 'specialChars' },
   { name: 'numbers', value: 'numbers' },

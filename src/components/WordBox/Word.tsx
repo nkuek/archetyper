@@ -1,16 +1,17 @@
 import React, { FC, useContext } from 'react';
 import { Box } from '@mui/system';
 import { IndexContext, ThemeContext } from 'providers';
-import { IChars } from '.';
 import Char from './Char';
+import { ICharList, IChars } from 'providers/WordListProvider';
 
 interface IProps {
   wordIdx: number;
   word: IChars;
+  charList: ICharList;
 }
 
 const Word: FC<IProps> = (props) => {
-  const { wordIdx, word } = props;
+  const { wordIdx, word, charList } = props;
   const { theme } = useContext(ThemeContext);
   const { currentWordIndex } = useContext(IndexContext);
 
@@ -33,6 +34,7 @@ const Word: FC<IProps> = (props) => {
           wordIdx={wordIdx}
           char={char}
           charIdx={charIdx}
+          charList={charList}
         />
       ))}
     </Box>

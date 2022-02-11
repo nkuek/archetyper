@@ -6,11 +6,12 @@ import {
   FormGroup,
   Typography,
 } from '@mui/material';
-import { ThemeContext, WordContext } from 'providers';
+import { ThemeContext, WordContext, WordListContext } from 'providers';
 import { defaultSettings, options } from 'providers/WordProvider';
 import { Box } from '@mui/system';
 
 const Options = () => {
+  const { setWordCount } = useContext(WordListContext);
   const { settings, setSettings } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
@@ -30,10 +31,20 @@ const Options = () => {
     }
   }, [settings]);
 
+  const resetWordCount = () => {
+    setWordCount(25);
+    localStorage.setItem('typer-word-count', JSON.stringify(25));
+  };
+
   const handleChange = (checked: boolean, option: string) => {
     let newSettings = { ...settings, [option]: checked };
     if (option === 'quotes' && checked) {
       newSettings = { ...defaultSettings, quotes: true };
+    } else if (option === 'endless' && checked) {
+      setWordCount(null);
+      localStorage.setItem('typer-word-count', JSON.stringify(null));
+    } else {
+      resetWordCount();
     }
     setSettings(newSettings);
     localStorage.setItem('typer-settings', JSON.stringify(newSettings));
@@ -41,6 +52,7 @@ const Options = () => {
   };
 
   const clearSelection = () => {
+    resetWordCount();
     setSettings(defaultSettings);
     localStorage.setItem('typer-settings', JSON.stringify(defaultSettings));
   };

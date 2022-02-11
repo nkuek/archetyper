@@ -6,7 +6,8 @@ import randomizeWords from 'words';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { wordList, setWordList, setAuthor } = useContext(WordListContext);
+  const { wordList, setWordList, setAuthor, setCharListNumber } =
+    useContext(WordListContext);
   const {
     wordRef,
     textFieldRef,
@@ -55,6 +56,7 @@ const useReset = (randomize = false) => {
       setWordBoxConfig(defaultWordBoxConfig);
       setCurrentCharIndex(0);
       setCurrentWordIndex(0);
+      setCharListNumber(1);
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
       setFocused(true);
