@@ -48,7 +48,7 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       ? JSON.parse(localStorage.getItem('typer-word-count') || '')
       : 25
   );
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [author, setAuthor] = useState<null | string>(null);
 
   const [charList, setCharList] = useState<ICharList>({});
@@ -57,7 +57,7 @@ const WordListProvider: FC<IProps> = ({ children }) => {
   const generateCharList = useCallback(
     (wordList: string[], charListNumber?: number) => {
       const charList: ICharList = {};
-      if (wordList.length && !loading) {
+      if (wordList.length) {
         for (let i = 0; i < wordList.length; i++) {
           const word = wordList[i];
           const wordChars: TWordChar[] = [];
@@ -71,10 +71,11 @@ const WordListProvider: FC<IProps> = ({ children }) => {
           };
         }
       }
+      setLoading(false);
       setCharListNumber((prev) => prev + 1);
       return charList;
     },
-    [loading, setCharListNumber]
+    [setLoading, setCharListNumber]
   );
 
   const value = useMemo(
