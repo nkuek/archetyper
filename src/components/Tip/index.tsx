@@ -7,9 +7,10 @@ interface IProps {
   showTip: boolean;
   setShowTip?: TReactSetState<boolean>;
   tip: string;
+  warning?: boolean;
 }
 
-const Tip: FC<IProps> = ({ showTip, setShowTip, tip }) => {
+const Tip: FC<IProps> = ({ showTip, setShowTip, tip, warning }) => {
   const { theme } = useContext(ThemeContext);
   const { textFieldRef } = useContext(WordContext);
 
@@ -35,7 +36,7 @@ const Tip: FC<IProps> = ({ showTip, setShowTip, tip }) => {
           textFieldRef.current?.focus();
         }}
       >
-        {`tip: ${tip}`}
+        {`${warning ? 'warning' : 'tip'}: ${tip}`}
       </Typography>
     </Container>
   );

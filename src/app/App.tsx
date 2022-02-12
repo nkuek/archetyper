@@ -18,6 +18,7 @@ const App = () => {
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
   const [showTip, setShowTip] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const closeDialog = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
@@ -105,11 +106,17 @@ const App = () => {
             }}
           >
             <WordOptions />
-            <WordBox setShowTip={setShowTip} />
+            <WordBox setShowTip={setShowTip} setShowWarning={setShowWarning} />
             <Tip
               showTip={showTip}
               setShowTip={setShowTip}
               tip="press esc at any time to restart"
+            />
+            <Tip
+              showTip={showWarning}
+              setShowTip={setShowWarning}
+              tip="caps lock is enabled"
+              warning
             />
           </Box>
         )}

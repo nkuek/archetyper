@@ -35,9 +35,10 @@ const calculateWpm = (charCount: number, timer: number, errors: number) => {
 
 interface IProps {
   setShowTip: TReactSetState<boolean>;
+  setShowWarning: TReactSetState<boolean>;
 }
 
-const WordBox: FC<IProps> = ({ setShowTip }) => {
+const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const {
     wordList,
     wordCount,
@@ -112,7 +113,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   }, [theme, caretSpacing, wordCount, wpmData, focused]);
 
   useEffect(() => {
-    if (wordList.length && !loading) {
+    if (wordList.length) {
       setCharList(generateCharList(wordList, charListNumber));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -277,7 +278,12 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!timer.id && userInput.length > 0) {
+    if (e.getModifierState('CapsLock')) {
+      setShowWarning(true);
+    } else {
+      setShowWarning(false);
+    }
+    if (!timer.id) {
       const intervalTimer = setInterval(
         () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
         1000
@@ -351,7 +357,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
               display: 'flex',
               flexWrap: 'wrap',
             }}
-            // ref={wordRef}
+            id="wordBox"
           >
             {Object.values(charList).map((word, wordIdx) => (
               <Word key={wordIdx} wordIdx={wordIdx} word={word} />
@@ -406,7 +412,10 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
           onChange={handleUserInput}
           autoFocus
           inputRef={textFieldRef}
-          inputProps={{ autoCapitalize: 'none', onKeyDown: handleKeyDown }}
+          inputProps={{
+            autoCapitalize: 'none',
+            onKeyDown: handleKeyDown,
+          }}
         />
         <Button
           sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
