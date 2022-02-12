@@ -10,7 +10,7 @@ const options = [10, 25, 50];
 const WordOptions = () => {
   const { setWordCount, wordCount } = useContext(WordListContext);
   const values = useContext(WordContext);
-  const { wpm, setFocused, settings } = values;
+  const { wpm, settings } = values;
 
   const reset = useReset(true);
 
@@ -50,7 +50,6 @@ const WordOptions = () => {
                 e.stopPropagation();
                 setWordCount(option);
                 reset(e);
-                setFocused(true);
                 localStorage.setItem(
                   'typer-word-count',
                   JSON.stringify(option)
