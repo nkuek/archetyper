@@ -7,7 +7,9 @@ import {
   useMemo,
   useRef,
   useContext,
+  useCallback,
 } from 'react';
+import randomizeWords from 'words';
 import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
 import { WordListContext } from './WordListProvider';
@@ -58,7 +60,8 @@ interface IWordContext {
   setUserInput: TReactSetState<string>;
   inputHistory: string[];
   setInputHistory: TReactSetState<string[]>;
-  wordRef: React.RefObject<HTMLDivElement>;
+  wordRef: (node: HTMLDivElement) => void;
+  lastWordRef: (node: HTMLDivElement) => void;
   textFieldRef: React.RefObject<HTMLInputElement>;
   settings: ISettings;
   setSettings: TReactSetState<ISettings>;
@@ -90,8 +93,16 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const { setWordList, setWordCount, setAuthor, wordCount } =
-    useContext(WordListContext);
+  const {
+    setWordList,
+    setWordCount,
+    setAuthor,
+    wordCount,
+    generateCharList,
+    charListNumber,
+    setCharList,
+    setCharListNumber,
+  } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -106,7 +117,38 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       : defaultSettings
   );
   const [focused, setFocused] = useState(true);
-  const wordRef = useRef<HTMLDivElement>(null);
+
+  const observer = useRef<IntersectionObserver>();
+  const lastWordObserver = useRef<IntersectionObserver>();
+
+  const lastWordRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (settings.quotes) return;
+      if (lastWordObserver.current) lastWordObserver.current.disconnect();
+
+      lastWordObserver.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          const newWords = randomizeWords(settings);
+          const newCharList = generateCharList(newWords, charListNumber);
+          setCharList((prev) => ({ ...prev, ...newCharList }));
+        }
+      });
+      if (lastWordObserver.current && node)
+        lastWordObserver.current.observe(node);
+    },
+    [setCharList, charListNumber, generateCharList, settings]
+  );
+
+  const wordRef = useCallback((node: HTMLDivElement) => {
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting)
+        entries[0].target.scrollIntoView({ block: 'center' });
+    });
+
+    if (observer.current && node) observer.current.observe(node);
+  }, []);
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
 
@@ -118,6 +160,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);
       setAuthor(null);
+      setCharListNumber(0);
     } else {
       getQuote();
     }
@@ -142,6 +185,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setSettings,
       focused,
       setFocused,
+      lastWordRef,
     }),
     [
       wpm,
@@ -160,6 +204,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setWordBoxConfig,
       focused,
       setFocused,
+      lastWordRef,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;

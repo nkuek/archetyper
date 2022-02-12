@@ -1,19 +1,25 @@
 import React, { FC, useContext } from 'react';
 import { Box } from '@mui/system';
-import { IndexContext, ThemeContext } from 'providers';
+import {
+  IndexContext,
+  ThemeContext,
+  WordContext,
+  WordListContext,
+} from 'providers';
 import Char from './Char';
-import { ICharList, IChars } from 'providers/WordListProvider';
+import { IChars } from 'providers/WordListProvider';
 
 interface IProps {
   wordIdx: number;
   word: IChars;
-  charList: ICharList;
 }
 
 const Word: FC<IProps> = (props) => {
-  const { wordIdx, word, charList } = props;
+  const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
   const { currentWordIndex } = useContext(IndexContext);
+  const { wordRef, lastWordRef } = useContext(WordContext);
+  const { charList } = useContext(WordListContext);
 
   return (
     <Box
@@ -27,6 +33,14 @@ const Word: FC<IProps> = (props) => {
           : 'none',
         flexWrap: 'wrap',
       }}
+      className="word"
+      ref={
+        currentWordIndex === wordIdx
+          ? wordRef
+          : wordIdx === Object.keys(charList).length - 1
+          ? lastWordRef
+          : null
+      }
     >
       {word.chars.map((char, charIdx) => (
         <Char
@@ -34,7 +48,6 @@ const Word: FC<IProps> = (props) => {
           wordIdx={wordIdx}
           char={char}
           charIdx={charIdx}
-          charList={charList}
         />
       ))}
     </Box>

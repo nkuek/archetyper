@@ -1,12 +1,4 @@
-import {
-  useEffect,
-  useContext,
-  useLayoutEffect,
-  FC,
-  KeyboardEvent,
-  useMemo,
-  useCallback,
-} from 'react';
+import { useEffect, useContext, FC, KeyboardEvent, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -27,9 +19,7 @@ import {
 } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
-import { keyframes } from '@emotion/react';
-import randomizeWords from 'words';
-import { ICharList, TWordChar } from 'providers/WordListProvider';
+import { animation } from './styles';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -47,12 +37,6 @@ interface IProps {
   setShowTip: TReactSetState<boolean>;
 }
 
-const animation = keyframes`
-  50% {
-    opacity: 0.25
-  }
-`;
-
 const WordBox: FC<IProps> = ({ setShowTip }) => {
   const {
     wordList,
@@ -62,7 +46,7 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     charList,
     setCharList,
     charListNumber,
-    setCharListNumber,
+    generateCharList,
   } = useContext(WordListContext);
 
   const {
@@ -76,11 +60,9 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     setUserInput,
     inputHistory,
     setInputHistory,
-    wordRef,
     textFieldRef,
     focused,
     setFocused,
-    settings,
   } = useContext(WordContext);
 
   const {
@@ -92,11 +74,8 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
   } = useContext(IndexContext);
 
   const muiTheme = useTheme();
-
   const { theme } = useContext(ThemeContext);
-
   const { timer, setTimer } = useContext(TimeContext);
-
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
@@ -132,70 +111,21 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     } as const;
   }, [theme, caretSpacing, wordCount, wpmData, focused]);
 
-  const generateCharList = useCallback(
-    (wordList: string[], startingIndex: number) => {
-      const charList: ICharList = {};
-      if (wordList.length && !loading) {
-        for (let i = 0; i < wordList.length; i++) {
-          const word = wordList[i];
-          const wordChars: TWordChar[] = [];
-          for (const char of word) {
-            wordChars.push({ correct: null, char, extra: false });
-          }
-          charList[i + startingIndex] = {
-            skipped: false,
-            chars: wordChars,
-            length: word.length,
-          };
-        }
-      }
-      return charList;
-    },
-    [loading]
-  );
-
   useEffect(() => {
-    if (
-      settings.endless &&
-      currentWordIndex > 0 &&
-      currentWordIndex % 40 === 0
-    ) {
-      const newWords = randomizeWords(settings);
-      const newCharList = generateCharList(newWords, 50 * charListNumber);
-      setCharList((prev) => ({ ...prev, ...newCharList }));
-      setCharListNumber((prev) => prev + 1);
+    if (wordList.length && !loading) {
+      setCharList(generateCharList(wordList, charListNumber));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings, currentWordIndex]);
-
-  console.log(charListNumber);
-
-  useEffect(() => {
-    setCharList(generateCharList(wordList, 0));
   }, [wordList, generateCharList]);
 
   useEffect(() => {
     setWpm(calculateWpm(charCount, timer.time, uncorrectedErrors));
   }, [timer.time, charCount, setWpm, uncorrectedErrors]);
 
-  // focus on input field whenever charList changes
-  useLayoutEffect(() => {
-    if (wordList.length > 0) {
-      textFieldRef.current!.focus();
-    }
-  }, [wordList, textFieldRef]);
-
-  useEffect(() => {
-    if (wordRef.current)
-      wordRef.current.children[currentWordIndex]?.scrollIntoView({
-        block: 'center',
-      });
-  }, [wordRef, currentWordIndex]);
-
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
-    if (wordRef.current && currentWordIndex < Object.keys(charList).length) {
+    if (currentWordIndex < Object.keys(charList).length) {
       const lastUserChar = e.target.value[e.target.value.length - 1];
 
       // handle space
@@ -356,7 +286,9 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
     } else if (
       wordCount !== null &&
       currentWordIndex === wordCount - 1 &&
-      e.key === wordList[wordCount - 1][wordList[wordCount - 1].length - 1] &&
+      e.key ===
+        charList[wordCount - 1].chars[charList[wordCount - 1].chars.length - 1]
+          .char &&
       timer.id
     ) {
       clearInterval(timer.id);
@@ -419,15 +351,10 @@ const WordBox: FC<IProps> = ({ setShowTip }) => {
               display: 'flex',
               flexWrap: 'wrap',
             }}
-            ref={wordRef}
+            // ref={wordRef}
           >
             {Object.values(charList).map((word, wordIdx) => (
-              <Word
-                key={wordIdx}
-                wordIdx={wordIdx}
-                word={word}
-                charList={charList}
-              />
+              <Word key={wordIdx} wordIdx={wordIdx} word={word} />
             ))}
             <Box sx={caretStyling}></Box>
             {author && (

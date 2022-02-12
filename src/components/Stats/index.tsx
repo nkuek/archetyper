@@ -66,6 +66,7 @@ const CustomTooltip = (props: any) => {
       </p>
       {payload.map((data: any) => (
         <div
+          key={data.name}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -80,7 +81,6 @@ const CustomTooltip = (props: any) => {
             }}
           ></div>
           <p
-            key={data.name}
             style={{
               margin: '0 0',
               padding: '3px 7.5px',

@@ -9,8 +9,6 @@ const useReset = (randomize = false) => {
   const { wordList, setWordList, setAuthor, setCharListNumber } =
     useContext(WordListContext);
   const {
-    wordRef,
-    textFieldRef,
     setWpm,
     setWpmData,
     setUserInput,
@@ -32,13 +30,8 @@ const useReset = (randomize = false) => {
   const { getQuote } = useQuote();
 
   return useCallback(
-    (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-      e.stopPropagation();
-      if (wordRef.current && textFieldRef.current) {
-        wordRef.current.children[0]?.scrollIntoView({
-          block: 'center',
-        });
-      }
+    (e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+      e?.stopPropagation();
       // if a user has not started a test or has finished the test, give them a new word list
       if ((!timer.id && !currentWordIndex && !currentCharIndex) || randomize) {
         if (settings.quotes) {
@@ -56,7 +49,7 @@ const useReset = (randomize = false) => {
       setWordBoxConfig(defaultWordBoxConfig);
       setCurrentCharIndex(0);
       setCurrentWordIndex(0);
-      setCharListNumber(1);
+      setCharListNumber(0);
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
       setFocused(true);
@@ -66,8 +59,6 @@ const useReset = (randomize = false) => {
       }
     },
     [
-      wordRef,
-      textFieldRef,
       setWordList,
       timer,
       setTimer,
@@ -86,6 +77,7 @@ const useReset = (randomize = false) => {
       currentWordIndex,
       setCurrentWordIndex,
       setFocused,
+      setCharListNumber,
     ]
   );
 };

@@ -13,15 +13,15 @@ import {
 ReactDOM.render(
   <React.StrictMode>
     <WordListProvider>
-      <WordProvider>
-        <ThemeProvider>
-          <TimeProvider>
-            <IndexProvider>
+      <IndexProvider>
+        <WordProvider>
+          <ThemeProvider>
+            <TimeProvider>
               <App />
-            </IndexProvider>
-          </TimeProvider>
-        </ThemeProvider>
-      </WordProvider>
+            </TimeProvider>
+          </ThemeProvider>
+        </WordProvider>
+      </IndexProvider>
     </WordListProvider>
   </React.StrictMode>,
   document.getElementById('root')
