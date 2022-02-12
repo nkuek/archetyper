@@ -9,8 +9,8 @@ interface IProps {
 interface IWordListContext {
   wordList: string[];
   setWordList: TReactSetState<string[]>;
-  wordCount: number | null;
-  setWordCount: TReactSetState<number | null>;
+  wordCount: number | 'endless';
+  setWordCount: TReactSetState<number | 'endless'>;
   loading: boolean;
   setLoading: TReactSetState<boolean>;
   author: string | null;

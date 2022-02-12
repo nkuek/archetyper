@@ -123,6 +123,27 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setWpm(calculateWpm(charCount, timer.time, uncorrectedErrors));
   }, [timer.time, charCount, setWpm, uncorrectedErrors]);
 
+  useEffect(() => {
+    if (!timer.id && userInput) {
+      const intervalTimer = setInterval(
+        () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
+        1000
+      );
+      setTimer((prev) => ({ ...prev, id: intervalTimer }));
+    } else if (
+      wordCount !== 'endless' &&
+      currentWordIndex === wordCount - 1 &&
+      userInput ===
+        charList[wordCount - 1].chars.reduce(
+          (word, key) => (word += key.char),
+          ''
+        ) &&
+      timer.id
+    ) {
+      clearInterval(timer.id);
+    }
+  }, [userInput, currentWordIndex, timer.id, charList, wordCount]);
+
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
@@ -283,22 +304,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     } else {
       setShowWarning(false);
     }
-    if (!timer.id) {
-      const intervalTimer = setInterval(
-        () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
-        1000
-      );
-      setTimer((prev) => ({ ...prev, id: intervalTimer }));
-    } else if (
-      wordCount !== null &&
-      currentWordIndex === wordCount - 1 &&
-      e.key ===
-        charList[wordCount - 1].chars[charList[wordCount - 1].chars.length - 1]
-          .char &&
-      timer.id
-    ) {
-      clearInterval(timer.id);
-    }
 
     if (e.key === 'Backspace') {
       handleBackspace();
@@ -327,7 +332,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         disableGutters
       >
         <Box sx={{ color: theme.words }}>{`${currentWordIndex}${
-          wordCount !== null ? `/ ${wordCount}` : ''
+          wordCount !== 'endless' ? `/ ${wordCount}` : ''
         }`}</Box>
 
         <Box sx={{ color: theme.words }}>{`${timer.time}s`}</Box>

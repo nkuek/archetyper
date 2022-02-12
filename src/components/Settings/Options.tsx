@@ -28,6 +28,7 @@ const Options = () => {
       )
     ) {
       setTimeout(() => setDisableClear(true), 300);
+      resetWordCount();
     }
   }, [settings]);
 
@@ -40,11 +41,6 @@ const Options = () => {
     let newSettings = { ...settings, [option]: checked };
     if (option === 'quotes' && checked) {
       newSettings = { ...defaultSettings, quotes: true };
-    } else if (option === 'endless' && checked) {
-      setWordCount(null);
-      localStorage.setItem('typer-word-count', JSON.stringify(null));
-    } else {
-      resetWordCount();
     }
     setSettings(newSettings);
     localStorage.setItem('typer-settings', JSON.stringify(newSettings));

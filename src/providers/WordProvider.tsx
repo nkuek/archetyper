@@ -75,7 +75,6 @@ export const WordContext = createContext<IWordContext>(undefined!);
 
 export const options = [
   { name: 'quotes', value: 'quotes' },
-  { name: 'endless', value: 'endless' },
   { name: 'capital letters', value: 'capitalChars' },
   { name: 'special characters', value: 'specialChars' },
   { name: 'numbers', value: 'numbers' },
@@ -168,7 +167,10 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     if (!settings.quotes) {
       const wordCount = localStorage.getItem('typer-word-count')
         ? JSON.parse(localStorage.getItem('typer-word-count') || '')
+        : settings.endless
+        ? 'endless'
         : 25;
+      console.log(localStorage.getItem('typer-word-count'));
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);
       setAuthor(null);
@@ -177,7 +179,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       getQuote();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings, wordCount]);
+  }, [settings]);
 
   const value = useMemo(
     () => ({
