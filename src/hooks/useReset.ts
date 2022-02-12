@@ -17,7 +17,6 @@ const useReset = (randomize = false) => {
     setWordBoxConfig,
     setFocused,
     textFieldRef,
-    wordRef,
   } = useContext(WordContext);
 
   const {
@@ -83,6 +82,7 @@ const useReset = (randomize = false) => {
       setCurrentWordIndex,
       setFocused,
       setCharListNumber,
+      textFieldRef,
     ]
   );
 };

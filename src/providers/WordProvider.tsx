@@ -102,6 +102,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     charListNumber,
     setCharList,
     setCharListNumber,
+    loading,
   } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
@@ -126,29 +127,40 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       if (settings.quotes) return;
       if (lastWordObserver.current) lastWordObserver.current.disconnect();
 
-      lastWordObserver.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          const newWords = randomizeWords(settings);
-          const newCharList = generateCharList(newWords, charListNumber);
-          setCharList((prev) => ({ ...prev, ...newCharList }));
-        }
-      });
+      lastWordObserver.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            const newWords = randomizeWords(settings);
+            const newCharList = generateCharList(newWords, charListNumber);
+            setCharList((prev) => ({ ...prev, ...newCharList }));
+          }
+        },
+        { rootMargin: '100px' }
+      );
       if (lastWordObserver.current && node)
         lastWordObserver.current.observe(node);
     },
     [setCharList, charListNumber, generateCharList, settings]
   );
 
-  const wordRef = useCallback((node: HTMLDivElement) => {
-    if (observer.current) observer.current.disconnect();
+  const wordRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return;
+      const wordBox = document.getElementById('wordBox');
+      if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting)
-        entries[0].target.scrollIntoView({ block: 'center' });
-    });
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting)
+            entries[0].target.scrollIntoView({ block: 'center' });
+        },
+        { root: wordBox, threshold: 0.1 }
+      );
 
-    if (observer.current && node) observer.current.observe(node);
-  }, []);
+      if (observer.current && node) observer.current.observe(node);
+    },
+    [loading]
+  );
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
 
