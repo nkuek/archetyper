@@ -6,12 +6,11 @@ import {
   FormGroup,
   Typography,
 } from '@mui/material';
-import { ThemeContext, WordContext, WordListContext } from 'providers';
+import { ThemeContext, WordContext } from 'providers';
 import { defaultSettings, options } from 'providers/WordProvider';
 import { Box } from '@mui/system';
 
 const Options = () => {
-  const { setWordCount } = useContext(WordListContext);
   const { settings, setSettings } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
 
@@ -28,15 +27,9 @@ const Options = () => {
       )
     ) {
       setTimeout(() => setDisableClear(true), 300);
-      resetWordCount();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings]);
-
-  const resetWordCount = () => {
-    setWordCount(25);
-    localStorage.setItem('typer-word-count', JSON.stringify(25));
-  };
 
   const handleChange = (checked: boolean, option: string) => {
     let newSettings = { ...settings, [option]: checked };
@@ -49,7 +42,6 @@ const Options = () => {
   };
 
   const clearSelection = () => {
-    resetWordCount();
     setSettings(defaultSettings);
     localStorage.setItem('typer-settings', JSON.stringify(defaultSettings));
   };

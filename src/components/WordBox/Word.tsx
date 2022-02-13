@@ -15,6 +15,7 @@ import {
 } from 'providers';
 import Char from './Char';
 import { IChars } from 'providers/WordListProvider';
+import { maxWords } from 'words';
 
 interface IProps {
   wordIdx: number;
@@ -24,30 +25,35 @@ interface IProps {
 const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
-  const { userWordIndex } = useContext(IndexContext);
+  const { currentWordIndex, userWordIndex } = useContext(IndexContext);
   const { currentWordRef } = useContext(WordContext);
-  const { charList } = useContext(WordListContext);
+  const { wordList } = useContext(WordListContext);
   const [showWord, setShowWord] = useState(true);
 
   const wordObserver = useRef<IntersectionObserver>();
-  const wordRef = useCallback((node: HTMLDivElement) => {
-    const wordBox = document.getElementById('wordBox');
-    if (wordObserver.current) wordObserver.current.disconnect();
+  const wordRef = useCallback(
+    (node: HTMLDivElement) => {
+      const wordBox = document.getElementById('wordBox');
+      if (wordObserver.current) wordObserver.current.disconnect();
 
-    wordObserver.current = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          setShowWord(false);
-        }
-      },
-      { root: wordBox, rootMargin: '-10px' }
-    );
-    if (node) wordObserver.current.observe(node);
-  }, []);
+      wordObserver.current = new IntersectionObserver(
+        ([entry]) => {
+          // hide words that the user has already typed
+          if (!entry.isIntersecting && wordIdx < userWordIndex) {
+            setShowWord(false);
+          }
+        },
+        { root: wordBox, rootMargin: '100px' }
+      );
+      if (node) wordObserver.current.observe(node);
+    },
+    [userWordIndex, wordIdx]
+  );
 
+  // useEffect to reset showWord state when resetting
   useEffect(() => {
     setShowWord(true);
-  }, [charList]);
+  }, [wordList]);
 
   if (!showWord) return null;
 
