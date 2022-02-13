@@ -9,10 +9,10 @@ import {
   useContext,
   useCallback,
 } from 'react';
-import randomizeWords from 'words';
+import randomizeWords, { maxWords } from 'words';
 import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
-import { WordListContext } from './WordListProvider';
+import { ICharList, TWordChar, WordListContext } from './WordListProvider';
 
 interface IProps {
   children?: React.ReactNode;
@@ -69,6 +69,7 @@ interface IWordContext {
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
   focused: boolean;
   setFocused: TReactSetState<boolean>;
+  generateCharList: (wordList: string[], charListNumber: number) => ICharList;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -96,12 +97,11 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     setWordList,
     setWordCount,
     setAuthor,
-    wordCount,
-    generateCharList,
     charListNumber,
     setCharList,
     setCharListNumber,
     loading,
+    setLoading,
   } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
@@ -117,6 +117,30 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       : defaultSettings
   );
   const [focused, setFocused] = useState(true);
+
+  const generateCharList = useCallback(
+    (wordList: string[], charListNumber?: number) => {
+      const charList: ICharList = {};
+      if (wordList.length) {
+        for (let i = 0; i < wordList.length; i++) {
+          const word = wordList[i];
+          const wordChars: TWordChar[] = [];
+          for (const char of word) {
+            wordChars.push({ correct: null, char, extra: false });
+          }
+          charList[i + (charListNumber ? maxWords * charListNumber : 0)] = {
+            skipped: false,
+            chars: wordChars,
+            length: word.length,
+          };
+        }
+      }
+      setLoading(false);
+      if (!settings.quotes) setCharListNumber((prev) => prev + 1);
+      return charList;
+    },
+    [setLoading, setCharListNumber, settings.quotes]
+  );
 
   const observer = useRef<IntersectionObserver>();
   const lastWordObserver = useRef<IntersectionObserver>();
@@ -170,7 +194,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
         : settings.endless
         ? 'endless'
         : 25;
-      console.log(localStorage.getItem('typer-word-count'));
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);
       setAuthor(null);
@@ -200,6 +223,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       focused,
       setFocused,
       lastWordRef,
+      generateCharList,
     }),
     [
       wpm,
@@ -219,6 +243,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       focused,
       setFocused,
       lastWordRef,
+      generateCharList,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;

@@ -31,8 +31,8 @@ const useReset = (randomize = false) => {
   const { getQuote } = useQuote();
 
   return useCallback(
-    (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-      e.stopPropagation();
+    (e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+      e?.stopPropagation();
       const wordBox = document.getElementById('wordBox');
       if (wordBox) wordBox.scrollTop = 0;
       if (textFieldRef.current) textFieldRef.current.focus();

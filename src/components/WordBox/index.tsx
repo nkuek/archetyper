@@ -47,7 +47,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     charList,
     setCharList,
     charListNumber,
-    generateCharList,
   } = useContext(WordListContext);
 
   const {
@@ -64,6 +63,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     textFieldRef,
     focused,
     setFocused,
+    generateCharList,
+    settings,
   } = useContext(WordContext);
 
   const {
@@ -142,7 +143,15 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     ) {
       clearInterval(timer.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInput, currentWordIndex, timer.id, charList, wordCount]);
+
+  useEffect(() => {
+    if (timer.id) {
+      handleReset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings]);
 
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {

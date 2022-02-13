@@ -30,6 +30,7 @@ const Options = () => {
       setTimeout(() => setDisableClear(true), 300);
       resetWordCount();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings]);
 
   const resetWordCount = () => {
