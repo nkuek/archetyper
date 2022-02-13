@@ -20,6 +20,7 @@ import {
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation } from './styles';
+import { TWordChar } from 'providers/WordListProvider';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -258,7 +259,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     }
   };
 
-  const handleBackspace = () => {
+  const handleBackspace = (e: KeyboardEvent<HTMLInputElement>) => {
     const decrementErrors = () => {
       setWordBoxConfig((prev) => ({
         ...prev,
@@ -266,9 +267,42 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
       }));
     };
 
-    if (currentCharIndex === 0 && currentWordIndex > 0) {
-      const previousWord = inputHistory[currentWordIndex - 1];
+    const decrementWord = () => {
+      setCurrentWordIndex((prev) => prev - 1);
+      charList[currentWordIndex - 1].skipped = false;
+      setInputHistory((prev) => prev.slice(0, prev.length - 1));
+    };
 
+    const resetWord = (index: number) => {
+      let newUncorrectErrors = uncorrectedErrors;
+      charList[index].chars.forEach((char) => {
+        if (!char.correct || char.extra) newUncorrectErrors--;
+      });
+      const baseWord = charList[index].chars.filter((char) => !char.extra);
+
+      const resetWord: TWordChar[] = baseWord.map((char) => ({
+        ...char,
+        correct: null,
+      }));
+
+      setWordBoxConfig((prev) => ({
+        ...prev,
+        uncorrectedErrors: newUncorrectErrors,
+        incorrectChars: 0,
+      }));
+      charList[index].chars = resetWord;
+    };
+
+    const previousWord = inputHistory[currentWordIndex - 1];
+
+    if (e.getModifierState('Alt') || e.getModifierState('Meta')) {
+      if (currentCharIndex === 0 && currentWordIndex > 0) {
+        resetWord(currentWordIndex - 1);
+        decrementWord();
+      } else {
+        resetWord(currentWordIndex);
+      }
+    } else if (currentCharIndex === 0 && currentWordIndex > 0) {
       setWordBoxConfig((prev) => ({
         ...prev,
         uncorrectedErrors:
@@ -278,14 +312,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             (previousWord.length - 1)),
         incorrectChars: wpmData[currentWordIndex - 1].incorrectChars,
       }));
-
-      setCurrentWordIndex((prev) => prev - 1);
-
+      decrementWord();
       setUserInput(inputHistory[currentWordIndex - 1]);
-
-      charList[currentWordIndex - 1].skipped = false;
-
-      setInputHistory((prev) => prev.slice(0, prev.length - 1));
     } else if (currentCharIndex > charList[currentWordIndex].length) {
       charList[currentWordIndex].chars = charList[currentWordIndex].chars.slice(
         0,
@@ -315,7 +343,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     }
 
     if (e.key === 'Backspace') {
-      handleBackspace();
+      handleBackspace(e);
     }
   };
 
