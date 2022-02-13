@@ -126,10 +126,12 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
           const word = wordList[i];
           const wordChars: TWordChar[] = [];
           for (const char of word) {
-            wordChars.push({ correct: null, char, extra: false });
+            wordChars.push({
+              correct: null,
+              char,
+            });
           }
           charList[i + (charListNumber ? maxWords * charListNumber : 0)] = {
-            skipped: false,
             chars: wordChars,
             length: word.length,
           };

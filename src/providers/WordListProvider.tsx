@@ -21,15 +21,15 @@ interface IWordListContext {
 }
 
 export type TWordChar = {
-  [key: string]: any;
   correct: null | boolean;
-  extra: boolean;
+  extra?: boolean;
   char: string;
+  skipped?: boolean;
 };
 
 export interface IChars {
   chars: TWordChar[];
-  skipped: boolean;
+  skipped?: boolean;
   length: number;
 }
 

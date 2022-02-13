@@ -173,16 +173,23 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           e.target.value.length - 1 > charList[currentWordIndex].chars.length
         ) {
           charList[currentWordIndex].skipped = true;
+          // loop over remaining chars and set skipped to true
+          for (
+            let i = currentCharIndex;
+            i < charList[currentWordIndex].length;
+            i++
+          ) {
+            charList[currentWordIndex].chars[i].skipped = true;
+          }
         }
-        const extraChars = Math.max(
-          e.target.value.length - 1 - charList[currentWordIndex].length,
-          0
-        );
 
-        const missingChars = Math.max(
-          charList[currentWordIndex].length - currentCharIndex,
-          0
-        );
+        let missingChars = 0;
+        let extraChars = 0;
+
+        charList[currentWordIndex].chars.forEach((char) => {
+          if (char.skipped) missingChars++;
+          else if (char.extra) extraChars++;
+        });
 
         const totalWordErrors = missingChars + incorrectChars;
 
@@ -214,25 +221,26 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         setInputHistory((prev) => [...prev, e.target.value]);
       } else {
         // move to next or previous character
-        setWordBoxConfig((prev) => ({
-          ...prev,
-          charCount: prev.charCount + 1,
-        }));
         setCurrentCharIndex(e.target.value.length);
 
         // userInput is > target value only when deleting since userInput is one state behind
         if (userInput.length > e.target.value.length) return;
 
+        setWordBoxConfig((prev) => ({
+          ...prev,
+          charCount: prev.charCount + 1,
+        }));
+
         if (e.target.value.length <= charList[currentWordIndex].length) {
-          const correct =
+          const isCorrect =
             e.target.value.length <= charList[currentWordIndex].length &&
             lastUserChar ===
               charList[currentWordIndex].chars[e.target.value.length - 1].char;
 
           charList[currentWordIndex].chars[e.target.value.length - 1].correct =
-            correct;
+            isCorrect;
 
-          if (!correct) {
+          if (!isCorrect) {
             setWordBoxConfig((prev) => ({
               ...prev,
               incorrectChars: prev.incorrectChars + 1,
@@ -243,11 +251,11 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
         // append extra letters to words if user types more letters
         else if (e.target.value.length > charList[currentWordIndex].length) {
-          // userInput length is greater than target value length if user deletes a value since the userInput state will always be one state behind the target value
           charList[currentWordIndex].chars.push({
             char: lastUserChar,
             correct: false,
             extra: true,
+            skipped: false,
           });
           setWordBoxConfig((prev) => ({
             ...prev,
@@ -276,8 +284,11 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     const resetWord = (index: number) => {
       let newUncorrectErrors = uncorrectedErrors;
       charList[index].chars.forEach((char) => {
-        if (!char.correct || char.extra) newUncorrectErrors--;
+        if ((char.correct !== null && !char.correct) || char.extra) {
+          newUncorrectErrors--;
+        }
       });
+      console.log({ newUncorrectErrors, charList: charList[index].chars });
       const baseWord = charList[index].chars.filter((char) => !char.extra);
 
       const resetWord: TWordChar[] = baseWord.map((char) => ({
@@ -290,18 +301,23 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         uncorrectedErrors: newUncorrectErrors,
         incorrectChars: 0,
       }));
+
       charList[index].chars = resetWord;
     };
 
     const previousWord = inputHistory[currentWordIndex - 1];
 
+    // deleting entire word
     if (e.getModifierState('Alt') || e.getModifierState('Meta')) {
+      // if at the beginning of a word, delete entire previous word
       if (currentCharIndex === 0 && currentWordIndex > 0) {
         resetWord(currentWordIndex - 1);
         decrementWord();
+        // else delete just current word
       } else {
         resetWord(currentWordIndex);
       }
+      // move back one word if backspacing at the beginning of a word
     } else if (currentCharIndex === 0 && currentWordIndex > 0) {
       setWordBoxConfig((prev) => ({
         ...prev,
@@ -312,27 +328,27 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             (previousWord.length - 1)),
         incorrectChars: wpmData[currentWordIndex - 1].incorrectChars,
       }));
-      decrementWord();
-      setUserInput(inputHistory[currentWordIndex - 1]);
-    } else if (currentCharIndex > charList[currentWordIndex].length) {
-      charList[currentWordIndex].chars = charList[currentWordIndex].chars.slice(
-        0,
-        charList[currentWordIndex].chars.length - 1
-      );
 
-      decrementErrors();
-    } else if (currentCharIndex > 0) {
-      if (!charList[currentWordIndex].chars[currentCharIndex - 1].correct) {
+      decrementWord();
+
+      setUserInput(inputHistory[currentWordIndex - 1]);
+      // if deleting an extra character, remove it from the charList
+    } else {
+      if (currentCharIndex > charList[currentWordIndex].length) {
+        charList[currentWordIndex].chars = charList[
+          currentWordIndex
+        ].chars.slice(0, charList[currentWordIndex].chars.length - 1);
+        // otherwise just decrement the num errors and update correct state
+      } else if (currentCharIndex > 0) {
+        charList[currentWordIndex].chars[currentCharIndex - 1].correct = null;
+      }
+      if (
+        !charList[currentWordIndex].chars[currentCharIndex - 1].correct ||
+        charList[currentWordIndex].chars[currentCharIndex - 1].extra
+      ) {
         decrementErrors();
       }
-
-      charList[currentWordIndex].chars[currentCharIndex - 1].correct = null;
     }
-
-    setWordBoxConfig((prev) => ({
-      ...prev,
-      charCount: Math.max(prev.charCount - 1, 0),
-    }));
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
