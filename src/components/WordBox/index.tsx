@@ -1,4 +1,12 @@
-import { useEffect, useContext, FC, KeyboardEvent, useMemo } from 'react';
+import {
+  useEffect,
+  useContext,
+  FC,
+  KeyboardEvent,
+  useMemo,
+  useRef,
+  useCallback,
+} from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -21,6 +29,7 @@ import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
+import randomizeWords from 'words';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -40,15 +49,8 @@ interface IProps {
 }
 
 const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
-  const {
-    wordList,
-    wordCount,
-    loading,
-    author,
-    charList,
-    setCharList,
-    charListNumber,
-  } = useContext(WordListContext);
+  const { wordList, wordCount, loading, author, charList, setCharList } =
+    useContext(WordListContext);
 
   const {
     wordBoxConfig,
@@ -74,6 +76,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     currentWordIndex,
     setCurrentWordIndex,
     caretSpacing,
+    userWordIndex,
+    setUserWordIndex,
   } = useContext(IndexContext);
 
   const muiTheme = useTheme();
@@ -116,10 +120,26 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   useEffect(() => {
     if (wordList.length) {
-      setCharList(generateCharList(wordList, charListNumber));
+      setCharList(generateCharList(wordList));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wordList, generateCharList]);
+
+  useEffect(() => {
+    if (settings.quotes) return;
+    const newWord = randomizeWords(settings, true);
+    const wordChars: TWordChar[] = [];
+    for (const char of newWord) {
+      wordChars.push({ correct: null, char });
+    }
+    setCharList((prev) => ({
+      ...prev,
+      [Object.keys(prev).length]: {
+        chars: wordChars,
+        length: wordChars.length,
+      },
+    }));
+  }, [currentWordIndex]);
 
   useEffect(() => {
     setWpm(calculateWpm(charCount, timer.time, uncorrectedErrors));
@@ -169,24 +189,24 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         }
         // if user presses space before reaching the end of the word, make entire word incorrect and remove other styling
         if (
-          currentCharIndex !== charList[currentWordIndex].chars.length ||
-          e.target.value.length - 1 > charList[currentWordIndex].chars.length
+          currentCharIndex !== charList[userWordIndex].chars.length ||
+          e.target.value.length - 1 > charList[userWordIndex].chars.length
         ) {
-          charList[currentWordIndex].skipped = true;
+          charList[userWordIndex].skipped = true;
           // loop over remaining chars and set skipped to true
           for (
             let i = currentCharIndex;
-            i < charList[currentWordIndex].length;
+            i < charList[userWordIndex].length;
             i++
           ) {
-            charList[currentWordIndex].chars[i].skipped = true;
+            charList[userWordIndex].chars[i].skipped = true;
           }
         }
 
         let missingChars = 0;
         let extraChars = 0;
 
-        charList[currentWordIndex].chars.forEach((char) => {
+        charList[userWordIndex].chars.forEach((char) => {
           if (char.skipped) missingChars++;
           else if (char.extra) extraChars++;
         });
@@ -196,9 +216,9 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         // set wpm data timestep
         setWpmData((prev) => ({
           ...prev,
-          [currentWordIndex]: {
-            word: wordList[currentWordIndex],
-            wordNum: currentWordIndex + 1,
+          [userWordIndex]: {
+            word: wordList[userWordIndex],
+            wordNum: userWordIndex + 1,
             errors: totalWordErrors,
             wpm,
             missingChars,
@@ -216,7 +236,10 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           uncorrectedErrors: prev.uncorrectedErrors + missingChars,
         }));
         setCurrentCharIndex(0);
-        setCurrentWordIndex((prev) => prev + 1);
+        if (userWordIndex === currentWordIndex) {
+          setCurrentWordIndex((prev) => prev + 1);
+        }
+        setUserWordIndex((prev) => prev + 1);
         setUserInput('');
         setInputHistory((prev) => [...prev, e.target.value]);
       } else {
@@ -231,13 +254,13 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           charCount: prev.charCount + 1,
         }));
 
-        if (e.target.value.length <= charList[currentWordIndex].length) {
+        if (e.target.value.length <= charList[userWordIndex].length) {
           const isCorrect =
-            e.target.value.length <= charList[currentWordIndex].length &&
+            e.target.value.length <= charList[userWordIndex].length &&
             lastUserChar ===
-              charList[currentWordIndex].chars[e.target.value.length - 1].char;
+              charList[userWordIndex].chars[e.target.value.length - 1].char;
 
-          charList[currentWordIndex].chars[e.target.value.length - 1].correct =
+          charList[userWordIndex].chars[e.target.value.length - 1].correct =
             isCorrect;
 
           if (!isCorrect) {
@@ -250,8 +273,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         }
 
         // append extra letters to words if user types more letters
-        else if (e.target.value.length > charList[currentWordIndex].length) {
-          charList[currentWordIndex].chars.push({
+        else if (e.target.value.length > charList[userWordIndex].length) {
+          charList[userWordIndex].chars.push({
             char: lastUserChar,
             correct: false,
             extra: true,
@@ -276,8 +299,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     };
 
     const decrementWord = () => {
-      setCurrentWordIndex((prev) => prev - 1);
-      charList[currentWordIndex - 1].skipped = false;
+      setUserWordIndex((prev) => prev - 1);
+      charList[userWordIndex - 1].skipped = false;
       setInputHistory((prev) => prev.slice(0, prev.length - 1));
     };
 
@@ -288,12 +311,12 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           newUncorrectErrors--;
         }
       });
-      console.log({ newUncorrectErrors, charList: charList[index].chars });
       const baseWord = charList[index].chars.filter((char) => !char.extra);
 
       const resetWord: TWordChar[] = baseWord.map((char) => ({
-        ...char,
         correct: null,
+        char: char.char,
+        skipped: false,
       }));
 
       setWordBoxConfig((prev) => ({
@@ -305,48 +328,49 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
       charList[index].chars = resetWord;
     };
 
-    const previousWord = inputHistory[currentWordIndex - 1];
+    const previousWord = inputHistory[userWordIndex - 1];
 
     // deleting entire word
     if (e.getModifierState('Alt') || e.getModifierState('Meta')) {
       // if at the beginning of a word, delete entire previous word
-      if (currentCharIndex === 0 && currentWordIndex > 0) {
-        resetWord(currentWordIndex - 1);
+      if (currentCharIndex === 0 && userWordIndex > 0) {
+        resetWord(userWordIndex - 1);
         decrementWord();
         // else delete just current word
       } else {
-        resetWord(currentWordIndex);
+        resetWord(userWordIndex);
       }
       // move back one word if backspacing at the beginning of a word
-    } else if (currentCharIndex === 0 && currentWordIndex > 0) {
+    } else if (currentCharIndex === 0 && userWordIndex > 0) {
       setWordBoxConfig((prev) => ({
         ...prev,
         uncorrectedErrors:
           prev.uncorrectedErrors -
           // subtract 1 to account for the space
-          (charList[currentWordIndex - 1].chars.length -
+          (charList[userWordIndex - 1].chars.length -
             (previousWord.length - 1)),
-        incorrectChars: wpmData[currentWordIndex - 1].incorrectChars,
+        incorrectChars: wpmData[userWordIndex - 1].incorrectChars,
       }));
 
       decrementWord();
 
-      setUserInput(inputHistory[currentWordIndex - 1]);
+      setUserInput(inputHistory[userWordIndex - 1]);
       // if deleting an extra character, remove it from the charList
     } else {
-      if (currentCharIndex > charList[currentWordIndex].length) {
-        charList[currentWordIndex].chars = charList[
-          currentWordIndex
-        ].chars.slice(0, charList[currentWordIndex].chars.length - 1);
+      if (currentCharIndex > charList[userWordIndex].length) {
+        charList[userWordIndex].chars = charList[userWordIndex].chars.slice(
+          0,
+          charList[userWordIndex].chars.length - 1
+        );
         // otherwise just decrement the num errors and update correct state
       } else if (currentCharIndex > 0) {
-        charList[currentWordIndex].chars[currentCharIndex - 1].correct = null;
-      }
-      if (
-        !charList[currentWordIndex].chars[currentCharIndex - 1].correct ||
-        charList[currentWordIndex].chars[currentCharIndex - 1].extra
-      ) {
-        decrementErrors();
+        charList[userWordIndex].chars[currentCharIndex - 1].correct = null;
+        if (
+          !charList[userWordIndex].chars[currentCharIndex - 1].correct ||
+          charList[userWordIndex].chars[currentCharIndex - 1].extra
+        ) {
+          decrementErrors();
+        }
       }
     }
   };
@@ -384,7 +408,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         }}
         disableGutters
       >
-        <Box sx={{ color: theme.words }}>{`${currentWordIndex}${
+        <Box sx={{ color: theme.words }}>{`${userWordIndex}${
           wordCount !== 'endless' ? `/ ${wordCount}` : ''
         }`}</Box>
 

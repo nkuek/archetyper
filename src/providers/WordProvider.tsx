@@ -9,7 +9,6 @@ import {
   useContext,
   useCallback,
 } from 'react';
-import randomizeWords, { maxWords } from 'words';
 import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
 import { ICharList, TWordChar, WordListContext } from './WordListProvider';
@@ -60,8 +59,7 @@ interface IWordContext {
   setUserInput: TReactSetState<string>;
   inputHistory: string[];
   setInputHistory: TReactSetState<string[]>;
-  wordRef: (node: HTMLDivElement) => void;
-  lastWordRef: (node: HTMLDivElement) => void;
+  currentWordRef: (node: HTMLDivElement) => void;
   textFieldRef: React.RefObject<HTMLInputElement>;
   settings: ISettings;
   setSettings: TReactSetState<ISettings>;
@@ -69,7 +67,7 @@ interface IWordContext {
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
   focused: boolean;
   setFocused: TReactSetState<boolean>;
-  generateCharList: (wordList: string[], charListNumber: number) => ICharList;
+  generateCharList: (wordList: string[] | string) => ICharList;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -93,16 +91,8 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
-  const {
-    setWordList,
-    setWordCount,
-    setAuthor,
-    charListNumber,
-    setCharList,
-    setCharListNumber,
-    loading,
-    setLoading,
-  } = useContext(WordListContext);
+  const { setWordList, setWordCount, setAuthor, loading, setLoading } =
+    useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -119,7 +109,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const [focused, setFocused] = useState(true);
 
   const generateCharList = useCallback(
-    (wordList: string[], charListNumber?: number) => {
+    (wordList: string[] | string) => {
       const charList: ICharList = {};
       if (wordList.length) {
         for (let i = 0; i < wordList.length; i++) {
@@ -131,61 +121,41 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
               char,
             });
           }
-          charList[i + (charListNumber ? maxWords * charListNumber : 0)] = {
+          charList[i] = {
             chars: wordChars,
             length: word.length,
           };
         }
       }
       setLoading(false);
-      if (!settings.quotes) setCharListNumber((prev) => prev + 1);
       return charList;
     },
-    [setLoading, setCharListNumber, settings.quotes]
+    [setLoading]
   );
 
-  const observer = useRef<IntersectionObserver>();
-  const lastWordObserver = useRef<IntersectionObserver>();
+  const currentWordObserver = useRef<IntersectionObserver>();
 
-  const lastWordRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (settings.quotes) return;
-      if (lastWordObserver.current) lastWordObserver.current.disconnect();
-
-      lastWordObserver.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            const newWords = randomizeWords(settings);
-            const newCharList = generateCharList(newWords, charListNumber);
-            setCharList((prev) => ({ ...prev, ...newCharList }));
-          }
-        },
-        { rootMargin: '100px' }
-      );
-      if (lastWordObserver.current && node)
-        lastWordObserver.current.observe(node);
-    },
-    [setCharList, charListNumber, generateCharList, settings]
-  );
-
-  const wordRef = useCallback(
+  const currentWordRef = useCallback(
     (node: HTMLDivElement) => {
       if (loading) return;
       const wordBox = document.getElementById('wordBox');
-      if (observer.current) observer.current.disconnect();
+      if (currentWordObserver.current) currentWordObserver.current.disconnect();
 
-      observer.current = new IntersectionObserver(
+      currentWordObserver.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting)
+          if (entries[0].isIntersecting) {
             entries[0].target.scrollIntoView({ block: 'center' });
+          }
         },
         { root: wordBox, threshold: 0.1 }
       );
 
-      if (observer.current && node) observer.current.observe(node);
+      if (currentWordObserver.current && node)
+        currentWordObserver.current.observe(node);
     },
     [loading]
   );
+
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
 
@@ -199,7 +169,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);
       setAuthor(null);
-      setCharListNumber(0);
     } else {
       getQuote();
     }
@@ -218,13 +187,12 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setUserInput,
       inputHistory,
       setInputHistory,
-      wordRef,
+      currentWordRef,
       textFieldRef,
       settings,
       setSettings,
       focused,
       setFocused,
-      lastWordRef,
       generateCharList,
     }),
     [
@@ -236,7 +204,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setUserInput,
       inputHistory,
       setInputHistory,
-      wordRef,
+      currentWordRef,
       textFieldRef,
       settings,
       setSettings,
@@ -244,7 +212,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
       setWordBoxConfig,
       focused,
       setFocused,
-      lastWordRef,
       generateCharList,
     ]
   );

@@ -16,8 +16,6 @@ interface IWordListContext {
   setAuthor: TReactSetState<null | string>;
   charList: ICharList;
   setCharList: TReactSetState<ICharList>;
-  charListNumber: number;
-  setCharListNumber: TReactSetState<number>;
 }
 
 export type TWordChar = {
@@ -50,7 +48,6 @@ const WordListProvider: FC<IProps> = ({ children }) => {
   const [author, setAuthor] = useState<null | string>(null);
 
   const [charList, setCharList] = useState<ICharList>({});
-  const [charListNumber, setCharListNumber] = useState(0);
 
   const value = useMemo(
     () => ({
@@ -64,8 +61,6 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       setAuthor,
       charList,
       setCharList,
-      charListNumber,
-      setCharListNumber,
     }),
     [
       wordList,
@@ -78,8 +73,6 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       setAuthor,
       charList,
       setCharList,
-      charListNumber,
-      setCharListNumber,
     ]
   );
   return (

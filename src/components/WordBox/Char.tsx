@@ -12,18 +12,17 @@ interface IProps {
 const Char: FC<IProps> = (props) => {
   const { charIdx, char, wordIdx } = props;
   const { charList } = useContext(WordListContext);
-  const { currentWordIndex, currentCharIndex, setCaretSpacing } =
+  const { userWordIndex, currentCharIndex, setCaretSpacing } =
     useContext(IndexContext);
   const { theme } = useContext(ThemeContext);
 
   const displayExtraChar =
-    wordIdx === currentWordIndex &&
-    charIdx >= charList[currentWordIndex].length - 1 &&
+    wordIdx === userWordIndex &&
+    charIdx >= charList[userWordIndex].length - 1 &&
     charIdx === currentCharIndex - 1 &&
-    currentCharIndex >= charList[currentWordIndex].length - 1;
+    currentCharIndex >= charList[userWordIndex].length - 1;
 
-  const currentChar =
-    wordIdx === currentWordIndex && charIdx === currentCharIndex;
+  const currentChar = wordIdx === userWordIndex && charIdx === currentCharIndex;
 
   const charRef = useCallback(
     (node: HTMLDivElement) => {

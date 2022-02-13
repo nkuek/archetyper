@@ -1,4 +1,11 @@
-import React, { FC, useContext } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Box } from '@mui/system';
 import {
   IndexContext,
@@ -17,13 +24,36 @@ interface IProps {
 const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
-  const { currentWordIndex } = useContext(IndexContext);
-  const { wordRef, lastWordRef } = useContext(WordContext);
+  const { userWordIndex } = useContext(IndexContext);
+  const { currentWordRef } = useContext(WordContext);
   const { charList } = useContext(WordListContext);
+  const [showWord, setShowWord] = useState(true);
+
+  const wordObserver = useRef<IntersectionObserver>();
+  const wordRef = useCallback((node: HTMLDivElement) => {
+    const wordBox = document.getElementById('wordBox');
+    if (wordObserver.current) wordObserver.current.disconnect();
+
+    wordObserver.current = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setShowWord(false);
+        }
+      },
+      { root: wordBox, rootMargin: '-10px' }
+    );
+    if (node) wordObserver.current.observe(node);
+  }, []);
+
+  useEffect(() => {
+    setShowWord(true);
+  }, [charList]);
+
+  if (!showWord) return null;
 
   return (
     <Box
-      color={wordIdx === currentWordIndex ? theme.currentWord : theme.words}
+      color={wordIdx === userWordIndex ? theme.currentWord : theme.words}
       key={wordIdx}
       sx={{
         display: 'flex',
@@ -34,13 +64,7 @@ const Word: FC<IProps> = (props) => {
         flexWrap: 'wrap',
       }}
       className="word"
-      ref={
-        currentWordIndex === wordIdx
-          ? wordRef
-          : wordIdx === Object.keys(charList).length - 1
-          ? lastWordRef
-          : null
-      }
+      ref={userWordIndex === wordIdx ? currentWordRef : wordRef}
     >
       {word.chars.map((char, charIdx) => (
         <Char
