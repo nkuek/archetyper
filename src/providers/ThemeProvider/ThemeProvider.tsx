@@ -1,6 +1,7 @@
 import { TReactSetState } from '../general/types';
 import { createContext, useState, FC, useMemo, useEffect } from 'react';
 import themeList, { ITheme } from './themeList';
+import { useLocalStorage } from 'hooks';
 
 interface IProps {
   children?: React.ReactNode;
@@ -15,11 +16,8 @@ interface IThemeContext {
 export const ThemeContext = createContext<IThemeContext>(undefined!);
 
 const ThemeProvider: FC<IProps> = ({ children }) => {
-  const [themeName, setThemeName] = useState(
-    localStorage.getItem('typer-theme')
-      ? JSON.parse(localStorage.getItem('typer-theme') || '')
-      : 'default'
-  );
+  const { value: LSTheme } = useLocalStorage('typer-theme', 'default');
+  const [themeName, setThemeName] = useState(LSTheme);
 
   const favicon = document.getElementById('favicon') as HTMLLinkElement;
 

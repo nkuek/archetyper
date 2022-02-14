@@ -9,6 +9,7 @@ import {
 import { ThemeContext, WordContext } from 'providers';
 import { defaultSettings, options } from 'providers/WordProvider';
 import { Box } from '@mui/system';
+import { useLocalStorage } from 'hooks';
 
 const Options = () => {
   const { settings, setSettings } = useContext(WordContext);
@@ -19,6 +20,8 @@ const Options = () => {
       (key) => !settings[key as keyof typeof settings]
     )
   );
+
+  const { setLocalStorage } = useLocalStorage('typer-settings');
 
   useEffect(() => {
     if (
@@ -37,13 +40,13 @@ const Options = () => {
       newSettings = { ...defaultSettings, quotes: true };
     }
     setSettings(newSettings);
-    localStorage.setItem('typer-settings', JSON.stringify(newSettings));
+    setLocalStorage(newSettings);
     setDisableClear(false);
   };
 
   const clearSelection = () => {
     setSettings(defaultSettings);
-    localStorage.setItem('typer-settings', JSON.stringify(defaultSettings));
+    setLocalStorage(defaultSettings);
   };
 
   return (

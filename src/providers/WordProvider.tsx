@@ -1,4 +1,4 @@
-import { useQuote } from 'hooks';
+import { useLocalStorage, useQuote } from 'hooks';
 import {
   createContext,
   useState,
@@ -90,6 +90,10 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC<IProps> = ({ children }) => {
+  const { value: LSSettings } = useLocalStorage(
+    'typer-settings',
+    defaultSettings
+  );
   const { setWordList, setWordCount, setAuthor, loading, setLoading } =
     useContext(WordListContext);
 
@@ -100,11 +104,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     useState<IWordBoxConfig>(defaultWordBoxConfig);
   const [userInput, setUserInput] = useState('');
   const [inputHistory, setInputHistory] = useState<string[]>([]);
-  const [settings, setSettings] = useState<ISettings>(
-    localStorage.getItem('typer-settings')
-      ? JSON.parse(localStorage.getItem('typer-settings') || '')
-      : defaultSettings
-  );
+  const [settings, setSettings] = useState<ISettings>(LSSettings);
   const [focused, setFocused] = useState(true);
 
   const generateCharList = useCallback(
@@ -143,11 +143,14 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
 
+  const { value: lsWordCount } = useLocalStorage<'endless' | number>(
+    'typer-word-count',
+    25
+  );
+
   useEffect(() => {
     if (!settings.quotes) {
-      const wordCount = localStorage.getItem('typer-word-count')
-        ? JSON.parse(localStorage.getItem('typer-word-count') || '')
-        : 25;
+      const wordCount = lsWordCount;
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);
       setAuthor(null);

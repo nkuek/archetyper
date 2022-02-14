@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import { useReset } from 'hooks';
+import { useLocalStorage, useReset } from 'hooks';
 import { ThemeContext, WordContext, WordListContext } from 'providers';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
@@ -7,6 +7,7 @@ import { Box } from '@mui/system';
 const options = [10, 25, 50, 'endless'] as const;
 const WordCountOptions = () => {
   const reset = useReset(true);
+  const { setLocalStorage } = useLocalStorage('typer-word-count');
 
   const { theme } = useContext(ThemeContext);
 
@@ -43,7 +44,7 @@ const WordCountOptions = () => {
               e.stopPropagation();
               setWordCount(option);
               reset(e);
-              localStorage.setItem('typer-word-count', JSON.stringify(option));
+              setLocalStorage(option);
             }}
           >
             <Typography

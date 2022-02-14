@@ -1,3 +1,4 @@
+import { useLocalStorage } from 'hooks';
 import { createContext, FC, useMemo, useState } from 'react';
 import { TReactSetState } from './general/types';
 
@@ -38,12 +39,12 @@ export interface ICharList {
 export const WordListContext = createContext<IWordListContext>(undefined!);
 
 const WordListProvider: FC<IProps> = ({ children }) => {
-  const [wordList, setWordList] = useState<string[]>([]);
-  const [wordCount, setWordCount] = useState(
-    localStorage.getItem('typer-word-count')
-      ? JSON.parse(localStorage.getItem('typer-word-count') || '')
-      : 25
+  const { value: LSWordCount } = useLocalStorage<'endless' | number>(
+    'typer-word-count',
+    25
   );
+  const [wordList, setWordList] = useState<string[]>([]);
+  const [wordCount, setWordCount] = useState(LSWordCount);
   const [loading, setLoading] = useState(true);
   const [author, setAuthor] = useState<null | string>(null);
 

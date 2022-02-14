@@ -25,10 +25,18 @@ const WordOptions = () => {
         marginBottom: '.5em',
       }}
     >
-      <Box>
-        <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Box sx={{ display: 'flex' }}>
           {categories.map((category) => (
-            <Typography key={category}>{category}</Typography>
+            <Typography sx={{ padding: '0 .5em' }} key={category}>
+              {category}
+            </Typography>
           ))}
         </Box>
         <WordCountOptions />
