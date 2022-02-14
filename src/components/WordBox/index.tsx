@@ -1,12 +1,4 @@
-import {
-  useEffect,
-  useContext,
-  FC,
-  KeyboardEvent,
-  useMemo,
-  useRef,
-  useCallback,
-} from 'react';
+import { useEffect, useContext, FC, KeyboardEvent, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -139,6 +131,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         length: wordChars.length,
       },
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWordIndex]);
 
   useEffect(() => {
@@ -409,7 +402,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         disableGutters
       >
         <Box sx={{ color: theme.words }}>{`${userWordIndex}${
-          wordCount !== 'endless' ? `/ ${wordCount}` : ''
+          wordCount !== 'endless' ? ` / ${wordCount}` : ''
         }`}</Box>
 
         <Box sx={{ color: theme.words }}>{`${timer.time}s`}</Box>

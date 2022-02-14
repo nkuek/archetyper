@@ -15,7 +15,6 @@ import {
 } from 'providers';
 import Char from './Char';
 import { IChars } from 'providers/WordListProvider';
-import { maxWords } from 'words';
 
 interface IProps {
   wordIdx: number;
@@ -25,29 +24,33 @@ interface IProps {
 const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
-  const { currentWordIndex, userWordIndex } = useContext(IndexContext);
+  const { userWordIndex } = useContext(IndexContext);
   const { currentWordRef } = useContext(WordContext);
-  const { wordList } = useContext(WordListContext);
+  const { wordList, wordCount } = useContext(WordListContext);
   const [showWord, setShowWord] = useState(true);
 
   const wordObserver = useRef<IntersectionObserver>();
   const wordRef = useCallback(
     (node: HTMLDivElement) => {
+      if (wordCount !== 'endless') return;
       const wordBox = document.getElementById('wordBox');
-      if (wordObserver.current) wordObserver.current.disconnect();
+      if (wordObserver.current) {
+        wordObserver.current.disconnect();
+      }
 
       wordObserver.current = new IntersectionObserver(
-        ([entry]) => {
+        ([entry], obs) => {
           // hide words that the user has already typed
           if (!entry.isIntersecting && wordIdx < userWordIndex) {
             setShowWord(false);
+            obs.unobserve(node);
           }
         },
         { root: wordBox, rootMargin: '100px' }
       );
       if (node) wordObserver.current.observe(node);
     },
-    [userWordIndex, wordIdx]
+    [userWordIndex, wordIdx, wordCount]
   );
 
   // useEffect to reset showWord state when resetting

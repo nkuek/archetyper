@@ -32,7 +32,6 @@ interface IWPMData {
 }
 
 export interface ISettings {
-  endless: boolean;
   specialChars: boolean;
   capitalChars: boolean;
   numbers: boolean;
@@ -133,25 +132,10 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     [setLoading]
   );
 
-  const currentWordObserver = useRef<IntersectionObserver>();
-
   const currentWordRef = useCallback(
     (node: HTMLDivElement) => {
-      if (loading) return;
-      const wordBox = document.getElementById('wordBox');
-      if (currentWordObserver.current) currentWordObserver.current.disconnect();
-
-      currentWordObserver.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            entries[0].target.scrollIntoView({ block: 'center' });
-          }
-        },
-        { root: wordBox, threshold: 0.1 }
-      );
-
-      if (currentWordObserver.current && node)
-        currentWordObserver.current.observe(node);
+      if (!node || loading) return;
+      node.scrollIntoView({ block: 'center' });
     },
     [loading]
   );
@@ -163,8 +147,6 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
     if (!settings.quotes) {
       const wordCount = localStorage.getItem('typer-word-count')
         ? JSON.parse(localStorage.getItem('typer-word-count') || '')
-        : settings.endless
-        ? 'endless'
         : 25;
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);

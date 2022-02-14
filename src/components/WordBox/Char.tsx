@@ -11,7 +11,7 @@ interface IProps {
 
 const Char: FC<IProps> = (props) => {
   const { charIdx, char, wordIdx } = props;
-  const { charList } = useContext(WordListContext);
+  const { charList, wordCount } = useContext(WordListContext);
   const { userWordIndex, currentCharIndex, setCaretSpacing } =
     useContext(IndexContext);
   const { theme } = useContext(ThemeContext);
@@ -31,9 +31,20 @@ const Char: FC<IProps> = (props) => {
           top: node.offsetTop,
           left: node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),
         });
+        // setTimeout to update the node position after hiding previous words
+        if (wordCount === 'endless') {
+          setTimeout(() => {
+            setCaretSpacing({
+              top: node.offsetTop,
+              left:
+                node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),
+            });
+          }, 40);
+        }
+        node.scrollIntoView({ block: 'center' });
       }
     },
-    [setCaretSpacing, displayExtraChar]
+    [setCaretSpacing, displayExtraChar, wordCount]
   );
 
   return (
