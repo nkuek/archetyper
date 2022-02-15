@@ -33,12 +33,6 @@ export interface ICharList {
   [key: string | number]: IChars;
 }
 
-export const paramsMap = {
-  short: '?minLength=100&maxLength=140',
-  medium: '?minLength=141&maxLength=180',
-  long: '?minLength=181&maxLength=220',
-};
-
 export type TQuoteParam = 'short' | 'medium' | 'long';
 
 export const WordListContext = createContext<IWordListContext>(undefined!);

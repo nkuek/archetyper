@@ -6,13 +6,26 @@ interface IQuote {
   author: string;
 }
 
+const paramsMap = {
+  short: 'minLength=60&maxLength=100',
+  medium: 'minLength=140&maxLength=180',
+  long: 'minLength=200',
+};
+
 const useQuote = () => {
-  const { setWordList, setWordCount, setLoading, author, setAuthor } =
-    useContext(WordListContext);
+  const {
+    setWordList,
+    setWordCount,
+    setLoading,
+    author,
+    setAuthor,
+    quoteParams,
+  } = useContext(WordListContext);
 
   const getQuote = useCallback(() => {
     setLoading(true);
-    fetch('https://api.quotable.io/random?minLength=100')
+    console.log(quoteParams);
+    fetch(`https://api.quotable.io/random?${paramsMap[quoteParams]}`)
       .then((response) => response.json())
       .then((quote: IQuote) => {
         const quoteContent = quote.content.split(' ');
@@ -21,7 +34,7 @@ const useQuote = () => {
         setWordCount(quoteContent.length);
         setLoading(false);
       });
-  }, [setWordList, setWordCount, setLoading, setAuthor]);
+  }, [setWordList, setWordCount, setLoading, setAuthor, quoteParams]);
   return useMemo(
     () => ({
       getQuote,

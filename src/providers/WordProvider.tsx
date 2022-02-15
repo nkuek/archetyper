@@ -91,8 +91,14 @@ const WordContextProvider: FC = ({ children }) => {
     'typer-settings',
     defaultSettings
   );
-  const { setWordList, setWordCount, setAuthor, loading, setLoading } =
-    useContext(WordListContext);
+  const {
+    setWordList,
+    setWordCount,
+    setAuthor,
+    loading,
+    setLoading,
+    quoteParams,
+  } = useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -155,7 +161,7 @@ const WordContextProvider: FC = ({ children }) => {
       getQuote();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings]);
+  }, [settings, quoteParams]);
 
   const value = useMemo(
     () => ({
