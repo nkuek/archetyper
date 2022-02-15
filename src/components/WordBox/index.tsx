@@ -395,6 +395,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         borderRadius: 5,
         fontSize: '1.5em',
         backgroundColor: theme.wordBoxBackground,
+        border: theme.border,
       }}
       onClick={handleFocus}
     >
