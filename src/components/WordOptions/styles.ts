@@ -33,15 +33,15 @@ const useWordOptionTheme = (type: ISettings['type']) => {
     [theme, textColor]
   );
 
-  const optionTypographyStyle = useMemo(
-    () =>
+  const getOptionTypographyStyle = useCallback(
+    (condition: boolean) =>
       ({
         display: 'flex',
         alignItems: 'center',
         lineHeight: 'normal',
         height: 20,
         boxSizing: 'border-box',
-        fontWeight: 'bold',
+        fontWeight: condition ? 'bold' : 'normal',
         borderColor: 'inherit',
       } as const),
     []
@@ -51,9 +51,9 @@ const useWordOptionTheme = (type: ISettings['type']) => {
     () => ({
       getOptionStyle,
       optionContainerStyle,
-      optionTypographyStyle,
+      getOptionTypographyStyle,
     }),
-    [optionContainerStyle, getOptionStyle, optionTypographyStyle]
+    [optionContainerStyle, getOptionStyle, getOptionTypographyStyle]
   );
 };
 

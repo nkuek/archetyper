@@ -1,7 +1,7 @@
 import { TReactSetState } from '../general/types';
 import { createContext, useState, FC, useMemo, useEffect } from 'react';
-import themeList, { ITheme } from './themeList';
 import { useLocalStorage } from 'hooks';
+import useThemeList, { ITheme } from './useThemeList';
 
 interface IThemeContext {
   themeName: string;
@@ -13,6 +13,7 @@ interface IThemeContext {
 export const ThemeContext = createContext<IThemeContext>(undefined!);
 
 const ThemeProvider: FC = ({ children }) => {
+  const themeList = useThemeList();
   const { value: LSTheme } = useLocalStorage('typer-theme', 'default');
   const [themeName, setThemeName] = useState(LSTheme);
 
@@ -24,7 +25,7 @@ const ThemeProvider: FC = ({ children }) => {
 
   const textColor = useMemo(
     () => themeList[themeName].wordsContrast || themeList[themeName].words,
-    [themeName]
+    [themeName, themeList]
   );
 
   const value = useMemo(
@@ -34,7 +35,7 @@ const ThemeProvider: FC = ({ children }) => {
       theme: themeList[themeName],
       textColor,
     }),
-    [themeName, setThemeName, textColor]
+    [themeName, setThemeName, textColor, themeList]
   );
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

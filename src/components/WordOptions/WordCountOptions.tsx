@@ -9,7 +9,8 @@ import useWordOptionTheme from './styles';
 const options = [10, 25, 50, 'endless'] as const;
 
 const WordCountOptions = () => {
-  const { settings, setSettings, textFieldRef } = useContext(WordContext);
+  const { settings, setSettings, textFieldRef, setFocused } =
+    useContext(WordContext);
 
   const { setLocalStorage } = useLocalStorage('typer-word-count');
 
@@ -19,8 +20,15 @@ const WordCountOptions = () => {
 
   const { setWordCount, wordCount } = useContext(WordListContext);
 
-  const { optionTypographyStyle, optionContainerStyle, getOptionStyle } =
+  const { getOptionTypographyStyle, optionContainerStyle, getOptionStyle } =
     useWordOptionTheme('words');
+
+  const focus = () => {
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+      setFocused(true);
+    }
+  };
 
   return (
     <>
@@ -33,11 +41,12 @@ const WordCountOptions = () => {
                 ...getOptionStyle(settings[setting.value]),
               }}
               onClick={(e) => {
+                e.stopPropagation();
                 setSettings((prev) => ({
                   ...prev,
                   [setting.value]: !prev[setting.value],
                 }));
-                textFieldRef.current?.focus();
+                focus();
               }}
             >
               {setting.name}
@@ -54,13 +63,13 @@ const WordCountOptions = () => {
                 e.stopPropagation();
                 setWordCount(option);
                 setLocalStorage(option);
-                textFieldRef.current?.focus();
+                focus();
               }}
             >
               <Typography
                 sx={{
                   fontSize: option === 'endless' ? '1.5rem' : '1rem',
-                  ...optionTypographyStyle,
+                  ...getOptionTypographyStyle(option === wordCount),
                 }}
               >
                 {option !== 'endless' ? option : String.fromCharCode(8734)}
@@ -71,7 +80,7 @@ const WordCountOptions = () => {
               key={'spacer' + idx}
               onClick={(e) => {
                 e.stopPropagation();
-                textFieldRef.current?.focus();
+                focus();
               }}
             >
               {idx !== options.length - 1 && '/'}

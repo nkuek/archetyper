@@ -10,7 +10,7 @@ const options = ['short', 'medium', 'long'] as const;
 const QuoteOptions = () => {
   const { setQuoteParams, quoteParams } = useContext(WordListContext);
   const { textFieldRef } = useContext(WordContext);
-  const { optionContainerStyle, getOptionStyle, optionTypographyStyle } =
+  const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('quotes');
   const { setLocalStorage } = useLocalStorage('typer-quote-length');
 
@@ -27,7 +27,9 @@ const QuoteOptions = () => {
               textFieldRef.current?.focus();
             }}
           >
-            <Typography sx={optionTypographyStyle}>{option}</Typography>
+            <Typography sx={getOptionTypographyStyle(option === quoteParams)}>
+              {option}
+            </Typography>
           </Box>
         </div>
       ))}

@@ -11,7 +11,7 @@ const TimedOptions = () => {
   const { setTimer, timer } = useContext(TimeContext);
   const { textFieldRef } = useContext(WordContext);
   const { setLocalStorage } = useLocalStorage('typer-time');
-  const { optionContainerStyle, getOptionStyle, optionTypographyStyle } =
+  const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('timed');
   return (
     <div
@@ -33,7 +33,9 @@ const TimedOptions = () => {
               textFieldRef.current?.focus();
             }}
           >
-            <Typography sx={optionTypographyStyle}>{option}</Typography>
+            <Typography sx={getOptionTypographyStyle(option === timer.time)}>
+              {option}
+            </Typography>
           </Box>
         </div>
       ))}
