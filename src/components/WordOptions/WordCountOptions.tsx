@@ -9,7 +9,6 @@ import useWordOptionTheme from './styles';
 const options = [10, 25, 50, 'endless'] as const;
 
 const WordCountOptions = () => {
-  const reset = useReset(true);
   const { settings, setSettings, textFieldRef } = useContext(WordContext);
 
   const { setLocalStorage } = useLocalStorage('typer-word-count');
@@ -38,7 +37,7 @@ const WordCountOptions = () => {
                   ...prev,
                   [setting.value]: !prev[setting.value],
                 }));
-                reset(e);
+                textFieldRef.current?.focus();
               }}
             >
               {setting.name}
@@ -55,7 +54,7 @@ const WordCountOptions = () => {
                 e.stopPropagation();
                 setWordCount(option);
                 setLocalStorage(option);
-                reset(e);
+                textFieldRef.current?.focus();
               }}
             >
               <Typography

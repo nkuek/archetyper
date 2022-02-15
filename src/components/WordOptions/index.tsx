@@ -1,7 +1,7 @@
-import { useMemo, useContext, useState } from 'react';
+import { useMemo, useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { ThemeContext, WordContext } from 'providers';
+import { ThemeContext, TimeContext, WordContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage } from 'hooks';
@@ -13,13 +13,19 @@ const categories = ['words', 'quotes', 'timed'] as const;
 
 const WordOptions = () => {
   const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
+  const { setTimer, timer } = useContext(TimeContext);
 
   const { theme } = useContext(ThemeContext);
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
   const { setLocalStorage } = useLocalStorage('typer-settings');
+  const { value: LSTime } = useLocalStorage('typer-time', 30);
 
   const [showOptions, setShowOptions] = useState(false);
+
+  useEffect(() => {
+    if (timer.id) setShowOptions(false);
+  }, [timer.id]);
 
   return (
     <Container
@@ -49,6 +55,9 @@ const WordOptions = () => {
                 setSettings((prev) => ({ ...prev, type: option }));
                 setLocalStorage({ ...settings, type: option });
                 setShowOptions(true);
+                option === 'timed' &&
+                  settings.type !== 'timed' &&
+                  setTimer({ id: null, time: LSTime, countdown: true });
                 if (textFieldRef.current) textFieldRef.current.focus();
               }}
               onMouseEnter={() => {

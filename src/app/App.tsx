@@ -2,7 +2,12 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import { WordContext, ThemeContext, WordListContext } from 'providers';
+import {
+  WordContext,
+  ThemeContext,
+  WordListContext,
+  TimeContext,
+} from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
 import Settings from 'components/Settings';
@@ -12,8 +17,10 @@ import Tip from 'components/Tip';
 
 const App = () => {
   const { wordCount } = useContext(WordListContext);
-  const { wpmData, setFocused, textFieldRef } = useContext(WordContext);
+  const { wpmData, setFocused, textFieldRef, settings } =
+    useContext(WordContext);
   const { theme } = useContext(ThemeContext);
+  const { timer } = useContext(TimeContext);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
@@ -59,6 +66,10 @@ const App = () => {
     [theme]
   );
 
+  const displayStats =
+    (settings.type === 'timed' && !timer.time) ||
+    (settings.type !== 'timed' && Object.keys(wpmData).length === wordCount);
+
   return (
     <div
       style={{
@@ -87,13 +98,12 @@ const App = () => {
         sx={{
           height: 'calc(100% - 80px)',
           display: 'flex',
-          alignItems:
-            Object.keys(wpmData).length === wordCount ? 'start' : 'center',
+          alignItems: displayStats ? 'start' : 'center',
           justifyContent: 'center',
           padding: 0,
         }}
       >
-        {Object.keys(wpmData).length === wordCount ? (
+        {displayStats ? (
           <Stats />
         ) : (
           <Box

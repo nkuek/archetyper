@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useState } from 'react';
+import { createContext, FC, useContext, useEffect, useState } from 'react';
 import { useLocalStorage } from 'hooks';
 import { TReactSetState } from './general/types';
 import { WordContext } from './WordProvider';
@@ -22,7 +22,16 @@ const TimeProvider: FC = ({ children }) => {
   const [timer, setTimer] = useState<ITimerConfig>({
     id: null,
     time: settings.type === 'timed' ? time : 1,
+    countdown: settings.type === 'timed',
   });
+
+  useEffect(() => {
+    setTimer({
+      id: null,
+      time: settings.type === 'timed' ? time : 1,
+      countdown: settings.type === 'timed',
+    });
+  }, [settings.type]);
 
   const value = { timer, setTimer };
 

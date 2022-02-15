@@ -10,7 +10,7 @@ import {
   TimeContext,
   IndexContext,
 } from 'providers';
-import { useReset } from 'hooks';
+import { useLocalStorage, useReset } from 'hooks';
 import {
   CircularProgress,
   TextField,
@@ -24,7 +24,7 @@ import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
-  const timeToMins = timer / 60;
+  const timeToMins = Math.max(timer, 1) / 60;
   const raw = Math.floor(charCount / 5 / timeToMins);
   const uncorrectedErrors = Math.floor(errors / timeToMins);
   const net = Math.max(raw - uncorrectedErrors, 0);
@@ -87,6 +87,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     }
   };
 
+  const { value: LSTime } = useLocalStorage('typer-time', 30);
+
   const handleReset = useReset();
 
   const caretStyling = useMemo(() => {
@@ -135,30 +137,37 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   }, [currentWordIndex]);
 
   useEffect(() => {
-    setWpm(calculateWpm(charCount, timer.time, uncorrectedErrors));
+    const time = timer.countdown ? LSTime - timer.time + 1 : timer.time;
+    setWpm(calculateWpm(charCount, time, uncorrectedErrors));
   }, [timer.time, charCount, setWpm, uncorrectedErrors]);
 
   useEffect(() => {
     if (!timer.id && userInput) {
       const intervalTimer = setInterval(
-        () => setTimer((prev) => ({ ...prev, time: prev.time + 1 })),
+        () =>
+          setTimer((prev) => ({
+            ...prev,
+            time: prev.time + (timer.countdown ? -1 : 1),
+          })),
         1000
       );
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     } else if (
-      wordCount !== 'endless' &&
-      currentWordIndex === wordCount - 1 &&
-      userInput ===
-        charList[wordCount - 1].chars.reduce(
-          (word, key) => (word += key.char),
-          ''
-        ) &&
-      timer.id
+      timer.id &&
+      ((timer.countdown && timer.time === 0) ||
+        (settings.type !== 'timed' &&
+          wordCount !== 'endless' &&
+          currentWordIndex === wordCount - 1 &&
+          userInput ===
+            charList[wordCount - 1].chars.reduce(
+              (word, key) => (word += key.char),
+              ''
+            )))
     ) {
       clearInterval(timer.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInput, currentWordIndex, timer.id, charList, wordCount]);
+  }, [userInput, currentWordIndex, timer, charList, wordCount]);
 
   useEffect(() => {
     if (timer.id) {
@@ -402,7 +411,9 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         disableGutters
       >
         <Box sx={{ color: theme.words }}>{`${userWordIndex}${
-          wordCount !== 'endless' ? ` / ${wordCount}` : ''
+          wordCount !== 'endless' && settings.type !== 'timed'
+            ? ` / ${wordCount}`
+            : ''
         }`}</Box>
 
         <Box sx={{ color: theme.words }}>{`${timer.time}s`}</Box>

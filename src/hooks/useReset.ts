@@ -3,6 +3,7 @@ import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
+import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
@@ -29,6 +30,8 @@ const useReset = (randomize = false) => {
   const { timer, setTimer } = useContext(TimeContext);
 
   const { getQuote } = useQuote();
+
+  const { value: LSTime } = useLocalStorage('typer-time', 30);
 
   return useCallback(
     (
@@ -61,7 +64,11 @@ const useReset = (randomize = false) => {
       setFocused(true);
       if (timer.id) {
         clearInterval(timer.id);
-        setTimer({ id: null, time: 1 });
+        setTimer({
+          id: null,
+          time: settings.type === 'timed' ? LSTime : 1,
+          countdown: settings.type === 'timed',
+        });
       }
     },
     [
