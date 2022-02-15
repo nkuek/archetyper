@@ -6,6 +6,8 @@ import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage, useReset } from 'hooks';
 import { IOptions } from './types';
+import QuoteOptions from './QuoteOptions';
+import WordOption from './WordOption';
 
 const categories = ['words', 'quotes', 'timed'] as const;
 
@@ -17,12 +19,7 @@ const WordOptions = () => {
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
   const { setLocalStorage } = useLocalStorage('typer-settings');
 
-  const [showOptions, setShowOptions] = useState(
-    categories.reduce(
-      (categoryObj, category) => ({ ...categoryObj, [category]: false }),
-      {} as IOptions
-    )
-  );
+  const [showOptions, setShowOptions] = useState(false);
 
   return (
     <Container
@@ -30,7 +27,6 @@ const WordOptions = () => {
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: '.5em',
-        height: 64,
       }}
     >
       <Box
@@ -40,27 +36,24 @@ const WordOptions = () => {
           alignItems: 'flex-start',
         }}
       >
-        <WordCountOptions
-          showOptions={showOptions}
-          setShowOptions={setShowOptions}
-        />
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', height: '100%' }}>
+        <WordOption setShowOptions={setShowOptions} showOptions={showOptions}>
+          {settings.type === 'quotes' && <QuoteOptions />}
+          {settings.type === 'words' && <WordCountOptions />}
+        </WordOption>
+        <Box sx={{ display: 'flex' }}>
           {categories.map((option) => (
             <Typography
               onClick={(e) => {
                 e.stopPropagation();
                 setSettings((prev) => ({ ...prev, type: option }));
                 setLocalStorage({ ...settings, type: option });
-                setShowOptions((prev) => ({ ...prev, [option]: true }));
+                setShowOptions(true);
                 if (textFieldRef.current) textFieldRef.current.focus();
               }}
               onMouseEnter={() => {
-                if (settings.type === option)
-                  setShowOptions((prev) => ({ ...prev, [option]: true }));
+                if (settings.type === option) setShowOptions(true);
               }}
-              onMouseLeave={() =>
-                setShowOptions((prev) => ({ ...prev, [option]: false }))
-              }
+              onMouseLeave={() => setShowOptions(false)}
               sx={{
                 margin: '0 .5em',
                 color: option === settings.type ? theme.currentWord : textColor,

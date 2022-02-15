@@ -1,11 +1,6 @@
 import { useLocalStorage } from 'hooks';
 import { createContext, FC, useMemo, useState } from 'react';
 import { TReactSetState } from './general/types';
-
-interface IProps {
-  children?: React.ReactNode;
-}
-
 interface IWordListContext {
   wordList: string[];
   setWordList: TReactSetState<string[]>;
@@ -44,11 +39,11 @@ export const paramsMap = {
   long: '?minLength=181&maxLength=220',
 };
 
-type TQuoteParam = 'short' | 'medium' | 'long';
+export type TQuoteParam = 'short' | 'medium' | 'long';
 
 export const WordListContext = createContext<IWordListContext>(undefined!);
 
-const WordListProvider: FC<IProps> = ({ children }) => {
+const WordListProvider: FC = ({ children }) => {
   const { value: LSWordCount } = useLocalStorage<'endless' | number>(
     'typer-word-count',
     25

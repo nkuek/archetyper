@@ -7,6 +7,6 @@ export interface IOptions {
 }
 
 export interface IProps {
-  showOptions: IOptions;
-  setShowOptions: TReactSetState<IOptions>;
+  showOptions: boolean;
+  setShowOptions: TReactSetState<boolean>;
 }

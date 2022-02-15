@@ -13,10 +13,6 @@ import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
 import { ICharList, TWordChar, WordListContext } from './WordListProvider';
 
-interface IProps {
-  children?: React.ReactNode;
-}
-
 interface ITimeStepData {
   wordNum: number;
   word: string;
@@ -90,7 +86,7 @@ export const defaultWordBoxConfig = {
   uncorrectedErrors: 0,
 };
 
-const WordContextProvider: FC<IProps> = ({ children }) => {
+const WordContextProvider: FC = ({ children }) => {
   const { value: LSSettings } = useLocalStorage(
     'typer-settings',
     defaultSettings

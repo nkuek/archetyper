@@ -3,10 +3,6 @@ import { createContext, useState, FC, useMemo, useEffect } from 'react';
 import themeList, { ITheme } from './themeList';
 import { useLocalStorage } from 'hooks';
 
-interface IProps {
-  children?: React.ReactNode;
-}
-
 interface IThemeContext {
   themeName: string;
   setThemeName: TReactSetState<string>;
@@ -16,7 +12,7 @@ interface IThemeContext {
 
 export const ThemeContext = createContext<IThemeContext>(undefined!);
 
-const ThemeProvider: FC<IProps> = ({ children }) => {
+const ThemeProvider: FC = ({ children }) => {
   const { value: LSTheme } = useLocalStorage('typer-theme', 'default');
   const [themeName, setThemeName] = useState(LSTheme);
 
