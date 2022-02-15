@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import { IProps, IOptions } from './types';
+import { IProps } from './types';
 import { Box } from '@mui/system';
-import { TReactSetState } from 'providers/general/types';
 
 const WordOption: FC<IProps> = ({ setShowOptions, showOptions, children }) => {
   return (

@@ -24,7 +24,6 @@ const useQuote = () => {
 
   const getQuote = useCallback(() => {
     setLoading(true);
-    console.log(quoteParams);
     fetch(`https://api.quotable.io/random?${paramsMap[quoteParams]}`)
       .then((response) => response.json())
       .then((quote: IQuote) => {

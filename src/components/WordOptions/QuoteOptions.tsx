@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { WordContext, WordListContext } from 'providers';
 import useWordOptionTheme from './styles';
-import { useLocalStorage, useReset } from 'hooks';
+import { useLocalStorage } from 'hooks';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 
@@ -10,11 +10,9 @@ const options = ['short', 'medium', 'long'] as const;
 const QuoteOptions = () => {
   const { setQuoteParams, quoteParams } = useContext(WordListContext);
   const { textFieldRef } = useContext(WordContext);
-  const { optionContainerStyle, getOptionStyle, getOptionTypography } =
+  const { optionContainerStyle, getOptionStyle, optionTypographyStyle } =
     useWordOptionTheme('quotes');
   const { setLocalStorage } = useLocalStorage('typer-quote-length');
-
-  const reset = useReset(true);
 
   return (
     <div style={{ display: 'flex', height: '100%', alignItems: 'flex-end' }}>
@@ -29,9 +27,7 @@ const QuoteOptions = () => {
               textFieldRef.current?.focus();
             }}
           >
-            <Typography sx={getOptionTypography(option === quoteParams)}>
-              {option}
-            </Typography>
+            <Typography sx={optionTypographyStyle}>{option}</Typography>
           </Box>
         </div>
       ))}

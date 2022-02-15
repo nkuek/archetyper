@@ -34,7 +34,7 @@ const ThemeProvider: FC = ({ children }) => {
       theme: themeList[themeName],
       textColor,
     }),
-    [themeName, setThemeName]
+    [themeName, setThemeName, textColor]
   );
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

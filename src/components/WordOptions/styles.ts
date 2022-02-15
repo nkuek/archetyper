@@ -15,7 +15,7 @@ const useWordOptionTheme = (type: ISettings['type']) => {
         transition: 'opacity 150ms linear, visibility 0s',
         position: settings.type === type ? 'relative' : 'absolute',
       } as const),
-    [settings.type]
+    [settings.type, type]
   );
 
   const getOptionStyle = useCallback(
@@ -33,8 +33,8 @@ const useWordOptionTheme = (type: ISettings['type']) => {
     [theme, textColor]
   );
 
-  const getOptionTypography = useCallback(
-    (condition: boolean) =>
+  const optionTypographyStyle = useMemo(
+    () =>
       ({
         display: 'flex',
         alignItems: 'center',
@@ -43,7 +43,6 @@ const useWordOptionTheme = (type: ISettings['type']) => {
         boxSizing: 'border-box',
         fontWeight: 'bold',
         borderColor: 'inherit',
-        marginBottom: condition ? 0 : '1px',
       } as const),
     []
   );
@@ -52,9 +51,9 @@ const useWordOptionTheme = (type: ISettings['type']) => {
     () => ({
       getOptionStyle,
       optionContainerStyle,
-      getOptionTypography,
+      optionTypographyStyle,
     }),
-    [optionContainerStyle, getOptionStyle, getOptionTypography]
+    [optionContainerStyle, getOptionStyle, optionTypographyStyle]
   );
 };
 

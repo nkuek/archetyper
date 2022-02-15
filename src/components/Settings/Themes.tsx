@@ -1,7 +1,8 @@
+import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import { useLocalStorage } from 'hooks';
-import { ThemeContext, themeList } from 'providers';
-import React, { useContext } from 'react';
+import { ThemeContext } from 'providers';
+import themeList from 'providers/ThemeProvider/themeList';
 
 const Themes = () => {
   const { setLocalStorage } = useLocalStorage('typer-theme');

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useLocalStorage, useReset } from 'hooks';
 import { ThemeContext, WordContext, WordListContext } from 'providers';
 import { Typography } from '@mui/material';
@@ -20,7 +20,7 @@ const WordCountOptions = () => {
 
   const { setWordCount, wordCount } = useContext(WordListContext);
 
-  const { getOptionTypography, optionContainerStyle, getOptionStyle } =
+  const { optionTypographyStyle, optionContainerStyle, getOptionStyle } =
     useWordOptionTheme('words');
 
   return (
@@ -61,7 +61,7 @@ const WordCountOptions = () => {
               <Typography
                 sx={{
                   fontSize: option === 'endless' ? '1.5rem' : '1rem',
-                  ...getOptionTypography(option === wordCount),
+                  ...optionTypographyStyle,
                 }}
               >
                 {option !== 'endless' ? option : String.fromCharCode(8734)}

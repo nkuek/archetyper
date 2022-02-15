@@ -4,8 +4,7 @@ import Container from '@mui/material/Container';
 import { ThemeContext, WordContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
-import { useLocalStorage, useReset } from 'hooks';
-import { IOptions } from './types';
+import { useLocalStorage } from 'hooks';
 import QuoteOptions from './QuoteOptions';
 import WordOption from './WordOption';
 
