@@ -1,23 +1,15 @@
-import { useCallback, useMemo } from 'react';
-
 const useLocalStorage = <T>(key: string, defaultValue?: T) => {
-  const getValue: () => T = useCallback(() => {
+  const getValue = () => {
     return localStorage.getItem(key)
       ? JSON.parse(localStorage.getItem(key) || '')
       : defaultValue;
-  }, [key, defaultValue]);
+  };
 
-  const setLocalStorage = useCallback(
-    (newValue: T) => {
-      localStorage.setItem(key, JSON.stringify(newValue));
-    },
-    [key]
-  );
+  const setLocalStorage = (newValue: T) => {
+    localStorage.setItem(key, JSON.stringify(newValue));
+  };
 
-  return useMemo(
-    () => ({ value: getValue(), setLocalStorage }),
-    [getValue, setLocalStorage]
-  );
+  return { value: getValue(), setLocalStorage };
 };
 
 export default useLocalStorage;

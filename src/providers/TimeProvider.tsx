@@ -6,6 +6,7 @@ import { WordContext } from './WordProvider';
 interface ITimerConfig {
   id?: null | NodeJS.Timeout;
   time: number;
+  _time: number;
   countdown?: boolean;
 }
 
@@ -21,17 +22,10 @@ const TimeProvider: FC = ({ children }) => {
   const { settings } = useContext(WordContext);
   const [timer, setTimer] = useState<ITimerConfig>({
     id: null,
-    time: settings.type === 'timed' ? time : 1,
+    time: settings.type === 'timed' ? time : 0,
+    _time: settings.type === 'timed' ? time : 0,
     countdown: settings.type === 'timed',
   });
-
-  useEffect(() => {
-    setTimer({
-      id: null,
-      time: settings.type === 'timed' ? time : 1,
-      countdown: settings.type === 'timed',
-    });
-  }, [settings.type]);
 
   const value = { timer, setTimer };
 

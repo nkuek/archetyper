@@ -13,6 +13,7 @@ const TimedOptions = () => {
   const { setLocalStorage } = useLocalStorage('typer-time');
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('timed');
+
   return (
     <div
       style={{
@@ -25,15 +26,20 @@ const TimedOptions = () => {
       {options.map((option, idx) => (
         <div style={optionContainerStyle} key={'quotesbox' + idx}>
           <Box
-            sx={getOptionStyle(!timer.id && option === timer.time)}
+            sx={getOptionStyle(option === timer._time)}
             onClick={(e) => {
               e.stopPropagation();
-              setTimer({ id: null, time: option, countdown: true });
+              setTimer({
+                id: null,
+                time: option,
+                _time: option,
+                countdown: true,
+              });
               setLocalStorage(option);
               textFieldRef.current?.focus();
             }}
           >
-            <Typography sx={getOptionTypographyStyle(option === timer.time)}>
+            <Typography sx={getOptionTypographyStyle(option === timer._time)}>
               {option}
             </Typography>
           </Box>
