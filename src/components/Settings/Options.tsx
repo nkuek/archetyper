@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ThemeContext, WordContext } from 'providers';
-import { defaultSettings, options } from 'providers/WordProvider';
+import { defaultSettings, wordOptions } from 'providers/WordProvider';
 import { Box } from '@mui/system';
 import { useLocalStorage } from 'hooks';
 
@@ -81,7 +81,7 @@ const Options = () => {
           clear all
         </Button>
       </Box>
-      {options.map((option) => (
+      {wordOptions.map((option) => (
         <FormControlLabel
           control={
             <Checkbox
@@ -94,7 +94,6 @@ const Options = () => {
                   filter: 'brightness(60%)',
                 },
               }}
-              disabled={option.value !== 'quotes' && settings.quotes}
             />
           }
           label={`${option.name}?`}

@@ -71,14 +71,13 @@ interface IWordContext {
 
 export const WordContext = createContext<IWordContext>(undefined!);
 
-export const options = [
-  { name: 'quotes', value: 'quotes' },
-  { name: 'capital letters', value: 'capitalChars' },
-  { name: 'special characters', value: 'specialChars' },
+export const wordOptions = [
+  { name: 'capital', value: 'capitalChars' },
+  { name: 'special', value: 'specialChars' },
   { name: 'numbers', value: 'numbers' },
-];
+] as const;
 
-export const defaultSettings = options.reduce(
+export const defaultSettings = wordOptions.reduce(
   (obj, option) => ({ ...obj, [option.value]: false }),
   {} as ISettings
 );

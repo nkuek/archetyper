@@ -31,7 +31,9 @@ const useReset = (randomize = false) => {
   const { getQuote } = useQuote();
 
   return useCallback(
-    (e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+    (
+      e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement | HTMLSpanElement>
+    ) => {
       e?.stopPropagation();
       const wordBox = document.getElementById('wordBox');
       if (wordBox) wordBox.scrollTop = 0;
