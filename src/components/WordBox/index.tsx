@@ -139,7 +139,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   useEffect(() => {
     const time = timer.countdown ? LSTime - timer.time + 1 : timer.time;
     setWpm(calculateWpm(charCount, time, uncorrectedErrors));
-  }, [timer.time, charCount, setWpm, uncorrectedErrors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timer.time]);
 
   useEffect(() => {
     if (!timer.id && userInput) {

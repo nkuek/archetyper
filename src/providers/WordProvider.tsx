@@ -91,14 +91,8 @@ const WordContextProvider: FC = ({ children }) => {
     'typer-settings',
     defaultSettings
   );
-  const {
-    setWordList,
-    setWordCount,
-    setAuthor,
-    loading,
-    setLoading,
-    quoteParams,
-  } = useContext(WordListContext);
+  const { setWordList, setAuthor, loading, setLoading, quoteParams } =
+    useContext(WordListContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -146,16 +140,9 @@ const WordContextProvider: FC = ({ children }) => {
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
 
-  const { value: lsWordCount } = useLocalStorage<'endless' | number>(
-    'typer-word-count',
-    25
-  );
-
   useEffect(() => {
     if (settings.type !== 'quotes') {
-      const wordCount = lsWordCount;
       setWordList(randomizedWords(settings));
-      setWordCount(wordCount);
       setAuthor(null);
     } else {
       getQuote();

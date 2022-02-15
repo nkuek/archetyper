@@ -1,7 +1,12 @@
-import { useMemo, useContext, useState, useEffect } from 'react';
+import { useMemo, useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { ThemeContext, TimeContext, WordContext } from 'providers';
+import {
+  ThemeContext,
+  TimeContext,
+  WordContext,
+  WordListContext,
+} from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage } from 'hooks';
@@ -13,19 +18,17 @@ const categories = ['words', 'quotes', 'timed'] as const;
 
 const WordOptions = () => {
   const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
-  const { setTimer, timer } = useContext(TimeContext);
+  const { setWordCount } = useContext(WordListContext);
+  const { setTimer } = useContext(TimeContext);
 
   const { theme } = useContext(ThemeContext);
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
   const { setLocalStorage } = useLocalStorage('typer-settings');
   const { value: LSTime } = useLocalStorage('typer-time', 30);
+  const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
 
   const [showOptions, setShowOptions] = useState(false);
-
-  useEffect(() => {
-    if (timer.id) setShowOptions(false);
-  }, [timer.id]);
 
   return (
     <Container
@@ -55,9 +58,15 @@ const WordOptions = () => {
                 setSettings((prev) => ({ ...prev, type: option }));
                 setLocalStorage({ ...settings, type: option });
                 setShowOptions(true);
+                option === 'words' && setWordCount(LSWordCount);
                 option === 'timed' &&
                   settings.type !== 'timed' &&
-                  setTimer({ id: null, time: LSTime, countdown: true });
+                  setTimer({
+                    id: null,
+                    time: LSTime,
+                    _time: LSTime,
+                    countdown: true,
+                  });
                 if (textFieldRef.current) textFieldRef.current.focus();
               }}
               onMouseEnter={() => {

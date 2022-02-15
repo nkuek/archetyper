@@ -67,6 +67,7 @@ const useReset = (randomize = false) => {
         setTimer({
           id: null,
           time: settings.type === 'timed' ? LSTime : 1,
+          _time: settings.type === 'timed' ? LSTime : 1,
           countdown: settings.type === 'timed',
         });
       }
@@ -92,6 +93,7 @@ const useReset = (randomize = false) => {
       setFocused,
       textFieldRef,
       setUserWordIndex,
+      LSTime,
     ]
   );
 };

@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, useState } from 'react';
+import { createContext, FC, useContext, useState } from 'react';
 import { useLocalStorage } from 'hooks';
 import { TReactSetState } from './general/types';
 import { WordContext } from './WordProvider';

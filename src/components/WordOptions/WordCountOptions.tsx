@@ -1,5 +1,5 @@
-import React, { useContext, useMemo } from 'react';
-import { useLocalStorage, useReset } from 'hooks';
+import { useContext, useMemo } from 'react';
+import { useLocalStorage } from 'hooks';
 import { ThemeContext, WordContext, WordListContext } from 'providers';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
@@ -12,14 +12,13 @@ const WordCountOptions = () => {
   const { settings, setSettings, textFieldRef, setFocused } =
     useContext(WordContext);
 
-  const { setLocalStorage } = useLocalStorage('typer-word-count');
-
   const { theme } = useContext(ThemeContext);
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
 
   const { setWordCount, wordCount } = useContext(WordListContext);
 
+  const { setLocalStorage } = useLocalStorage('typer-word-count');
   const { getOptionTypographyStyle, optionContainerStyle, getOptionStyle } =
     useWordOptionTheme('words');
 
