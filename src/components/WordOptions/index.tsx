@@ -7,6 +7,7 @@ import { Typography } from '@mui/material';
 import { useLocalStorage } from 'hooks';
 import QuoteOptions from './QuoteOptions';
 import WordOption from './WordOption';
+import TimedOptions from './TimedOptions';
 
 const categories = ['words', 'quotes', 'timed'] as const;
 
@@ -38,6 +39,7 @@ const WordOptions = () => {
         <WordOption setShowOptions={setShowOptions} showOptions={showOptions}>
           {settings.type === 'quotes' && <QuoteOptions />}
           {settings.type === 'words' && <WordCountOptions />}
+          {settings.type === 'timed' && <TimedOptions />}
         </WordOption>
         <Box sx={{ display: 'flex' }}>
           {categories.map((option) => (

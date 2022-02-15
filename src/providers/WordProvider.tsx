@@ -152,7 +152,7 @@ const WordContextProvider: FC = ({ children }) => {
   );
 
   useEffect(() => {
-    if (settings.type === 'words') {
+    if (settings.type !== 'quotes') {
       const wordCount = lsWordCount;
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);

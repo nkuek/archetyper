@@ -10,7 +10,7 @@ const options = [10, 25, 50, 'endless'] as const;
 
 const WordCountOptions = () => {
   const reset = useReset(true);
-  const { settings, setSettings } = useContext(WordContext);
+  const { settings, setSettings, textFieldRef } = useContext(WordContext);
 
   const { setLocalStorage } = useLocalStorage('typer-word-count');
 
@@ -67,7 +67,14 @@ const WordCountOptions = () => {
                 {option !== 'endless' ? option : String.fromCharCode(8734)}
               </Typography>
             </Box>
-            <Box sx={{ color: textColor }} key={'spacer' + idx}>
+            <Box
+              sx={{ color: textColor, cursor: 'default' }}
+              key={'spacer' + idx}
+              onClick={(e) => {
+                e.stopPropagation();
+                textFieldRef.current?.focus();
+              }}
+            >
               {idx !== options.length - 1 && '/'}
             </Box>
           </div>

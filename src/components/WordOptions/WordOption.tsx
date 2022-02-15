@@ -12,6 +12,7 @@ const WordOption: FC<IProps> = ({ setShowOptions, showOptions, children }) => {
         opacity: showOptions ? 1 : 0,
         transition: 'opacity 300ms ease-in-out',
         height: 40,
+        width: '100%',
       }}
     >
       {children}
