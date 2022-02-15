@@ -17,6 +17,8 @@ interface IWordListContext {
   setAuthor: TReactSetState<null | string>;
   charList: ICharList;
   setCharList: TReactSetState<ICharList>;
+  quoteParams: TQuoteParam;
+  setQuoteParams: TReactSetState<TQuoteParam>;
 }
 
 export type TWordChar = {
@@ -36,6 +38,14 @@ export interface ICharList {
   [key: string | number]: IChars;
 }
 
+export const paramsMap = {
+  short: '?minLength=100&maxLength=140',
+  medium: '?minLength=141&maxLength=180',
+  long: '?minLength=181&maxLength=220',
+};
+
+type TQuoteParam = 'short' | 'medium' | 'long';
+
 export const WordListContext = createContext<IWordListContext>(undefined!);
 
 const WordListProvider: FC<IProps> = ({ children }) => {
@@ -43,10 +53,15 @@ const WordListProvider: FC<IProps> = ({ children }) => {
     'typer-word-count',
     25
   );
+  const { value: quoteLength } = useLocalStorage<TQuoteParam>(
+    'typer-quote-length',
+    'medium'
+  );
   const [wordList, setWordList] = useState<string[]>([]);
   const [wordCount, setWordCount] = useState(LSWordCount);
   const [loading, setLoading] = useState(true);
   const [author, setAuthor] = useState<null | string>(null);
+  const [quoteParams, setQuoteParams] = useState(quoteLength);
 
   const [charList, setCharList] = useState<ICharList>({});
 
@@ -62,6 +77,8 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       setAuthor,
       charList,
       setCharList,
+      quoteParams,
+      setQuoteParams,
     }),
     [
       wordList,
@@ -74,6 +91,8 @@ const WordListProvider: FC<IProps> = ({ children }) => {
       setAuthor,
       charList,
       setCharList,
+      quoteParams,
+      setQuoteParams,
     ]
   );
   return (

@@ -1,16 +1,14 @@
 import React, { FC } from 'react';
 import { TReactSetState } from 'providers/general/types';
-import { ICategories } from '.';
+import { IProps, IOptions } from './types';
 import { Box } from '@mui/system';
 
-interface IProps {
-  showOptions: ICategories;
-  setShowOptions: TReactSetState<ICategories>;
-  option: keyof ICategories;
+interface IWordProps extends IProps {
+  option: keyof IOptions;
   children: React.ReactNode;
 }
 
-const WordOption: FC<IProps> = ({
+const WordOption: FC<IWordProps> = ({
   showOptions,
   setShowOptions,
   option,

@@ -35,7 +35,7 @@ export interface ISettings {
   specialChars: boolean;
   capitalChars: boolean;
   numbers: boolean;
-  quotes: boolean;
+  type: 'quotes' | 'words' | 'timed';
 }
 
 interface IWpm {
@@ -77,10 +77,12 @@ export const wordOptions = [
   { name: 'numbers', value: 'numbers' },
 ] as const;
 
-export const defaultSettings = wordOptions.reduce(
-  (obj, option) => ({ ...obj, [option.value]: false }),
-  {} as ISettings
-);
+export const defaultSettings: ISettings = {
+  capitalChars: false,
+  specialChars: false,
+  numbers: false,
+  type: 'words',
+};
 
 export const defaultWordBoxConfig = {
   charCount: 0,
@@ -148,7 +150,7 @@ const WordContextProvider: FC<IProps> = ({ children }) => {
   );
 
   useEffect(() => {
-    if (!settings.quotes) {
+    if (settings.type === 'words') {
       const wordCount = lsWordCount;
       setWordList(randomizedWords(settings));
       setWordCount(wordCount);

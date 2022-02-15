@@ -5,33 +5,22 @@ import { ThemeContext, WordContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage, useReset } from 'hooks';
+import { IOptions } from './types';
 
 const categories = ['words', 'quotes', 'timed'] as const;
 
-export interface ICategories {
-  words: boolean;
-  quotes: boolean;
-  timed: boolean;
-}
-
 const WordOptions = () => {
-  const values = useContext(WordContext);
-  const { wpm } = values;
+  const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
 
   const { theme } = useContext(ThemeContext);
-  const reset = useReset();
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
-  const { value: LSCategory, setLocalStorage } = useLocalStorage(
-    'typer-word-category',
-    'words'
-  );
+  const { setLocalStorage } = useLocalStorage('typer-settings');
 
-  const [category, setCategory] = useState(LSCategory);
   const [showOptions, setShowOptions] = useState(
     categories.reduce(
       (categoryObj, category) => ({ ...categoryObj, [category]: false }),
-      {} as ICategories
+      {} as IOptions
     )
   );
 
@@ -59,13 +48,14 @@ const WordOptions = () => {
           {categories.map((option) => (
             <Typography
               onClick={(e) => {
-                setCategory(option);
-                setLocalStorage(option);
+                e.stopPropagation();
+                setSettings((prev) => ({ ...prev, type: option }));
+                setLocalStorage({ ...settings, type: option });
                 setShowOptions((prev) => ({ ...prev, [option]: true }));
-                reset(e);
+                if (textFieldRef.current) textFieldRef.current.focus();
               }}
               onMouseEnter={() => {
-                if (category === option)
+                if (settings.type === option)
                   setShowOptions((prev) => ({ ...prev, [option]: true }));
               }}
               onMouseLeave={() =>
@@ -73,8 +63,8 @@ const WordOptions = () => {
               }
               sx={{
                 margin: '0 .5em',
-                color: option === category ? theme.currentWord : textColor,
-                opacity: option === category ? 1 : 0.6,
+                color: option === settings.type ? theme.currentWord : textColor,
+                opacity: option === settings.type ? 1 : 0.6,
                 cursor: 'pointer',
               }}
               key={option}
@@ -85,8 +75,10 @@ const WordOptions = () => {
         </Box>
       </Box>
       <div style={{ display: 'flex', alignSelf: 'flex-end' }}>
-        <Box sx={{ color: textColor, marginRight: '.25em' }}>{'wpm: '}</Box>
-        <Box sx={{ color: textColor }}>{wpm.net || ''}</Box>
+        <Typography sx={{ color: textColor, marginRight: '.25em' }}>
+          {'wpm: '}
+        </Typography>
+        <Typography sx={{ color: textColor }}>{wpm.net || ''}</Typography>
       </div>
     </Container>
   );

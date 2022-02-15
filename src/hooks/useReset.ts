@@ -40,7 +40,8 @@ const useReset = (randomize = false) => {
       if (textFieldRef.current) textFieldRef.current.focus();
       // if a user has not started a test or has finished the test, give them a new word list
       if ((!timer.id && !currentWordIndex && !currentCharIndex) || randomize) {
-        if (settings.quotes) {
+        console.log(settings);
+        if (settings.type === 'quotes') {
           getQuote();
         } else {
           setWordList(randomizeWords(settings));

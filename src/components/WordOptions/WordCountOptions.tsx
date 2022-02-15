@@ -4,16 +4,10 @@ import { ThemeContext, WordContext, WordListContext } from 'providers';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { wordOptions } from 'providers/WordProvider';
-import { TReactSetState } from 'providers/general/types';
-import { ICategories } from '.';
+import { IProps } from './types';
 import WordOption from './WordOption';
 
 const options = [10, 25, 50, 'endless'] as const;
-
-interface IProps {
-  showOptions: ICategories;
-  setShowOptions: TReactSetState<ICategories>;
-}
 
 const WordCountOptions: FC<IProps> = ({ showOptions, setShowOptions }) => {
   const reset = useReset(true);
@@ -28,9 +22,9 @@ const WordCountOptions: FC<IProps> = ({ showOptions, setShowOptions }) => {
 
   const optionContainerStyle = {
     display: 'flex',
-    opacity: settings.quotes ? 0 : 1,
-    visibility: settings.quotes ? 'hidden' : 'visible',
-    transition: 'opacity 200ms ease-in-out, visibility 200ms linear',
+    opacity: settings.type === 'words' ? 1 : 0,
+    visibility: settings.type === 'words' ? 'visible' : 'hidden',
+    transition: 'opacity 150ms linear, visibility 0s',
   } as const;
 
   const optionStyle = (condition: boolean) => ({

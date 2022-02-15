@@ -118,7 +118,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   }, [wordList, generateCharList]);
 
   useEffect(() => {
-    if (settings.quotes) return;
+    if (settings.type === 'quotes') return;
     const newWord = randomizeWords(settings, true);
     const wordChars: TWordChar[] = [];
     for (const char of newWord) {

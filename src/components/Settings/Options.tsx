@@ -37,7 +37,7 @@ const Options = () => {
   const handleChange = (checked: boolean, option: string) => {
     let newSettings = { ...settings, [option]: checked };
     if (option === 'quotes' && checked) {
-      newSettings = { ...defaultSettings, quotes: true };
+      newSettings = { ...defaultSettings, type: 'quotes' };
     }
     setSettings(newSettings);
     setLocalStorage(newSettings);
@@ -85,7 +85,6 @@ const Options = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={settings[option.value as keyof typeof settings]}
               sx={{
                 color: 'inherit',
                 '&.Mui-checked': { color: 'inherit' },
