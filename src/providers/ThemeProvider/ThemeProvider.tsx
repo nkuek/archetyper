@@ -11,6 +11,7 @@ interface IThemeContext {
   themeName: string;
   setThemeName: TReactSetState<string>;
   theme: ITheme;
+  textColor: string;
 }
 
 export const ThemeContext = createContext<IThemeContext>(undefined!);
@@ -25,11 +26,17 @@ const ThemeProvider: FC<IProps> = ({ children }) => {
     favicon!.href = `/${themeName}Favicon.ico`;
   }, [themeName, favicon]);
 
+  const textColor = useMemo(
+    () => themeList[themeName].wordsContrast || themeList[themeName].words,
+    [themeName]
+  );
+
   const value = useMemo(
     () => ({
       themeName,
       setThemeName,
       theme: themeList[themeName],
+      textColor,
     }),
     [themeName, setThemeName]
   );

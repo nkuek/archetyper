@@ -1,13 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import WordOption from './WordOption';
 import { IProps } from './types';
+import { WordListContext } from 'providers';
 
 const QuoteOptions: FC<IProps> = ({ showOptions, setShowOptions }) => {
+  const { setQuoteParams } = useContext(WordListContext);
+
   return (
     <WordOption
       showOptions={showOptions}
       setShowOptions={setShowOptions}
-      option="quotes"
+      optionKey="quotes"
     >
       <div></div>
     </WordOption>
