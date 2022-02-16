@@ -55,7 +55,7 @@ interface IWordContext {
   setUserInput: TReactSetState<string>;
   inputHistory: string[];
   setInputHistory: TReactSetState<string[]>;
-  currentWordRef: (node: HTMLDivElement) => void;
+  currentWordRef: React.MutableRefObject<HTMLDivElement | null>;
   textFieldRef: React.RefObject<HTMLInputElement>;
   settings: ISettings;
   setSettings: TReactSetState<ISettings>;
@@ -94,7 +94,7 @@ const WordContextProvider: FC = ({ children }) => {
   );
   const { setWordList, setAuthor, loading, setLoading, quoteParams } =
     useContext(WordListContext);
-  const { setCaretSpacing } = useContext(IndexContext);
+  const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -132,18 +132,20 @@ const WordContextProvider: FC = ({ children }) => {
     [setLoading]
   );
 
-  const currentWordRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (!node || loading) return;
-      node.scrollIntoView({ block: 'center' });
-      // asynchronous timeout to fix caret bug after hiding existing words
-      setTimeout(
-        () => setCaretSpacing({ top: node.offsetTop, left: node.offsetLeft }),
-        25
-      );
-    },
-    [loading, setCaretSpacing]
-  );
+  const currentWordRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!currentWordRef.current || loading) return;
+    currentWordRef.current.scrollIntoView({ block: 'center' });
+    setTimeout(
+      () =>
+        setCaretSpacing({
+          top: currentWordRef.current!.offsetTop,
+          left: currentWordRef.current!.offsetLeft,
+        }),
+      25
+    );
+  }, [currentWordIndex]);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
   const { getQuote } = useQuote();
