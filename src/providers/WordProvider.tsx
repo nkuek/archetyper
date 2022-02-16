@@ -146,6 +146,7 @@ const WordContextProvider: FC = ({ children }) => {
       setAuthor(null);
     } else {
       getQuote();
+      setFocused(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings, quoteParams]);

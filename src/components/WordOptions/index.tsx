@@ -50,7 +50,6 @@ const WordOptions = () => {
       });
     if (textFieldRef.current) {
       textFieldRef.current.focus();
-      setFocused(true);
     }
   };
 
