@@ -17,6 +17,7 @@ import Word from './Word';
 import { animation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
+import MessageOverlay from './MessageOverlay';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -36,8 +37,15 @@ interface IProps {
 }
 
 const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
-  const { wordList, wordCount, loading, author, charList, setCharList } =
-    useContext(WordListContext);
+  const {
+    wordList,
+    wordCount,
+    loading,
+    author,
+    charList,
+    setCharList,
+    errorMessage,
+  } = useContext(WordListContext);
 
   const {
     wordBoxConfig,
@@ -459,25 +467,9 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
                 &#8212;{author}
               </Box>
             )}
+            {errorMessage && <MessageOverlay message={errorMessage} />}
             {!focused && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  zIndex: 2,
-                  height: '100%',
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  background: 'white',
-                  cursor: 'pointer',
-                  color: theme.words,
-                  backgroundColor: theme.wordBoxBackground,
-                }}
-              >
-                click here to start typing
-              </Box>
+              <MessageOverlay message="click here to start typing" />
             )}
           </Box>
         </>

@@ -14,6 +14,8 @@ interface IWordListContext {
   setCharList: TReactSetState<ICharList>;
   quoteParams: TQuoteParam;
   setQuoteParams: TReactSetState<TQuoteParam>;
+  errorMessage: string | null;
+  setErrorMessage: TReactSetState<string | null>;
 }
 
 export type TWordChar = {
@@ -53,6 +55,8 @@ const WordListProvider: FC = ({ children }) => {
   const [author, setAuthor] = useState<null | string>(null);
   const [quoteParams, setQuoteParams] = useState(quoteLength);
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [charList, setCharList] = useState<ICharList>({});
 
   const value = useMemo(
@@ -69,6 +73,8 @@ const WordListProvider: FC = ({ children }) => {
       setCharList,
       quoteParams,
       setQuoteParams,
+      errorMessage,
+      setErrorMessage,
     }),
     [
       wordList,
@@ -83,6 +89,8 @@ const WordListProvider: FC = ({ children }) => {
       setCharList,
       quoteParams,
       setQuoteParams,
+      errorMessage,
+      setErrorMessage,
     ]
   );
   return (

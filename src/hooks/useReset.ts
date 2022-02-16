@@ -7,7 +7,8 @@ import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { wordList, setWordList, setAuthor } = useContext(WordListContext);
+  const { wordList, setWordList, setAuthor, setErrorMessage } =
+    useContext(WordListContext);
   const {
     setWpm,
     setWpmData,
@@ -62,6 +63,7 @@ const useReset = (randomize = false) => {
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
       setFocused(true);
+      setErrorMessage(null);
       if (timer.id) {
         clearInterval(timer.id);
         setTimer({
@@ -94,6 +96,7 @@ const useReset = (randomize = false) => {
       textFieldRef,
       setUserWordIndex,
       LSTime,
+      setErrorMessage,
     ]
   );
 };

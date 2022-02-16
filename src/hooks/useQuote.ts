@@ -20,6 +20,7 @@ const useQuote = () => {
     author,
     setAuthor,
     quoteParams,
+    setErrorMessage,
   } = useContext(WordListContext);
 
   const getQuote = useCallback(() => {
@@ -32,8 +33,27 @@ const useQuote = () => {
         setWordList(quoteContent);
         setWordCount(quoteContent.length);
         setLoading(false);
+      })
+      .catch((error) => {
+        if (error.message.includes('Failed to fetch')) {
+          setLoading(false);
+          setErrorMessage(
+            'there was a problem loading this quote. please ensure you have a stable network connection.'
+          );
+        } else {
+          setErrorMessage(
+            'something went wrong. try refreshing the page and ensure you have a stable network connection.'
+          );
+        }
       });
-  }, [setWordList, setWordCount, setLoading, setAuthor, quoteParams]);
+  }, [
+    setWordList,
+    setWordCount,
+    setLoading,
+    setAuthor,
+    quoteParams,
+    setErrorMessage,
+  ]);
   return useMemo(
     () => ({
       getQuote,

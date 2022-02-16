@@ -18,7 +18,7 @@ const categories = ['words', 'quotes', 'timed'] as const;
 
 const WordOptions = () => {
   const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
-  const { setWordCount } = useContext(WordListContext);
+  const { setWordCount, setErrorMessage } = useContext(WordListContext);
   const { setTimer } = useContext(TimeContext);
 
   const { theme } = useContext(ThemeContext);
@@ -38,6 +38,7 @@ const WordOptions = () => {
     setSettings((prev) => ({ ...prev, type: option }));
     setLocalStorage({ ...settings, type: option });
     setShowOptions(true);
+    setErrorMessage(null);
 
     const isTimed = option === 'timed' && settings.type !== 'timed';
 
