@@ -67,7 +67,7 @@ const App = () => {
   );
 
   const displayStats =
-    (settings.type === 'timed' && !timer.time) ||
+    (settings.type === 'timed' && timer.time === 0) ||
     (settings.type !== 'timed' && Object.keys(wpmData).length === wordCount);
 
   return (
