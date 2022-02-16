@@ -1,18 +1,26 @@
 import React, { useContext } from 'react';
-import { TimeContext, WordContext } from 'providers';
+import { ThemeContext, TimeContext, WordContext } from 'providers';
 import { useLocalStorage } from 'hooks';
 import useWordOptionTheme from './styles';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 
-const options = [30, 60, 120] as const;
+const options = [30, 60, 120, 180] as const;
 
 const TimedOptions = () => {
   const { setTimer, timer } = useContext(TimeContext);
-  const { textFieldRef } = useContext(WordContext);
+  const { textFieldRef, setFocused } = useContext(WordContext);
+  const { textColor } = useContext(ThemeContext);
   const { setLocalStorage } = useLocalStorage('typer-time');
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('timed');
+
+  const focus = () => {
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+      setFocused(true);
+    }
+  };
 
   return (
     <div
@@ -37,12 +45,22 @@ const TimedOptions = () => {
                 countdown: true,
               });
               setLocalStorage(option);
-              textFieldRef.current?.focus();
+              focus();
             }}
           >
             <Typography sx={getOptionTypographyStyle(option === timer._time)}>
               {option}
             </Typography>
+          </Box>
+          <Box
+            sx={{ color: textColor, cursor: 'default' }}
+            key={'spacer' + option}
+            onClick={(e) => {
+              e.stopPropagation();
+              focus();
+            }}
+          >
+            {idx !== options.length - 1 && '/'}
           </Box>
         </div>
       ))}

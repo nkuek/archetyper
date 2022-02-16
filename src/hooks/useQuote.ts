@@ -32,7 +32,9 @@ const useQuote = () => {
         setAuthor(quote.author);
         setWordList(quoteContent);
         setWordCount(quoteContent.length);
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 100);
       })
       .catch((error) => {
         if (error.message.includes('Failed to fetch')) {

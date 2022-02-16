@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import { ThemeContext } from 'providers';
 
 interface IProps {
-  message: string;
+  message: string | React.ReactNode;
 }
 
 const MessageOverlay: FC<IProps> = ({ message }) => {

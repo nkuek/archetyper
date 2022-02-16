@@ -427,56 +427,46 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
         <Box sx={{ color: theme.words }}>{`${timer.time}s`}</Box>
       </Container>
-      {loading ? (
+
+      <div style={{ position: 'relative', display: 'flex' }}>
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
+            position: 'relative',
+            zIndex: 1,
             height: 100,
+            overflow: 'hidden',
+            fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
+            width: '100%',
+            display: 'flex',
+            flexWrap: 'wrap',
           }}
+          id="wordBox"
         >
-          <CircularProgress sx={{ color: theme.headings }} />
+          {Object.values(charList).map((word, wordIdx) => (
+            <Word key={wordIdx} wordIdx={wordIdx} word={word} />
+          ))}
+          <Box sx={caretStyling}></Box>
+          {author && (
+            <Box
+              sx={{
+                color: theme.words,
+                filter: 'brightness(70%)',
+                margin: '0.25em',
+                fontStyle: 'italic',
+              }}
+            >
+              &#8212;{author}
+            </Box>
+          )}
         </Box>
-      ) : (
-        <>
-          <Box
-            sx={{
-              position: 'relative',
-              zIndex: 1,
-              height: 100,
-              overflow: 'hidden',
-              fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
-              width: '100%',
-              display: 'flex',
-              flexWrap: 'wrap',
-            }}
-            id="wordBox"
-          >
-            {Object.values(charList).map((word, wordIdx) => (
-              <Word key={wordIdx} wordIdx={wordIdx} word={word} />
-            ))}
-            <Box sx={caretStyling}></Box>
-            {author && (
-              <Box
-                sx={{
-                  color: theme.words,
-                  filter: 'brightness(70%)',
-                  margin: '0.25em',
-                  fontStyle: 'italic',
-                }}
-              >
-                &#8212;{author}
-              </Box>
-            )}
-            {errorMessage && <MessageOverlay message={errorMessage} />}
-            {!focused && (
-              <MessageOverlay message="click here to start typing" />
-            )}
-          </Box>
-        </>
-      )}
+        {errorMessage && <MessageOverlay message={errorMessage} />}
+        {!focused && <MessageOverlay message="click here to start typing" />}
+        {loading && (
+          <MessageOverlay
+            message={<CircularProgress sx={{ color: theme.headings }} />}
+          />
+        )}
+      </div>
       <Box
         sx={{
           display: 'flex',

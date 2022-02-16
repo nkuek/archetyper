@@ -126,7 +126,6 @@ const WordContextProvider: FC = ({ children }) => {
           };
         }
       }
-      setLoading(false);
       return charList;
     },
     [setLoading]
@@ -145,6 +144,7 @@ const WordContextProvider: FC = ({ children }) => {
         }),
       25
     );
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWordIndex]);
 
   const textFieldRef = useRef<HTMLInputElement>(null);

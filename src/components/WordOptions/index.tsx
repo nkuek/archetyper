@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState } from 'react';
+import { useMemo, useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {
@@ -9,7 +9,7 @@ import {
 } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
-import { useLocalStorage } from 'hooks';
+import { useLocalStorage, useReset } from 'hooks';
 import QuoteOptions from './QuoteOptions';
 import WordOption from './WordOption';
 import TimedOptions from './TimedOptions';
@@ -29,6 +29,7 @@ const WordOptions = () => {
   const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
 
   const [showOptions, setShowOptions] = useState(false);
+  const [needReset, setNeedReset] = useState(false);
 
   const handleClick = (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
@@ -38,23 +39,32 @@ const WordOptions = () => {
     setSettings((prev) => ({ ...prev, type: option }));
     setLocalStorage({ ...settings, type: option });
     setShowOptions(true);
-    setErrorMessage(null);
+    setNeedReset(true);
+    // const isTimed = option === 'timed' && settings.type !== 'timed';
 
-    const isTimed = option === 'timed' && settings.type !== 'timed';
-
-    if (option === 'words') {
-      setWordCount(LSWordCount);
-    }
-    setTimer({
-      id: null,
-      time: isTimed ? LSTime : 1,
-      _time: isTimed ? LSTime : 1,
-      countdown: isTimed,
-    });
-    if (textFieldRef.current) {
-      textFieldRef.current.focus();
-    }
+    // if (option === 'words') {
+    //   setWordCount(LSWordCount);
+    // }
+    // setTimer({
+    //   id: null,
+    //   time: isTimed ? LSTime : 1,
+    //   _time: isTimed ? LSTime : 1,
+    //   countdown: isTimed,
+    // });
+    // if (textFieldRef.current) {
+    //   textFieldRef.current.focus();
+    // }
   };
+
+  const reset = useReset({ resetState: true });
+
+  useEffect(() => {
+    if (needReset) {
+      console.log('reseting');
+      reset();
+      setNeedReset(false);
+    }
+  }, [needReset]);
 
   return (
     <Container

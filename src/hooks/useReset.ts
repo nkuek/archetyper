@@ -6,7 +6,15 @@ import randomizeWords from 'words';
 import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
-const useReset = (randomize = false) => {
+interface IResetSettings {
+  randomize?: boolean;
+  resetState?: boolean;
+}
+
+const useReset = (
+  resetSettings: IResetSettings = { randomize: false, resetState: false }
+) => {
+  const { randomize, resetState } = resetSettings;
   const { wordList, setWordList, setAuthor, setErrorMessage } =
     useContext(WordListContext);
   const {
@@ -43,7 +51,10 @@ const useReset = (randomize = false) => {
       if (wordBox) wordBox.scrollTop = 0;
       if (textFieldRef.current) textFieldRef.current.focus();
       // if a user has not started a test or has finished the test, give them a new word list
-      if ((!timer.id && !currentWordIndex && !currentCharIndex) || randomize) {
+      if (
+        (!resetState && !timer.id && !currentWordIndex && !currentCharIndex) ||
+        randomize
+      ) {
         if (settings.type === 'quotes') {
           getQuote();
         } else {
@@ -97,6 +108,7 @@ const useReset = (randomize = false) => {
       setUserWordIndex,
       LSTime,
       setErrorMessage,
+      resetState,
     ]
   );
 };

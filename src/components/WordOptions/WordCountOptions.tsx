@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext } from 'react';
 import { useLocalStorage } from 'hooks';
 import { ThemeContext, WordContext, WordListContext } from 'providers';
 import { Typography } from '@mui/material';
@@ -12,9 +12,7 @@ const WordCountOptions = () => {
   const { settings, setSettings, textFieldRef, setFocused } =
     useContext(WordContext);
 
-  const { theme } = useContext(ThemeContext);
-
-  const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
+  const { textColor } = useContext(ThemeContext);
 
   const { setWordCount, wordCount } = useContext(WordListContext);
 
@@ -76,7 +74,7 @@ const WordCountOptions = () => {
             </Box>
             <Box
               sx={{ color: textColor, cursor: 'default' }}
-              key={'spacer' + idx}
+              key={'spacer' + option}
               onClick={(e) => {
                 e.stopPropagation();
                 focus();
