@@ -11,6 +11,7 @@ import {
 } from 'react';
 import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
+import { IndexContext } from './IndexProvider';
 import { ICharList, TWordChar, WordListContext } from './WordListProvider';
 
 interface ITimeStepData {
@@ -93,6 +94,7 @@ const WordContextProvider: FC = ({ children }) => {
   );
   const { setWordList, setAuthor, loading, setLoading, quoteParams } =
     useContext(WordListContext);
+  const { setCaretSpacing } = useContext(IndexContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
@@ -134,8 +136,9 @@ const WordContextProvider: FC = ({ children }) => {
     (node: HTMLDivElement) => {
       if (!node || loading) return;
       node.scrollIntoView({ block: 'center' });
+      setCaretSpacing({ top: node.offsetTop, left: node.offsetLeft });
     },
-    [loading]
+    [loading, setCaretSpacing]
   );
 
   const textFieldRef = useRef<HTMLInputElement>(null);

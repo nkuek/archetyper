@@ -14,7 +14,7 @@ import { useLocalStorage, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
-import { animation } from './styles';
+import { animation, slowAnimation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
 import MessageOverlay from './MessageOverlay';
@@ -103,8 +103,11 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
       left: left - 2,
       position: 'absolute',
       backgroundColor: theme.currentChar,
-      animation: `${animation} 1.5s linear infinite`,
+      animation: !timer.id
+        ? `${animation} 1.1s ease infinite`
+        : `${slowAnimation} 1.5s linear infinite`,
       zIndex: 5,
+      transition: 'left 100ms ease',
       display:
         top > 0 &&
         left > 0 &&
@@ -113,7 +116,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           ? 'initial'
           : 'none',
     } as const;
-  }, [theme, caretSpacing, wordCount, wpmData, focused]);
+  }, [theme, caretSpacing, wordCount, wpmData, focused, timer.id]);
 
   useEffect(() => {
     if (wordList.length) {

@@ -1,11 +1,6 @@
 import React, { FC, useCallback, useContext } from 'react';
 import { Box } from '@mui/system';
-import {
-  ThemeContext,
-  IndexContext,
-  WordListContext,
-  WordContext,
-} from 'providers';
+import { ThemeContext, IndexContext, WordListContext } from 'providers';
 import { TWordChar } from 'providers/WordListProvider';
 
 interface IProps {
@@ -16,11 +11,10 @@ interface IProps {
 
 const Char: FC<IProps> = (props) => {
   const { charIdx, char, wordIdx } = props;
-  const { charList, wordCount } = useContext(WordListContext);
+  const { charList } = useContext(WordListContext);
   const { userWordIndex, currentCharIndex, setCaretSpacing } =
     useContext(IndexContext);
   const { theme } = useContext(ThemeContext);
-  const { settings } = useContext(WordContext);
 
   const displayExtraChar =
     wordIdx === userWordIndex &&
@@ -37,19 +31,9 @@ const Char: FC<IProps> = (props) => {
           top: node.offsetTop,
           left: node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),
         });
-        // setTimeout to update the node position after hiding previous words
-        if (wordCount === 'endless' || settings.type === 'timed') {
-          setTimeout(() => {
-            setCaretSpacing({
-              top: node.offsetTop,
-              left:
-                node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),
-            });
-          }, 40);
-        }
       }
     },
-    [setCaretSpacing, displayExtraChar, wordCount, settings.type]
+    [setCaretSpacing, displayExtraChar]
   );
 
   return (
