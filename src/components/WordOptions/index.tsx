@@ -106,10 +106,14 @@ const WordOptions = () => {
         </Box>
       </Box>
       <div style={{ display: 'flex', alignSelf: 'flex-end' }}>
-        <Typography sx={{ color: textColor, marginRight: '.25em' }}>
+        <Typography
+          sx={{ color: textColor, marginRight: '.25em', fontWeight: 'bold' }}
+        >
           {'wpm: '}
         </Typography>
-        <Typography sx={{ color: textColor }}>{wpm.net || ''}</Typography>
+        <Typography sx={{ color: textColor, fontWeight: 'bold' }}>
+          {wpm.net || ''}
+        </Typography>
       </div>
     </Container>
   );

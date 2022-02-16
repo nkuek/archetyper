@@ -23,7 +23,7 @@ const useWordOptionTheme = (type: ISettings['type']) => {
       ({
         padding: '0em .5em',
         cursor: 'pointer',
-        color: condition ? theme.currentWord : textColor,
+        color: condition ? theme.wordsContrast || theme.currentWord : textColor,
         opacity: condition ? 1 : 0.6,
         transition: 'opacity 250ms ease-in-out',
         '&:hover': {

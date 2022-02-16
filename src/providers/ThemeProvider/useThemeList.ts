@@ -53,7 +53,7 @@ const useThemeList = () => {
         currentChar: 'hsl(28deg 94% 30%)',
         words: '#66d2bc',
         correct: 'hsl(45deg 72% 60%)',
-        wordsContrast: 'white',
+        wordsContrast: 'rgb(33, 38, 45)',
         graphText: 'hsl(45deg 72% 58%)',
         lineColor: '#66d2bc',
         headings: 'black',
@@ -155,7 +155,8 @@ const useThemeList = () => {
         border: `1px solid ${isDarkTheme ? 'rgb(33, 38, 45)' : 'black'}`,
         disabled: '#ddd',
         lineColor2: 'darkmagenta',
-        legendBackground: isDarkTheme ? 'black' : 'white',
+        legendBackground: isDarkTheme ? '#0e1117' : 'white',
+        gradientUnderline: ['darkmagenta', 'plum'],
       },
     }),
     [isDarkTheme]
