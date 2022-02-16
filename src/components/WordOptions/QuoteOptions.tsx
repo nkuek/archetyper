@@ -15,7 +15,7 @@ const QuoteOptions = () => {
   const { setLocalStorage } = useLocalStorage('typer-quote-length');
 
   return (
-    <div style={{ display: 'flex', height: '100%', alignItems: 'flex-end' }}>
+    <>
       {options.map((option, idx) => (
         <div style={optionContainerStyle} key={'quotesbox' + idx}>
           <Box
@@ -34,7 +34,7 @@ const QuoteOptions = () => {
           </Box>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

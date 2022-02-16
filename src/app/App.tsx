@@ -101,6 +101,7 @@ const App = () => {
           alignItems: displayStats ? 'start' : 'center',
           justifyContent: 'center',
           padding: 0,
+          position: 'relative',
         }}
       >
         {displayStats ? (
@@ -112,6 +113,7 @@ const App = () => {
               flexDirection: 'column',
               width: '75%',
               minHeight: '30%',
+              top: -64,
               position: 'relative',
             }}
           >

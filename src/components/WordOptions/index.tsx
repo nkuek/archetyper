@@ -17,7 +17,8 @@ import TimedOptions from './TimedOptions';
 const categories = ['words', 'quotes', 'timed'] as const;
 
 const WordOptions = () => {
-  const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
+  const { wpm, setSettings, settings, textFieldRef, setFocused } =
+    useContext(WordContext);
   const { setWordCount } = useContext(WordListContext);
   const { setTimer } = useContext(TimeContext);
 
@@ -29,6 +30,29 @@ const WordOptions = () => {
   const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
 
   const [showOptions, setShowOptions] = useState(false);
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    option: typeof categories[number]
+  ) => {
+    e.stopPropagation();
+    setSettings((prev) => ({ ...prev, type: option }));
+    setLocalStorage({ ...settings, type: option });
+    setShowOptions(true);
+    option === 'words' && setWordCount(LSWordCount);
+    option === 'timed' &&
+      settings.type !== 'timed' &&
+      setTimer({
+        id: null,
+        time: LSTime,
+        _time: LSTime,
+        countdown: true,
+      });
+    if (textFieldRef.current) {
+      textFieldRef.current.focus();
+      setFocused(true);
+    }
+  };
 
   return (
     <Container
@@ -43,36 +67,26 @@ const WordOptions = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
+          position: 'relative',
+        }}
+        onMouseEnter={() => {
+          setShowOptions(true);
+        }}
+        onMouseLeave={() => {
+          setShowOptions(false);
         }}
       >
-        <WordOption setShowOptions={setShowOptions} showOptions={showOptions}>
-          {settings.type === 'quotes' && <QuoteOptions />}
-          {settings.type === 'words' && <WordCountOptions />}
-          {settings.type === 'timed' && <TimedOptions />}
+        <WordOption showOptions={showOptions}>
+          <QuoteOptions />
+          <WordCountOptions />
+          <TimedOptions />
         </WordOption>
         <Box sx={{ display: 'flex' }}>
           {categories.map((option) => (
             <Typography
               onClick={(e) => {
-                e.stopPropagation();
-                setSettings((prev) => ({ ...prev, type: option }));
-                setLocalStorage({ ...settings, type: option });
-                setShowOptions(true);
-                option === 'words' && setWordCount(LSWordCount);
-                option === 'timed' &&
-                  settings.type !== 'timed' &&
-                  setTimer({
-                    id: null,
-                    time: LSTime,
-                    _time: LSTime,
-                    countdown: true,
-                  });
-                if (textFieldRef.current) textFieldRef.current.focus();
+                handleClick(e, option);
               }}
-              onMouseEnter={() => {
-                if (settings.type === option) setShowOptions(true);
-              }}
-              onMouseLeave={() => setShowOptions(false)}
               sx={{
                 margin: '0 .5em',
                 color: option === settings.type ? theme.currentWord : textColor,

@@ -21,6 +21,7 @@ const TimedOptions = () => {
         justifyContent: 'center',
         height: '100%',
         alignItems: 'flex-end',
+        width: '100%',
       }}
     >
       {options.map((option, idx) => (

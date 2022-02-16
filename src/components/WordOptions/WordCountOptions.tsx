@@ -30,7 +30,7 @@ const WordCountOptions = () => {
   };
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex' }}>
         {wordOptions.map((setting, idx) => (
           <div style={optionContainerStyle} key={setting.value + idx}>
@@ -87,7 +87,7 @@ const WordCountOptions = () => {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

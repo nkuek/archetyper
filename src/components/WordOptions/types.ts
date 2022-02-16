@@ -1,5 +1,3 @@
-import { TReactSetState } from 'providers/general/types';
-
 export interface IOptions {
   words: boolean;
   quotes: boolean;
@@ -8,5 +6,4 @@ export interface IOptions {
 
 export interface IProps {
   showOptions: boolean;
-  setShowOptions: TReactSetState<boolean>;
 }
