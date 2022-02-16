@@ -1,12 +1,7 @@
 import { useMemo, useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import {
-  ThemeContext,
-  TimeContext,
-  WordContext,
-  WordListContext,
-} from 'providers';
+import { ThemeContext, WordContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage, useReset } from 'hooks';
@@ -14,19 +9,15 @@ import QuoteOptions from './QuoteOptions';
 import WordOption from './WordOption';
 import TimedOptions from './TimedOptions';
 
-const categories = ['words', 'quotes', 'timed'] as const;
+const categories = ['words', 'timed', 'quotes'] as const;
 
 const WordOptions = () => {
-  const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
-  const { setWordCount, setErrorMessage } = useContext(WordListContext);
-  const { setTimer } = useContext(TimeContext);
+  const { wpm, setSettings, settings } = useContext(WordContext);
 
   const { theme } = useContext(ThemeContext);
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
   const { setLocalStorage } = useLocalStorage('typer-settings');
-  const { value: LSTime } = useLocalStorage('typer-time', 30);
-  const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
 
   const [showOptions, setShowOptions] = useState(false);
   const [needReset, setNeedReset] = useState(false);
@@ -40,27 +31,12 @@ const WordOptions = () => {
     setLocalStorage({ ...settings, type: option });
     setShowOptions(true);
     setNeedReset(true);
-    // const isTimed = option === 'timed' && settings.type !== 'timed';
-
-    // if (option === 'words') {
-    //   setWordCount(LSWordCount);
-    // }
-    // setTimer({
-    //   id: null,
-    //   time: isTimed ? LSTime : 1,
-    //   _time: isTimed ? LSTime : 1,
-    //   countdown: isTimed,
-    // });
-    // if (textFieldRef.current) {
-    //   textFieldRef.current.focus();
-    // }
   };
 
   const reset = useReset({ resetState: true });
 
   useEffect(() => {
     if (needReset) {
-      console.log('reseting');
       reset();
       setNeedReset(false);
     }

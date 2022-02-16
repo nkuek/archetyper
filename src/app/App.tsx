@@ -14,11 +14,11 @@ import Settings from 'components/Settings';
 import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 import Tip from 'components/Tip';
+import { useFocus } from 'hooks';
 
 const App = () => {
   const { wordCount } = useContext(WordListContext);
-  const { wpmData, setFocused, textFieldRef, settings } =
-    useContext(WordContext);
+  const { wpmData, setFocused, settings } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
   const { timer } = useContext(TimeContext);
 
@@ -27,16 +27,15 @@ const App = () => {
   const [showTip, setShowTip] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
+  const focus = useFocus();
+
   const closeDialog = (
     e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
     setDialog: TReactSetState<boolean>
   ) => {
     e.stopPropagation();
     setDialog(false);
-    if (textFieldRef.current) {
-      setFocused(true);
-      setTimeout(() => textFieldRef.current!.focus(), 1);
-    }
+    focus();
   };
 
   // handle pressing escape

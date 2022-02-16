@@ -1,7 +1,8 @@
 import React, { FC, useContext } from 'react';
 import { Container, Typography } from '@mui/material';
-import { ThemeContext, WordContext } from 'providers';
+import { ThemeContext } from 'providers';
 import { TReactSetState } from 'providers/general/types';
+import { useFocus } from 'hooks';
 
 interface IProps {
   showTip: boolean;
@@ -12,7 +13,7 @@ interface IProps {
 
 const Tip: FC<IProps> = ({ showTip, setShowTip, tip, warning }) => {
   const { theme } = useContext(ThemeContext);
-  const { textFieldRef } = useContext(WordContext);
+  const focus = useFocus();
 
   if (!showTip) return null;
 
@@ -33,7 +34,7 @@ const Tip: FC<IProps> = ({ showTip, setShowTip, tip, warning }) => {
         onClick={(e) => {
           e.stopPropagation();
           setShowTip && setShowTip(false);
-          textFieldRef.current?.focus();
+          focus();
         }}
       >
         {`${warning ? 'warning' : 'tip'}: ${tip}`}

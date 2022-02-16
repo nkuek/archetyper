@@ -1,56 +1,28 @@
 import { useContext } from 'react';
-import { useLocalStorage } from 'hooks';
-import { ThemeContext, WordContext, WordListContext } from 'providers';
+import { useFocus, useLocalStorage } from 'hooks';
+import { ThemeContext, WordListContext } from 'providers';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { wordOptions } from 'providers/WordProvider';
 import useWordOptionTheme from './styles';
+import WordTypeOptions from './WordTypeOptions';
 
 const options = [10, 25, 50, 'endless'] as const;
 
 const WordCountOptions = () => {
-  const { settings, setSettings, textFieldRef, setFocused } =
-    useContext(WordContext);
-
   const { textColor } = useContext(ThemeContext);
 
   const { setWordCount, wordCount } = useContext(WordListContext);
 
   const { setLocalStorage } = useLocalStorage('typer-word-count');
+
   const { getOptionTypographyStyle, optionContainerStyle, getOptionStyle } =
     useWordOptionTheme('words');
 
-  const focus = () => {
-    if (textFieldRef.current) {
-      textFieldRef.current.focus();
-      setFocused(true);
-    }
-  };
+  const focus = useFocus();
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex' }}>
-        {wordOptions.map((setting, idx) => (
-          <div style={optionContainerStyle} key={setting.value + idx}>
-            <Box
-              sx={{
-                display: 'flex',
-                ...getOptionStyle(settings[setting.value]),
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSettings((prev) => ({
-                  ...prev,
-                  [setting.value]: !prev[setting.value],
-                }));
-                focus();
-              }}
-            >
-              {setting.name}
-            </Box>
-          </div>
-        ))}
-      </div>
+      <WordTypeOptions type="words" />
       <div style={{ display: 'flex' }}>
         {options.map((option, idx) => (
           <div style={optionContainerStyle} key={'wordsbox' + idx}>

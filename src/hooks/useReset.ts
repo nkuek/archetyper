@@ -3,6 +3,7 @@ import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
+import useFocus from './useFocus';
 import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
@@ -24,8 +25,6 @@ const useReset = (
     setInputHistory,
     settings,
     setWordBoxConfig,
-    setFocused,
-    textFieldRef,
   } = useContext(WordContext);
 
   const {
@@ -42,6 +41,8 @@ const useReset = (
 
   const { value: LSTime } = useLocalStorage('typer-time', 30);
 
+  const focus = useFocus();
+
   return useCallback(
     (
       e?: React.MouseEvent<HTMLDivElement | HTMLButtonElement | HTMLSpanElement>
@@ -49,7 +50,6 @@ const useReset = (
       e?.stopPropagation();
       const wordBox = document.getElementById('wordBox');
       if (wordBox) wordBox.scrollTop = 0;
-      if (textFieldRef.current) textFieldRef.current.focus();
       // if a user has not started a test or has finished the test, give them a new word list
       if (
         (!resetState && !timer.id && !currentWordIndex && !currentCharIndex) ||
@@ -65,6 +65,7 @@ const useReset = (
       } else {
         setWordList([...wordList]);
       }
+
       setUserInput('');
       setInputHistory([]);
       setWordBoxConfig(defaultWordBoxConfig);
@@ -73,17 +74,20 @@ const useReset = (
       setUserWordIndex(0);
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
-      setFocused(true);
       setErrorMessage(null);
+
       if (timer.id) {
         clearInterval(timer.id);
-        setTimer({
-          id: null,
-          time: settings.type === 'timed' ? LSTime : 1,
-          _time: settings.type === 'timed' ? LSTime : 1,
-          countdown: settings.type === 'timed',
-        });
       }
+
+      setTimer({
+        id: null,
+        time: settings.type === 'timed' ? LSTime : 1,
+        _time: settings.type === 'timed' ? LSTime : 1,
+        countdown: settings.type === 'timed',
+      });
+
+      focus();
     },
     [
       setWordList,
@@ -103,12 +107,11 @@ const useReset = (
       setCurrentCharIndex,
       currentWordIndex,
       setCurrentWordIndex,
-      setFocused,
-      textFieldRef,
       setUserWordIndex,
       LSTime,
       setErrorMessage,
       resetState,
+      focus,
     ]
   );
 };

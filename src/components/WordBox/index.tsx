@@ -10,7 +10,7 @@ import {
   TimeContext,
   IndexContext,
 } from 'providers';
-import { useLocalStorage, useReset } from 'hooks';
+import { useFocus, useLocalStorage, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
@@ -60,7 +60,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setInputHistory,
     textFieldRef,
     focused,
-    setFocused,
     generateCharList,
     settings,
   } = useContext(WordContext);
@@ -81,13 +80,11 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
+  const focus = useFocus();
 
   const handleFocus = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    if (textFieldRef.current) {
-      textFieldRef.current.focus();
-      setFocused(true);
-    }
+    focus();
   };
 
   const { value: LSTime } = useLocalStorage('typer-time', 30);

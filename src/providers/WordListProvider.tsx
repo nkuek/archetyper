@@ -51,7 +51,7 @@ const WordListProvider: FC = ({ children }) => {
   );
   const [wordList, setWordList] = useState<string[]>([]);
   const [wordCount, setWordCount] = useState(LSWordCount);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [author, setAuthor] = useState<null | string>(null);
   const [quoteParams, setQuoteParams] = useState(quoteLength);
 

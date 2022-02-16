@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { ThemeContext, TimeContext, WordContext } from 'providers';
-import { useLocalStorage } from 'hooks';
+import { ThemeContext, TimeContext } from 'providers';
+import { useFocus, useLocalStorage } from 'hooks';
 import useWordOptionTheme from './styles';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
@@ -9,18 +9,12 @@ const options = [30, 60, 120, 180] as const;
 
 const TimedOptions = () => {
   const { setTimer, timer } = useContext(TimeContext);
-  const { textFieldRef, setFocused } = useContext(WordContext);
   const { textColor } = useContext(ThemeContext);
   const { setLocalStorage } = useLocalStorage('typer-time');
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('timed');
 
-  const focus = () => {
-    if (textFieldRef.current) {
-      textFieldRef.current.focus();
-      setFocused(true);
-    }
-  };
+  const focus = useFocus();
 
   return (
     <div
