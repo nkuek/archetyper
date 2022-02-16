@@ -29,6 +29,7 @@ const useWordOptionTheme = (type: ISettings['type']) => {
         '&:hover': {
           opacity: 1,
         },
+        fontWeight: condition ? 'bold' : 'normal',
       } as const),
     [theme, textColor]
   );

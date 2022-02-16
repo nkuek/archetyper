@@ -69,14 +69,8 @@ const WordOptions = () => {
           alignItems: 'flex-start',
           position: 'relative',
         }}
-        onMouseEnter={() => {
-          setShowOptions(true);
-        }}
-        onMouseLeave={() => {
-          setShowOptions(false);
-        }}
       >
-        <WordOption showOptions={showOptions}>
+        <WordOption showOptions={showOptions} setShowOptions={setShowOptions}>
           <QuoteOptions />
           <WordCountOptions />
           <TimedOptions />
@@ -92,8 +86,15 @@ const WordOptions = () => {
                 color: option === settings.type ? theme.currentWord : textColor,
                 opacity: option === settings.type ? 1 : 0.6,
                 cursor: 'pointer',
+                fontWeight: option === settings.type ? 'bold' : 'normal',
               }}
               key={option}
+              onMouseEnter={() => {
+                if (option === settings.type) setShowOptions(true);
+              }}
+              onMouseLeave={() => {
+                setShowOptions(false);
+              }}
             >
               {option}
             </Typography>

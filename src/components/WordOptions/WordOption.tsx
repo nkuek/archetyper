@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { IProps } from './types';
 import { Box } from '@mui/system';
 
-const WordOption: FC<IProps> = ({ showOptions, children }) => {
+const WordOption: FC<IProps> = ({ showOptions, setShowOptions, children }) => {
   return (
     <Box
       sx={{
@@ -14,6 +14,12 @@ const WordOption: FC<IProps> = ({ showOptions, children }) => {
         top: 0,
         display: 'flex',
         alignItems: 'flex-end',
+      }}
+      onMouseEnter={() => {
+        setShowOptions(true);
+      }}
+      onMouseLeave={() => {
+        setShowOptions(false);
       }}
     >
       {children}
