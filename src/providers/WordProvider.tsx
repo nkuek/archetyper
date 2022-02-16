@@ -120,6 +120,7 @@ const WordContextProvider: FC = ({ children }) => {
           charList[i] = {
             chars: wordChars,
             length: word.length,
+            word,
           };
         }
       }

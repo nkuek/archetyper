@@ -39,15 +39,18 @@ const WordOptions = () => {
     setSettings((prev) => ({ ...prev, type: option }));
     setLocalStorage({ ...settings, type: option });
     setShowOptions(true);
-    option === 'words' && setWordCount(LSWordCount);
-    option === 'timed' &&
-      settings.type !== 'timed' &&
-      setTimer({
-        id: null,
-        time: LSTime,
-        _time: LSTime,
-        countdown: true,
-      });
+
+    const isTimed = option === 'timed' && settings.type !== 'timed';
+
+    if (option === 'words') {
+      setWordCount(LSWordCount);
+    }
+    setTimer({
+      id: null,
+      time: isTimed ? LSTime : 1,
+      _time: isTimed ? LSTime : 1,
+      countdown: isTimed,
+    });
     if (textFieldRef.current) {
       textFieldRef.current.focus();
     }

@@ -27,6 +27,7 @@ export interface IChars {
   chars: TWordChar[];
   skipped?: boolean;
   length: number;
+  word: string;
 }
 
 export interface ICharList {

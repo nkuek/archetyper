@@ -22,8 +22,8 @@ const TimeProvider: FC = ({ children }) => {
   const { settings } = useContext(WordContext);
   const [timer, setTimer] = useState<ITimerConfig>({
     id: null,
-    time: settings.type === 'timed' ? time : 0,
-    _time: settings.type === 'timed' ? time : 0,
+    time: settings.type === 'timed' ? time : 1,
+    _time: settings.type === 'timed' ? time : 1,
     countdown: settings.type === 'timed',
   });
 

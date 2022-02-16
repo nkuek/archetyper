@@ -24,7 +24,7 @@ import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
-  const timeToMins = Math.max(timer, 1) / 60;
+  const timeToMins = timer / 60;
   const raw = Math.floor(charCount / 5 / timeToMins);
   const uncorrectedErrors = Math.floor(errors / timeToMins);
   const net = Math.max(raw - uncorrectedErrors, 0);
@@ -131,6 +131,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
       [Object.keys(prev).length]: {
         chars: wordChars,
         length: wordChars.length,
+        word: newWord,
       },
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,7 +141,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     const time = timer.countdown ? LSTime - timer.time + 1 : timer.time;
     setWpm(calculateWpm(charCount, time, uncorrectedErrors));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timer.time]);
+  }, [timer.time, charCount, uncorrectedErrors]);
 
   useEffect(() => {
     if (!timer.id && userInput) {
@@ -159,11 +160,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         (settings.type !== 'timed' &&
           wordCount !== 'endless' &&
           currentWordIndex === wordCount - 1 &&
-          userInput ===
-            charList[wordCount - 1].chars.reduce(
-              (word, key) => (word += key.char),
-              ''
-            )))
+          userInput === charList[wordCount - 1].word))
     ) {
       clearInterval(timer.id);
     }
@@ -220,7 +217,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         setWpmData((prev) => ({
           ...prev,
           [userWordIndex]: {
-            word: wordList[userWordIndex],
+            word: charList[userWordIndex].word,
             wordNum: userWordIndex + 1,
             errors: totalWordErrors,
             wpm,

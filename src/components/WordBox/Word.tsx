@@ -25,14 +25,14 @@ const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
   const { userWordIndex } = useContext(IndexContext);
-  const { currentWordRef } = useContext(WordContext);
+  const { currentWordRef, settings } = useContext(WordContext);
   const { wordList, wordCount } = useContext(WordListContext);
   const [showWord, setShowWord] = useState(true);
 
   const wordObserver = useRef<IntersectionObserver>();
   const wordRef = useCallback(
     (node: HTMLDivElement) => {
-      if (wordCount !== 'endless') return;
+      if (wordCount !== 'endless' || settings.type !== 'timed') return;
       const wordBox = document.getElementById('wordBox');
       if (wordObserver.current) {
         wordObserver.current.disconnect();
