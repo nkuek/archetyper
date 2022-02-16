@@ -144,6 +144,10 @@ const WordContextProvider: FC = ({ children }) => {
     if (settings.type !== 'quotes') {
       setWordList(randomizedWords(settings));
       setAuthor(null);
+      // asynchronous timeout to generate new word list before focusing
+      setTimeout(() => {
+        setFocused(true);
+      }, 1);
     } else {
       getQuote();
       setFocused(true);
