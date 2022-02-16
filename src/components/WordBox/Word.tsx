@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   IndexContext,
@@ -29,30 +22,29 @@ const Word: FC<IProps> = (props) => {
   const { wordList, wordCount } = useContext(WordListContext);
   const [showWord, setShowWord] = useState(true);
 
-  const wordObserver = useRef<IntersectionObserver>();
-  const wordRef = useCallback(
-    (node: HTMLDivElement) => {
-      if ((wordCount !== 'endless' && settings.type !== 'timed') || !node)
-        return;
-      const wordBox = document.getElementById('wordBox');
-      if (wordObserver.current) {
-        wordObserver.current.disconnect();
-      }
+  const wordRef = useRef<HTMLDivElement | null>(null);
 
-      wordObserver.current = new IntersectionObserver(
-        ([entry], obs) => {
-          // hide words that the user has already typed
-          if (!entry.isIntersecting && wordIdx < userWordIndex) {
-            setShowWord(false);
-            obs.unobserve(node);
-          }
-        },
-        { root: wordBox, rootMargin: '25px' }
-      );
-      wordObserver.current.observe(node);
-    },
-    [userWordIndex, wordIdx, wordCount, settings.type]
-  );
+  useEffect(() => {
+    if (wordCount !== 'endless' && settings.type !== 'timed') return;
+
+    const wordBox = document.getElementById('wordBox');
+
+    const observer = new IntersectionObserver(
+      ([entry], obs) => {
+        // hide words that the user has already typed
+        if (!entry.isIntersecting && wordIdx < userWordIndex) {
+          setShowWord(false);
+          if (wordRef.current) obs.unobserve(wordRef.current);
+        }
+      },
+      { root: wordBox, rootMargin: '25px' }
+    );
+
+    if (wordRef.current) observer.observe(wordRef.current);
+
+    return () => observer.disconnect();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userWordIndex]);
 
   // useEffect to reset showWord state when resetting
   useEffect(() => {

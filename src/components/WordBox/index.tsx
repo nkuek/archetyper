@@ -104,7 +104,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         ? `${animation} 1.1s ease infinite`
         : `${slowAnimation} 1.5s linear infinite`,
       zIndex: 5,
-      transition: 'left 100ms ease',
+      transition: 'left 75ms ease',
       display:
         top > 0 &&
         left > 0 &&
@@ -118,6 +118,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   useEffect(() => {
     if (wordList.length) {
       setCharList(generateCharList(wordList));
+      focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wordList, generateCharList]);
@@ -417,7 +418,9 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         disableGutters
       >
         <Box sx={{ color: theme.words }}>{`${userWordIndex}${
-          wordCount !== 'endless' && timer._time !== 'endless'
+          wordCount !== 'endless' &&
+          timer._time !== 'endless' &&
+          settings.type !== 'timed'
             ? ` / ${wordCount}`
             : ''
         }`}</Box>

@@ -95,7 +95,7 @@ const CustomTooltip = (props: any) => {
 };
 
 const Stats = () => {
-  const { wpm, wpmData, wordBoxConfig } = useContext(WordContext);
+  const { wpm, wpmData, wordBoxConfig, settings } = useContext(WordContext);
   const { timer } = useContext(TimeContext);
 
   const { theme } = useContext(ThemeContext);
@@ -278,7 +278,11 @@ const Stats = () => {
           tooltip="total characters typed / incorrect / missing / extra"
           data={`${wordBoxConfig.charCount} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
         />
-        <DataDisplay title="time" data={timer.time} unit="s" />
+        <DataDisplay
+          title="time"
+          data={settings.type === 'timed' ? timer._time : timer.time}
+          unit="s"
+        />
       </Container>
       <Container
         sx={{
