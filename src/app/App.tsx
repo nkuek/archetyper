@@ -172,17 +172,14 @@ const App = () => {
           about me
         </Typography>
       </Container>
-      <div>
-        <Settings
-          open={settingsDialogOpen}
-          onClose={(e) => closeDialog(e, setSettingsDialogOpen)}
-        />
-        <AboutMe
-          open={aboutMeOpen}
-          onClose={(e) => closeDialog(e, setAboutMeOpen)}
-        />
-      </div>
-      <Box sx={{ textAlign: 'center', color: theme.words }}>version</Box>
+      <Settings
+        open={settingsDialogOpen}
+        onClose={(e) => closeDialog(e, setSettingsDialogOpen)}
+      />
+      <AboutMe
+        open={aboutMeOpen}
+        onClose={(e) => closeDialog(e, setAboutMeOpen)}
+      />
     </div>
   );
 };
