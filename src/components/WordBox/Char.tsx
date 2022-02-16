@@ -27,6 +27,7 @@ const Char: FC<IProps> = (props) => {
   const charRef = useCallback(
     (node: HTMLDivElement) => {
       if (node) {
+        console.log('char', node.offsetTop);
         setCaretSpacing({
           top: node.offsetTop,
           left: node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),

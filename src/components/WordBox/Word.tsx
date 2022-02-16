@@ -32,7 +32,8 @@ const Word: FC<IProps> = (props) => {
   const wordObserver = useRef<IntersectionObserver>();
   const wordRef = useCallback(
     (node: HTMLDivElement) => {
-      if (wordCount !== 'endless' || settings.type !== 'timed') return;
+      if ((wordCount !== 'endless' && settings.type !== 'timed') || !node)
+        return;
       const wordBox = document.getElementById('wordBox');
       if (wordObserver.current) {
         wordObserver.current.disconnect();
@@ -46,10 +47,9 @@ const Word: FC<IProps> = (props) => {
             obs.unobserve(node);
           }
         },
-        { root: wordBox, rootMargin: '50px' }
+        { root: wordBox, rootMargin: '25px' }
       );
       wordObserver.current.observe(node);
-      node.scrollIntoView({ block: 'center' });
     },
     [userWordIndex, wordIdx, wordCount, settings.type]
   );

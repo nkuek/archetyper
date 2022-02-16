@@ -136,7 +136,11 @@ const WordContextProvider: FC = ({ children }) => {
     (node: HTMLDivElement) => {
       if (!node || loading) return;
       node.scrollIntoView({ block: 'center' });
-      setCaretSpacing({ top: node.offsetTop, left: node.offsetLeft });
+      // asynchronous timeout to fix caret bug after hiding existing words
+      setTimeout(
+        () => setCaretSpacing({ top: node.offsetTop, left: node.offsetLeft }),
+        25
+      );
     },
     [loading, setCaretSpacing]
   );
