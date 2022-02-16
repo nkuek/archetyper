@@ -84,7 +84,10 @@ const WordOptions = () => {
               }}
               sx={{
                 margin: '0 .5em',
-                color: option === settings.type ? theme.currentWord : textColor,
+                color:
+                  option === settings.type
+                    ? theme.wordsContrast || theme.currentWord
+                    : textColor,
                 opacity: option === settings.type ? 1 : 0.6,
                 cursor: 'pointer',
                 fontWeight: option === settings.type ? 'bold' : 'normal',

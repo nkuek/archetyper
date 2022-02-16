@@ -51,7 +51,7 @@ const CustomTooltip = (props: any) => {
         background: theme.wordBoxBackground,
         borderRadius: 3,
         padding: '.5em',
-        border: `1px solid ${theme.graphText || theme.words}`,
+        border: theme.border || `1px solid ${theme.graphText || theme.words}`,
       }}
     >
       <p
@@ -141,7 +141,11 @@ const Stats = () => {
       }}
     >
       <Container
-        sx={{ color: theme.headings, display: 'flex', flexDirection: 'column' }}
+        sx={{
+          color: theme.headings,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
       >
         <Box textAlign="center" fontSize="1.5em">
           wpm:
@@ -174,6 +178,7 @@ const Stats = () => {
           backgroundColor: theme.wordBoxBackground,
           padding: '2em 1em',
           borderRadius: 2,
+          border: theme.border,
         }}
       >
         <ResponsiveContainer width={'100%'} height={250}>
@@ -282,7 +287,10 @@ const Stats = () => {
           justifyContent: 'center',
         }}
       >
-        <Button sx={{ color: theme.buttonText }} onClick={handleReset}>
+        <Button
+          sx={{ color: theme.buttonText || theme.currentWord }}
+          onClick={handleReset}
+        >
           <ReplayIcon />
         </Button>
       </Container>
