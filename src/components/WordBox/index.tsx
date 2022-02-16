@@ -11,12 +11,7 @@ import {
   IndexContext,
 } from 'providers';
 import { useLocalStorage, useReset } from 'hooks';
-import {
-  CircularProgress,
-  TextField,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation } from './styles';
@@ -495,17 +490,17 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           padding: '.3em 0',
         }}
       >
-        <TextField
-          sx={{ width: 0, opacity: 0, boxSizing: 'border-box' }}
-          value={userInput}
-          onChange={handleUserInput}
-          autoFocus
-          inputRef={textFieldRef}
-          inputProps={{
-            autoCapitalize: 'none',
-            onKeyDown: handleKeyDown,
-          }}
-        />
+        <div style={{ width: 0, opacity: 0, boxSizing: 'border-box' }}>
+          <input
+            value={userInput}
+            onChange={handleUserInput}
+            ref={textFieldRef}
+            autoCapitalize="none"
+            autoFocus
+            onKeyDown={handleKeyDown}
+            style={{ padding: '1em' }}
+          />
+        </div>
         <Button
           sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
           onClick={(e) => {
