@@ -48,7 +48,8 @@ const Word: FC<IProps> = (props) => {
         },
         { root: wordBox, rootMargin: '50px' }
       );
-      if (node) wordObserver.current.observe(node);
+      wordObserver.current.observe(node);
+      node.scrollIntoView({ block: 'center' });
     },
     [userWordIndex, wordIdx, wordCount, settings.type]
   );

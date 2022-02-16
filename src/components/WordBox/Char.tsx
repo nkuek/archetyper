@@ -47,7 +47,6 @@ const Char: FC<IProps> = (props) => {
             });
           }, 40);
         }
-        node.scrollIntoView({ block: 'center' });
       }
     },
     [setCaretSpacing, displayExtraChar, wordCount, settings.type]

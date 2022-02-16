@@ -495,10 +495,12 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             value={userInput}
             onChange={handleUserInput}
             ref={textFieldRef}
-            autoCapitalize="none"
             autoFocus
             onKeyDown={handleKeyDown}
             style={{ padding: '1em' }}
+            autoCapitalize="off"
+            autoCorrect="off"
+            autoComplete="off"
           />
         </div>
         <Button
