@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { IProps } from '../Settings';
 import Dialog from 'components/Dialog';
-import { Button } from '@mui/material';
+import { IconButton } from '@mui/material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -9,11 +9,11 @@ import { ThemeContext } from 'providers';
 
 const aboutMeLinks = [
   {
-    Icon: <LinkedInIcon fontSize="large" />,
+    Icon: <LinkedInIcon fontSize="inherit" />,
     link: 'https://www.linkedin.com/in/nick-kuek/',
   },
-  { Icon: <GitHubIcon fontSize="large" />, link: 'https://github.com/nkuek' },
-  { Icon: <FolderSharedIcon fontSize="large" />, link: 'https://nkuek.dev/' },
+  { Icon: <GitHubIcon fontSize="inherit" />, link: 'https://github.com/nkuek' },
+  { Icon: <FolderSharedIcon fontSize="inherit" />, link: 'https://nkuek.dev/' },
 ];
 
 const AboutMe: FC<IProps> = ({ open, onClose }) => {
@@ -21,16 +21,17 @@ const AboutMe: FC<IProps> = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose} title="about me">
       {aboutMeLinks.map(({ link, Icon }) => (
-        <Button
+        <IconButton
           sx={{
             color: theme.headings,
             padding: 0,
           }}
           key={link}
+          size="large"
         >
           <a
             style={{
-              fontSize: '2em',
+              fontSize: '1.5em',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -44,7 +45,7 @@ const AboutMe: FC<IProps> = ({ open, onClose }) => {
           >
             {Icon}
           </a>
-        </Button>
+        </IconButton>
       ))}
     </Dialog>
   );
