@@ -36,7 +36,7 @@ export interface ICharList {
   [key: string | number]: IChars;
 }
 
-export type TQuoteParam = 'short' | 'medium' | 'long';
+export type TQuoteParam = 'short' | 'medium' | 'long' | 'all';
 
 export const WordListContext = createContext<IWordListContext>(undefined!);
 

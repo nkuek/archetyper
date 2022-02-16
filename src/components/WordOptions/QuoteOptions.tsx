@@ -6,7 +6,7 @@ import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 import { IOptionProps } from './types';
 
-const options = ['short', 'medium', 'long'] as const;
+const options = ['short', 'medium', 'long', 'all'] as const;
 
 const QuoteOptions: FC<IOptionProps> = ({ setNeedReset }) => {
   const { setQuoteParams, quoteParams } = useContext(WordListContext);

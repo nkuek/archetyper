@@ -7,9 +7,10 @@ interface IQuote {
 }
 
 const paramsMap = {
-  short: 'minLength=60&maxLength=100',
-  medium: 'minLength=140&maxLength=180',
-  long: 'minLength=200',
+  short: '?maxLength=100',
+  medium: '?minLength=140&maxLength=180',
+  long: '?minLength=200',
+  all: '',
 };
 
 const useQuote = () => {
@@ -25,7 +26,7 @@ const useQuote = () => {
 
   const getQuote = useCallback(() => {
     setLoading(true);
-    fetch(`https://api.quotable.io/random?${paramsMap[quoteParams]}`)
+    fetch(`https://api.quotable.io/random${paramsMap[quoteParams]}`)
       .then((response) => response.json())
       .then((quote: IQuote) => {
         const quoteContent = quote.content.split(' ');
