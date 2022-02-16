@@ -301,6 +301,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
       window.removeEventListener('keydown', capsLockListener);
       window.removeEventListener('keyup', capsLockListener);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

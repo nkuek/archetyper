@@ -50,7 +50,7 @@ const Char: FC<IProps> = (props) => {
         node.scrollIntoView({ block: 'center' });
       }
     },
-    [setCaretSpacing, displayExtraChar, wordCount]
+    [setCaretSpacing, displayExtraChar, wordCount, settings.type]
   );
 
   return (

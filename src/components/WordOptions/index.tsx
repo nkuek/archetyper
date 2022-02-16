@@ -17,8 +17,7 @@ import TimedOptions from './TimedOptions';
 const categories = ['words', 'quotes', 'timed'] as const;
 
 const WordOptions = () => {
-  const { wpm, setSettings, settings, textFieldRef, setFocused } =
-    useContext(WordContext);
+  const { wpm, setSettings, settings, textFieldRef } = useContext(WordContext);
   const { setWordCount } = useContext(WordListContext);
   const { setTimer } = useContext(TimeContext);
 

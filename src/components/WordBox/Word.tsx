@@ -46,11 +46,11 @@ const Word: FC<IProps> = (props) => {
             obs.unobserve(node);
           }
         },
-        { root: wordBox, rootMargin: '100px' }
+        { root: wordBox, rootMargin: '50px' }
       );
       if (node) wordObserver.current.observe(node);
     },
-    [userWordIndex, wordIdx, wordCount]
+    [userWordIndex, wordIdx, wordCount, settings.type]
   );
 
   // useEffect to reset showWord state when resetting
