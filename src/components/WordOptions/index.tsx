@@ -40,6 +40,7 @@ const WordOptions = () => {
       reset();
       setNeedReset(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [needReset]);
 
   return (
@@ -59,9 +60,9 @@ const WordOptions = () => {
         }}
       >
         <WordOption showOptions={showOptions} setShowOptions={setShowOptions}>
-          <QuoteOptions />
-          <WordCountOptions />
-          <TimedOptions />
+          <QuoteOptions setNeedReset={setNeedReset} />
+          <WordCountOptions setNeedReset={setNeedReset} />
+          <TimedOptions setNeedReset={setNeedReset} />
         </WordOption>
         <Box sx={{ display: 'flex' }}>
           {categories.map((option) => (

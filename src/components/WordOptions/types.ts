@@ -10,3 +10,7 @@ export interface IProps {
   showOptions: boolean;
   setShowOptions: TReactSetState<boolean>;
 }
+
+export interface IOptionProps {
+  setNeedReset: TReactSetState<boolean>;
+}

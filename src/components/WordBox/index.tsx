@@ -417,7 +417,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         disableGutters
       >
         <Box sx={{ color: theme.words }}>{`${userWordIndex}${
-          wordCount !== 'endless' && settings.type !== 'timed'
+          wordCount !== 'endless' && timer._time !== 'endless'
             ? ` / ${wordCount}`
             : ''
         }`}</Box>

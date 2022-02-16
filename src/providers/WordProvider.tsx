@@ -92,7 +92,7 @@ const WordContextProvider: FC = ({ children }) => {
     'typer-settings',
     defaultSettings
   );
-  const { setWordList, setAuthor, loading, setLoading, quoteParams } =
+  const { setWordList, setAuthor, loading, quoteParams } =
     useContext(WordListContext);
   const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
 
@@ -106,30 +106,27 @@ const WordContextProvider: FC = ({ children }) => {
   const [settings, setSettings] = useState<ISettings>(LSSettings);
   const [focused, setFocused] = useState(true);
 
-  const generateCharList = useCallback(
-    (wordList: string[] | string) => {
-      const charList: ICharList = {};
-      if (wordList.length) {
-        for (let i = 0; i < wordList.length; i++) {
-          const word = wordList[i];
-          const wordChars: TWordChar[] = [];
-          for (const char of word) {
-            wordChars.push({
-              correct: null,
-              char,
-            });
-          }
-          charList[i] = {
-            chars: wordChars,
-            length: word.length,
-            word,
-          };
+  const generateCharList = useCallback((wordList: string[] | string) => {
+    const charList: ICharList = {};
+    if (wordList.length) {
+      for (let i = 0; i < wordList.length; i++) {
+        const word = wordList[i];
+        const wordChars: TWordChar[] = [];
+        for (const char of word) {
+          wordChars.push({
+            correct: null,
+            char,
+          });
         }
+        charList[i] = {
+          chars: wordChars,
+          length: word.length,
+          word,
+        };
       }
-      return charList;
-    },
-    [setLoading]
-  );
+    }
+    return charList;
+  }, []);
 
   const currentWordRef = useRef<HTMLDivElement>(null);
 

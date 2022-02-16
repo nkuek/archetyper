@@ -82,9 +82,9 @@ const useReset = (
 
       setTimer({
         id: null,
-        time: settings.type === 'timed' ? LSTime : 1,
+        time: settings.type === 'timed' && LSTime !== 'endless' ? LSTime : 1,
         _time: settings.type === 'timed' ? LSTime : 1,
-        countdown: settings.type === 'timed',
+        countdown: settings.type === 'timed' && LSTime !== 'endless',
       });
 
       focus();
