@@ -79,9 +79,7 @@ const useReset = (randomize = false) => {
         countdown: settings.type === 'timed' && LSTime !== 'endless',
       });
 
-      setTimeout(() => {
-        focus();
-      }, 1);
+      focus();
     },
     [
       setWordList,

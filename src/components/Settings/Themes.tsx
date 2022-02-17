@@ -9,7 +9,6 @@ const Themes = () => {
   const { themeName, setThemeName } = useContext(ThemeContext);
 
   const themeList = useThemeList();
-
   return (
     <>
       <Typography sx={{ fontSize: '1.25rem' }}>themes</Typography>

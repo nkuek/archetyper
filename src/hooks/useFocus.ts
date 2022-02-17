@@ -6,8 +6,10 @@ const useFocus = () => {
 
   return () => {
     if (!textFieldRef.current) return;
-    textFieldRef.current.focus();
-    setFocused(true);
+    setTimeout(() => {
+      textFieldRef.current!.focus();
+      setFocused(true);
+    }, 1);
   };
 };
 
