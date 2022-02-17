@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from 'react';
-import { Container, Button } from '@mui/material';
+import { Container, Button, Typography } from '@mui/material';
 import { TimeContext, WordContext } from 'providers';
 import { Box } from '@mui/system';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -15,11 +15,11 @@ import {
   Label,
   Legend,
 } from 'recharts';
-import { Tooltip as MuiTooltip } from '@mui/material';
 import { ThemeContext } from 'providers';
 import { useReset } from 'hooks';
 import DataDisplay from './DataDisplay';
 import _ from 'lodash';
+import { default as MuiCustomTooltip } from 'components/CustomTooltip';
 
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
@@ -150,11 +150,11 @@ const Stats = () => {
         <Box textAlign="center" fontSize="1.5em">
           wpm:
         </Box>
-        <MuiTooltip title="wpm factoring in uncorrected errors" arrow>
+        <MuiCustomTooltip title="wpm with uncorrected errors">
           <Box textAlign="center" fontSize="2em">
             {wpm.net}
           </Box>
-        </MuiTooltip>
+        </MuiCustomTooltip>
       </Container>
       <Container
         sx={{
@@ -167,11 +167,11 @@ const Stats = () => {
         <Box textAlign="center" fontSize="1.5em">
           accuracy:
         </Box>
-        <MuiTooltip title={`${(accuracy * 100).toFixed(2)}%`} arrow>
+        <MuiCustomTooltip title={`${(accuracy * 100).toFixed(2)}%`}>
           <Box textAlign="center" fontSize="2em">{`${Math.round(
             Math.floor(accuracy * 100)
           )}%`}</Box>
-        </MuiTooltip>
+        </MuiCustomTooltip>
       </Container>
       <Container
         sx={{
@@ -271,11 +271,11 @@ const Stats = () => {
         <DataDisplay
           title="raw"
           data={wpm.raw}
-          tooltip="wpm without factoring in uncorrected errors"
+          tooltip="wpm without uncorrected errors"
         />
         <DataDisplay
           title="characters"
-          tooltip="total characters typed / incorrect / missing / extra"
+          tooltip="typed / incorrect / missing / extra"
           data={`${wordBoxConfig.charCount} / ${totalErrors.incorrectChars} / ${totalErrors.missingChars} / ${totalErrors.extraChars}`}
         />
         <DataDisplay
@@ -291,12 +291,14 @@ const Stats = () => {
           justifyContent: 'center',
         }}
       >
-        <Button
-          sx={{ color: theme.buttonText || theme.currentWord }}
-          onClick={handleReset}
-        >
-          <ReplayIcon />
-        </Button>
+        <MuiCustomTooltip title="restart test">
+          <Button
+            sx={{ color: theme.buttonText || theme.currentWord }}
+            onClick={handleReset}
+          >
+            <ReplayIcon />
+          </Button>
+        </MuiCustomTooltip>
       </Container>
     </Container>
   );

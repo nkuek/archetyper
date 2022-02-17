@@ -1,7 +1,8 @@
 import React, { FC, useContext } from 'react';
-import { Container, Tooltip } from '@mui/material';
+import { Container, Tooltip, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ThemeContext } from 'providers';
+import CustomTooltip from 'components/CustomTooltip';
 
 interface IProps {
   title: string;
@@ -20,11 +21,7 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
       </Box>
     );
     if (tooltip) {
-      return (
-        <Tooltip title={tooltip} arrow>
-          {children}
-        </Tooltip>
-      );
+      return <CustomTooltip title={tooltip}>{children}</CustomTooltip>;
     } else {
       return children;
     }

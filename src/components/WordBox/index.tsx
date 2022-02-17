@@ -18,6 +18,7 @@ import { animation, slowAnimation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
 import MessageOverlay from './MessageOverlay';
+import CustomTooltip from 'components/CustomTooltip';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -488,18 +489,20 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             autoComplete="off"
           />
         </div>
-        <Button
-          sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
-          onClick={(e) => {
-            handleReset(e);
-            if (!mobileDevice) {
-              setShowTip(true);
-              setShowWarning(false);
-            }
-          }}
-        >
-          <Replay />
-        </Button>
+        <CustomTooltip title="restart test">
+          <Button
+            sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
+            onClick={(e) => {
+              handleReset(e);
+              if (!mobileDevice) {
+                setShowTip(true);
+                setShowWarning(false);
+              }
+            }}
+          >
+            <Replay />
+          </Button>
+        </CustomTooltip>
       </Box>
     </Container>
   );
