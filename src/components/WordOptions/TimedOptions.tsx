@@ -55,7 +55,7 @@ const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
             </Box>
             <Box
               sx={{ color: textColor, cursor: 'default' }}
-              key={'spacer' + option}
+              key={'quotesbox' + option}
               onClick={(e) => {
                 e.stopPropagation();
                 focus();

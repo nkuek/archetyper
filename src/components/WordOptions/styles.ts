@@ -9,11 +9,10 @@ const useWordOptionTheme = (type: ISettings['type']) => {
   const optionContainerStyle = useMemo(
     () =>
       ({
-        display: 'flex',
+        display: settings.type === type ? 'flex' : 'none',
         opacity: settings.type === type ? 1 : 0,
         visibility: settings.type === type ? 'visible' : 'hidden',
-        transition: 'opacity 250ms linear, visibility 0s',
-        position: settings.type === type ? 'relative' : 'absolute',
+        transition: 'opacity 300ms linear 1ms, visibility 0s 1ms',
       } as const),
     [settings.type, type]
   );
@@ -25,7 +24,7 @@ const useWordOptionTheme = (type: ISettings['type']) => {
         cursor: 'pointer',
         color: condition ? theme.wordsContrast || theme.currentWord : textColor,
         opacity: condition ? 1 : 0.6,
-        transition: 'opacity 250ms ease-in-out',
+        transition: 'opacity 300ms ease-in-out',
         '&:hover': {
           opacity: 1,
         },
