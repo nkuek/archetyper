@@ -483,7 +483,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             ref={textFieldRef}
             autoFocus
             onKeyDown={handleKeyDown}
-            style={{ padding: '1em' }}
+            style={{ fontSize: '1em' }}
             autoCapitalize="off"
             autoCorrect="off"
             autoComplete="off"
