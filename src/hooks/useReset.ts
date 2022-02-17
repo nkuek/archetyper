@@ -50,7 +50,6 @@ const useReset = (randomize = false) => {
         } else {
           setWordList(randomizeWords(settings));
           setWordCount(LSWordCount);
-          console.log(LSWordCount);
           setAuthor(null);
         }
         // otherwise reset to the current word list
