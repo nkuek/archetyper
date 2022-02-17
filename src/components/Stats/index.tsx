@@ -106,7 +106,7 @@ const Stats = () => {
     }
   }, [timer.id]);
 
-  const handleReset = useReset({ randomize: true });
+  const handleReset = useReset(true);
 
   const totalErrors = useMemo(() => {
     const total = {

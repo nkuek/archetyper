@@ -33,7 +33,7 @@ const WordOptions = () => {
     setNeedReset(true);
   };
 
-  const reset = useReset({ resetState: true });
+  const reset = useReset();
 
   useEffect(() => {
     if (needReset) {

@@ -7,16 +7,8 @@ import useFocus from './useFocus';
 import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
-interface IResetSettings {
-  randomize?: boolean;
-  resetState?: boolean;
-}
-
-const useReset = (
-  resetSettings: IResetSettings = { randomize: false, resetState: false }
-) => {
-  const { randomize, resetState } = resetSettings;
-  const { wordList, setWordList, setAuthor, setErrorMessage } =
+const useReset = (randomize = false) => {
+  const { wordList, setWordList, setAuthor, setErrorMessage, setWordCount } =
     useContext(WordListContext);
   const {
     setWpm,
@@ -40,6 +32,7 @@ const useReset = (
   const { getQuote } = useQuote();
 
   const { value: LSTime } = useLocalStorage('typer-time', 30);
+  const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
 
   const focus = useFocus();
 
@@ -51,14 +44,13 @@ const useReset = (
       const wordBox = document.getElementById('wordBox');
       if (wordBox) wordBox.scrollTop = 0;
       // if a user has not started a test or has finished the test, give them a new word list
-      if (
-        (!resetState && !timer.id && !currentWordIndex && !currentCharIndex) ||
-        randomize
-      ) {
+      if ((!timer.id && !currentWordIndex && !currentCharIndex) || randomize) {
         if (settings.type === 'quotes') {
           getQuote();
         } else {
           setWordList(randomizeWords(settings));
+          setWordCount(LSWordCount);
+          console.log(LSWordCount);
           setAuthor(null);
         }
         // otherwise reset to the current word list
@@ -87,7 +79,9 @@ const useReset = (
         countdown: settings.type === 'timed' && LSTime !== 'endless',
       });
 
-      focus();
+      setTimeout(() => {
+        focus();
+      }, 1);
     },
     [
       setWordList,
@@ -110,8 +104,9 @@ const useReset = (
       setUserWordIndex,
       LSTime,
       setErrorMessage,
-      resetState,
       focus,
+      setWordCount,
+      LSWordCount,
     ]
   );
 };
