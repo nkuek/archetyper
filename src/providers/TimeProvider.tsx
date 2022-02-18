@@ -18,7 +18,7 @@ interface ITimeContext {
 export const TimeContext = createContext<ITimeContext>(undefined!);
 
 const TimeProvider: FC = ({ children }) => {
-  const { value: time } = useLocalStorage('typer-time', 30);
+  const { value: time } = useLocalStorage<number | 'endless'>('typer-time', 30);
   const { settings } = useContext(WordContext);
   const [timer, setTimer] = useState<ITimerConfig>({
     id: null,
