@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from 'react';
-import { Container, Button, Typography } from '@mui/material';
+import { Container, Button } from '@mui/material';
 import { TimeContext, WordContext } from 'providers';
 import { Box } from '@mui/system';
 import ReplayIcon from '@mui/icons-material/Replay';
