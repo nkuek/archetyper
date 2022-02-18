@@ -7,7 +7,7 @@ import { Typography } from '@mui/material';
 import WordTypeOptions from './WordTypeOptions';
 import { IOptionProps } from './types';
 
-const options = [30, 60, 120, 'endless'] as const;
+const options = [15, 30, 60, 120, 'endless'] as const;
 
 const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
   const { timer } = useContext(TimeContext);

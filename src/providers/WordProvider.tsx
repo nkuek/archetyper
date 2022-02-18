@@ -133,14 +133,13 @@ const WordContextProvider: FC = ({ children }) => {
   useEffect(() => {
     if (!currentWordRef.current || loading) return;
     currentWordRef.current.scrollIntoView({ block: 'center' });
-    setTimeout(
-      () =>
-        setCaretSpacing({
-          top: currentWordRef.current!.offsetTop,
-          left: currentWordRef.current!.offsetLeft,
-        }),
-      25
-    );
+    setTimeout(() => {
+      if (!currentWordRef.current) return;
+      setCaretSpacing({
+        top: currentWordRef.current.offsetTop,
+        left: currentWordRef.current.offsetLeft,
+      });
+    }, 25);
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWordIndex]);
 

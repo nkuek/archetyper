@@ -1,5 +1,5 @@
 const useLocalStorage = <T>(key: string, defaultValue?: T) => {
-  const getValue = () => {
+  const getValue = (): T => {
     return localStorage.getItem(key)
       ? JSON.parse(localStorage.getItem(key) || '')
       : defaultValue;

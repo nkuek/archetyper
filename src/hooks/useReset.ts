@@ -31,7 +31,10 @@ const useReset = (randomize = false) => {
 
   const { getQuote } = useQuote();
 
-  const { value: LSTime } = useLocalStorage('typer-time', 30);
+  const { value: LSTime } = useLocalStorage<number | 'endless'>(
+    'typer-time',
+    30
+  );
   const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
 
   const focus = useFocus();
