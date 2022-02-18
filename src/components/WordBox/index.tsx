@@ -19,6 +19,7 @@ import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
+import { useSettings, useTimer } from 'providers/store';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -62,7 +63,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     textFieldRef,
     focused,
     generateCharList,
-    settings,
+    // settings,
   } = useContext(WordContext);
 
   const {
@@ -77,7 +78,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   const muiTheme = useTheme();
   const { theme } = useContext(ThemeContext);
-  const { timer, setTimer } = useContext(TimeContext);
+  const { timer, setTimer, updateTime } = useTimer();
+  const { settings } = useSettings();
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
@@ -151,14 +153,10 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   useEffect(() => {
     if (!timer.id && userInput) {
       const intervalTimer = setInterval(
-        () =>
-          setTimer((prev) => ({
-            ...prev,
-            time: prev.time + (timer.countdown ? -1 : 1),
-          })),
+        () => updateTime(timer.countdown ? 'decrement' : 'increment'),
         1000
       );
-      setTimer((prev) => ({ ...prev, id: intervalTimer }));
+      setTimer({ ...timer, id: intervalTimer });
     } else if (
       timer.id &&
       ((timer.countdown && timer.time === 0) ||
@@ -273,6 +271,36 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
               ...prev,
               incorrectChars: prev.incorrectChars + 1,
               uncorrectedErrors: prev.uncorrectedErrors + 1,
+            }));
+          }
+          if (
+            settings.type === 'words' &&
+            wordCount !== 'endless' &&
+            currentWordIndex === wordCount - 1 &&
+            e.target.value === wordList[wordCount - 1]
+          ) {
+            let missingChars = 0;
+            let extraChars = 0;
+
+            charList[userWordIndex].chars.forEach((char) => {
+              if (char.skipped) missingChars++;
+              else if (char.extra) extraChars++;
+            });
+
+            const totalWordErrors = missingChars + incorrectChars;
+
+            // set wpm data timestep
+            setWpmData((prev) => ({
+              ...prev,
+              [userWordIndex]: {
+                word: charList[userWordIndex].word,
+                wordNum: userWordIndex + 1,
+                errors: totalWordErrors,
+                wpm,
+                missingChars,
+                extraChars,
+                incorrectChars,
+              },
             }));
           }
         }
