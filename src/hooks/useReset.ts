@@ -1,4 +1,4 @@
-import { IndexContext, TimeContext, WordContext } from 'providers';
+import { IndexContext, useTimer, WordContext } from 'providers';
 import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
@@ -27,7 +27,7 @@ const useReset = (randomize = false) => {
     setUserWordIndex,
   } = useContext(IndexContext);
 
-  const { timer, setTimer } = useContext(TimeContext);
+  const { timer, resetTimer, defaultTimer } = useTimer();
 
   const { getQuote } = useQuote();
 
@@ -74,12 +74,7 @@ const useReset = (randomize = false) => {
         clearInterval(timer.id);
       }
 
-      setTimer({
-        id: null,
-        time: settings.type === 'timed' && LSTime !== 'endless' ? LSTime : 1,
-        _time: settings.type === 'timed' ? LSTime : 1,
-        countdown: settings.type === 'timed' && LSTime !== 'endless',
-      });
+      resetTimer(defaultTimer);
       setTimeout(() => {
         focus();
       }, 1);
@@ -87,7 +82,7 @@ const useReset = (randomize = false) => {
     [
       setWordList,
       timer,
-      setTimer,
+      resetTimer,
       setWpm,
       setWpmData,
       setUserInput,

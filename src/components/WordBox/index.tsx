@@ -7,7 +7,8 @@ import {
   ThemeContext,
   WordListContext,
   WordContext,
-  TimeContext,
+  useTimer,
+  useSettings,
   IndexContext,
 } from 'providers';
 import { useFocus, useLocalStorage, useReset } from 'hooks';
@@ -19,7 +20,6 @@ import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'words';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
-import { useSettings, useTimer } from 'providers/store';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -84,6 +84,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
   const focus = useFocus();
+
+  console.log(timer);
 
   const handleFocus = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();

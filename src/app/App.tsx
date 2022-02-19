@@ -6,7 +6,8 @@ import {
   WordContext,
   ThemeContext,
   WordListContext,
-  TimeContext,
+  useTimer,
+  useSettings,
 } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
@@ -14,18 +15,21 @@ import Settings from 'components/Settings';
 import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 import Tip from 'components/Tip';
-import { useFocus } from 'hooks';
+import { useFocus, useLocalStorage } from 'hooks';
 
 const App = () => {
   const { wordCount } = useContext(WordListContext);
-  const { wpmData, setFocused, settings } = useContext(WordContext);
+  const { wpmData, setFocused } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
-  const { timer } = useContext(TimeContext);
+  const { timer, setTimer } = useTimer();
+  const { settings } = useSettings();
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+
+  const { value: time } = useLocalStorage<number | 'endless'>('typer-time', 30);
 
   const focus = useFocus();
 
@@ -37,6 +41,15 @@ const App = () => {
     setDialog(false);
     focus();
   };
+
+  useEffect(() => {
+    setTimer({
+      id: null,
+      time: settings.type === 'timed' && time !== 'endless' ? time : 1,
+      _time: settings.type === 'timed' ? time : 1,
+      countdown: settings.type === 'timed' && time !== 'endless',
+    });
+  }, []);
 
   // handle pressing escape
   useEffect(() => {
