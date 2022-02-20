@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo } from 'react';
 import { Container, Button } from '@mui/material';
-import { useTimer, WordContext } from 'providers';
+import { useSettings, useTimer, WordContext } from 'providers';
 import { Box } from '@mui/system';
 import ReplayIcon from '@mui/icons-material/Replay';
 import {
@@ -95,8 +95,9 @@ const CustomTooltip = (props: any) => {
 };
 
 const Stats = () => {
-  const { wpm, wpmData, wordBoxConfig, settings } = useContext(WordContext);
+  const { wpm, wpmData, wordBoxConfig } = useContext(WordContext);
   const { timer } = useTimer();
+  const { settings } = useSettings();
 
   const { theme } = useContext(ThemeContext);
 

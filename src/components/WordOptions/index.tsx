@@ -1,7 +1,7 @@
 import { useMemo, useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { ThemeContext, WordContext } from 'providers';
+import { ThemeContext, useSettings, WordContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage, useReset } from 'hooks';
@@ -12,7 +12,9 @@ import TimedOptions from './TimedOptions';
 const categories = ['words', 'timed', 'quotes'] as const;
 
 const WordOptions = () => {
-  const { wpm, setSettings, settings } = useContext(WordContext);
+  const { wpm } = useContext(WordContext);
+
+  const { settings, setSettings } = useSettings();
 
   const { theme } = useContext(ThemeContext);
 
@@ -27,7 +29,7 @@ const WordOptions = () => {
     option: typeof categories[number]
   ) => {
     e.stopPropagation();
-    setSettings((prev) => ({ ...prev, type: option }));
+    setSettings({ ...settings, type: option });
     setLocalStorage({ ...settings, type: option });
     setShowOptions(true);
     setNeedReset(true);

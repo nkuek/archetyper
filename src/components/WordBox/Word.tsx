@@ -3,6 +3,7 @@ import { Box } from '@mui/system';
 import {
   IndexContext,
   ThemeContext,
+  useSettings,
   WordContext,
   WordListContext,
 } from 'providers';
@@ -18,9 +19,11 @@ const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
   const { userWordIndex } = useContext(IndexContext);
-  const { currentWordRef, settings } = useContext(WordContext);
+  const { currentWordRef } = useContext(WordContext);
   const { wordList, wordCount } = useContext(WordListContext);
   const [showWord, setShowWord] = useState(true);
+
+  const { settings } = useSettings();
 
   const wordRef = useRef<HTMLDivElement | null>(null);
 

@@ -2,6 +2,7 @@ import { createContext, FC, useContext, useState } from 'react';
 import { useLocalStorage } from 'hooks';
 import { TReactSetState } from './general/types';
 import { WordContext } from './WordProvider';
+import { useSettings } from './store';
 
 interface ITimerConfig {
   id?: null | NodeJS.Timeout;
@@ -19,7 +20,7 @@ export const TimeContext = createContext<ITimeContext>(undefined!);
 
 const TimeProvider: FC = ({ children }) => {
   const { value: time } = useLocalStorage<number | 'endless'>('typer-time', 30);
-  const { settings } = useContext(WordContext);
+  const { settings } = useSettings();
   const [timer, setTimer] = useState<ITimerConfig>({
     id: null,
     time: settings.type === 'timed' && time !== 'endless' ? time : 1,

@@ -1,10 +1,10 @@
-import { ThemeContext, WordContext } from 'providers';
+import { ThemeContext, useSettings } from 'providers';
 import { ISettings } from 'providers/WordProvider';
 import { useCallback, useContext, useMemo } from 'react';
 
 const useWordOptionTheme = (type: ISettings['type']) => {
   const { theme, textColor } = useContext(ThemeContext);
-  const { settings } = useContext(WordContext);
+  const { settings } = useSettings();
 
   const optionContainerStyle = useMemo(
     () =>

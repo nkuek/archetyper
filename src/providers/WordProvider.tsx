@@ -1,4 +1,5 @@
 import { useLocalStorage, useQuote } from 'hooks';
+import { useSettings } from 'providers';
 import {
   createContext,
   useState,
@@ -57,8 +58,6 @@ interface IWordContext {
   setInputHistory: TReactSetState<string[]>;
   currentWordRef: React.MutableRefObject<HTMLDivElement | null>;
   textFieldRef: React.RefObject<HTMLInputElement>;
-  settings: ISettings;
-  setSettings: TReactSetState<ISettings>;
   wordBoxConfig: IWordBoxConfig;
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
   focused: boolean;
@@ -103,7 +102,7 @@ const WordContextProvider: FC = ({ children }) => {
     useState<IWordBoxConfig>(defaultWordBoxConfig);
   const [userInput, setUserInput] = useState('');
   const [inputHistory, setInputHistory] = useState<string[]>([]);
-  const [settings, setSettings] = useState<ISettings>(LSSettings);
+  const { settings } = useSettings();
   const [focused, setFocused] = useState(true);
 
   const generateCharList = useCallback((wordList: string[] | string) => {
@@ -175,8 +174,6 @@ const WordContextProvider: FC = ({ children }) => {
       setInputHistory,
       currentWordRef,
       textFieldRef,
-      settings,
-      setSettings,
       focused,
       setFocused,
       generateCharList,
@@ -192,8 +189,6 @@ const WordContextProvider: FC = ({ children }) => {
       setInputHistory,
       currentWordRef,
       textFieldRef,
-      settings,
-      setSettings,
       wordBoxConfig,
       setWordBoxConfig,
       focused,
