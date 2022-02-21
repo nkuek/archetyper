@@ -1,11 +1,7 @@
-import React, { FC, useContext } from 'react';
-import {
-  defaultSettings,
-  ISettings,
-  wordOptions,
-} from 'providers/WordProvider';
+import React, { FC } from 'react';
+import { ISettings, wordOptions } from 'providers/WordProvider';
 import useWordOptionTheme from './styles';
-import { useSettings, WordContext } from 'providers';
+import { useSettings } from 'providers';
 import { useFocus, useLocalStorage } from 'hooks';
 import { Box } from '@mui/system';
 

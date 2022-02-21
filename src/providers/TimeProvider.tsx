@@ -1,7 +1,6 @@
-import { createContext, FC, useContext, useState } from 'react';
+import { createContext, FC, useState } from 'react';
 import { useLocalStorage } from 'hooks';
 import { TReactSetState } from './general/types';
-import { WordContext } from './WordProvider';
 import { useSettings } from './store';
 
 interface ITimerConfig {

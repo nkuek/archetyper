@@ -2,8 +2,9 @@ import { useLocalStorage } from 'hooks';
 import create, { SetState, GetState } from 'zustand';
 import { ISettingsSlice, SettingsSlice } from './SettingsSlice';
 import { ITimerSlice, TimerSlice } from './TimerSlice';
+import { IWordListSlice, WordListSlice } from './WordListSlice';
 
-export type StoreState = ITimerSlice & ISettingsSlice;
+export type StoreState = ITimerSlice & ISettingsSlice & IWordListSlice;
 
 export type StoreSlice<T> = (
   set: SetState<StoreState>,
@@ -13,6 +14,7 @@ export type StoreSlice<T> = (
 export const useStore = create<StoreState>((set, get) => ({
   ...SettingsSlice(set, get),
   ...TimerSlice(set, get),
+  ...WordListSlice(set, get),
 }));
 
 export const useTimer = () => {

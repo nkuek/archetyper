@@ -2,13 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import {
-  WordContext,
-  ThemeContext,
-  WordListContext,
-  useTimer,
-  useSettings,
-} from 'providers';
+import { WordContext, ThemeContext, useStore } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
 import Settings from 'components/Settings';
@@ -16,13 +10,17 @@ import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 import Tip from 'components/Tip';
 import { useFocus, useLocalStorage } from 'hooks';
+import { TQuoteParam } from 'providers/WordListProvider';
 
 const App = () => {
-  const { wordCount } = useContext(WordListContext);
   const { wpmData, setFocused } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
-  const { timer, setTimer } = useTimer();
-  const { settings } = useSettings();
+  const timer = useStore((state) => state.timer);
+  const setTimer = useStore((state) => state.setTimer);
+  const settings = useStore((state) => state.settings);
+  const wordCount = useStore((state) => state.wordCount);
+  const setWordCount = useStore((state) => state.setWordCount);
+  const setQuoteParams = useStore((state) => state.setQuoteParams);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);
@@ -30,6 +28,14 @@ const App = () => {
   const [showWarning, setShowWarning] = useState(false);
 
   const { value: time } = useLocalStorage<number | 'endless'>('typer-time', 30);
+  const { value: LSWordCount } = useLocalStorage<number | 'endless'>(
+    'typer-word-count',
+    25
+  );
+  const { value: quoteLength } = useLocalStorage<TQuoteParam>(
+    'typer-quote-length',
+    'medium'
+  );
 
   const focus = useFocus();
 
@@ -49,6 +55,9 @@ const App = () => {
       _time: settings.type === 'timed' ? time : 1,
       countdown: settings.type === 'timed' && time !== 'endless',
     });
+    setWordCount(LSWordCount);
+    setQuoteParams(quoteLength);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // handle pressing escape

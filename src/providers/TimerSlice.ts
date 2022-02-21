@@ -14,7 +14,7 @@ export interface ITimerSlice {
   resetTimer: (defaultTimer: ITimerConfig) => void;
 }
 
-export const TimerSlice: StoreSlice<ITimerSlice> = (set, get) => ({
+export const TimerSlice: StoreSlice<ITimerSlice> = (set) => ({
   timer: { id: null, time: 1, _time: 1 },
   setTimer: (timer) => set(() => ({ timer })),
   updateTime: (type) =>

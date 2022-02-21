@@ -85,8 +85,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
   const focus = useFocus();
 
-  console.log(timer);
-
   const handleFocus = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     focus();

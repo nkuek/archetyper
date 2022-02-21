@@ -6,4 +6,4 @@ export {
 } from './WordListProvider';
 export { default as TimeProvider, TimeContext } from './TimeProvider';
 export { default as IndexProvider, IndexContext } from './IndexProvider';
-export { useTimer, useSettings } from './store';
+export { useTimer, useSettings, useStore } from './store';

@@ -1,4 +1,4 @@
-import { useLocalStorage, useQuote } from 'hooks';
+import { useQuote } from 'hooks';
 import { useSettings } from 'providers';
 import {
   createContext,
@@ -87,10 +87,6 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC = ({ children }) => {
-  const { value: LSSettings } = useLocalStorage(
-    'typer-settings',
-    defaultSettings
-  );
   const { setWordList, setAuthor, loading, quoteParams } =
     useContext(WordListContext);
   const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
