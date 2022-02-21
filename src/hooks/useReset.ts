@@ -106,6 +106,7 @@ const useReset = (randomize = false) => {
       focus,
       setWordCount,
       LSWordCount,
+      time,
     ]
   );
 };

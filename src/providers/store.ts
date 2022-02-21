@@ -3,8 +3,12 @@ import create, { SetState, GetState } from 'zustand';
 import { ISettingsSlice, SettingsSlice } from './SettingsSlice';
 import { ITimerSlice, TimerSlice } from './TimerSlice';
 import { IWordListSlice, WordListSlice } from './WordListSlice';
+import { IWordSlice, WordSlice } from './WordSlice';
 
-export type StoreState = ITimerSlice & ISettingsSlice & IWordListSlice;
+export type StoreState = ITimerSlice &
+  ISettingsSlice &
+  IWordListSlice &
+  IWordSlice;
 
 export type StoreSlice<T> = (
   set: SetState<StoreState>,
@@ -15,6 +19,7 @@ export const useStore = create<StoreState>((set, get) => ({
   ...SettingsSlice(set, get),
   ...TimerSlice(set, get),
   ...WordListSlice(set, get),
+  ...WordSlice(set, get),
 }));
 
 export const useTimer = () => {

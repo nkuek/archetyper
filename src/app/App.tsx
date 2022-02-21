@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import WordBox from '../components/WordBox';
 import Box from '@mui/material/Box';
 import WordOptions from '../components/WordOptions';
-import { WordContext, ThemeContext, useStore } from 'providers';
+import { ThemeContext, useStore } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
 import Settings from 'components/Settings';
@@ -13,7 +13,6 @@ import { useFocus, useLocalStorage } from 'hooks';
 import { TQuoteParam } from 'providers/WordListSlice';
 
 const App = () => {
-  const { wpmData, setFocused } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
   const timer = useStore((state) => state.timer);
   const setTimer = useStore((state) => state.setTimer);
@@ -21,6 +20,8 @@ const App = () => {
   const wordCount = useStore((state) => state.wordCount);
   const setWordCount = useStore((state) => state.setWordCount);
   const setQuoteParams = useStore((state) => state.setQuoteParams);
+  const wpmData = useStore((state) => state.wpmData);
+  const setFocused = useStore((state) => state.setFocused);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);

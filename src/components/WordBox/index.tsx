@@ -38,29 +38,24 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const author = useStore((state) => state.author);
   const charList = useStore((state) => state.charList);
   const setCharList = useStore((state) => state.setCharList);
-  const addToCharList = useStore((state) => state.addToCharList);
+  const appendCharList = useStore((state) => state.appendCharList);
   const errorMessage = useStore((state) => state.errorMessage);
   const timer = useStore((state) => state.timer);
   const setTimer = useStore((state) => state.setTimer);
   const updateTime = useStore((state) => state.updateTime);
   const settings = useStore((state) => state.settings);
-
-  const {
-    wordBoxConfig,
-    setWordBoxConfig,
-    wpm,
-    setWpm,
-    wpmData,
-    setWpmData,
-    userInput,
-    setUserInput,
-    inputHistory,
-    setInputHistory,
-    textFieldRef,
-    focused,
-    generateCharList,
-    // settings,
-  } = useContext(WordContext);
+  const wordBoxConfig = useStore((state) => state.wordBoxConfig);
+  const setWordBoxConfig = useStore((state) => state.setWordBoxConfig);
+  const wpm = useStore((state) => state.wpm);
+  const setWpm = useStore((state) => state.setWpm);
+  const wpmData = useStore((state) => state.wpmData);
+  const appendWpmData = useStore((state) => state.appendWpmData);
+  const userInput = useStore((state) => state.userInput);
+  const setUserInput = useStore((state) => state.setUserInput);
+  const inputHistory = useStore((state) => state.inputHistory);
+  const appendInputHistory = useStore((state) => state.appendInputHistory);
+  const focused = useStore((state) => state.focused);
+  const generateCharList = useStore((state) => state.generateCharList);
 
   const {
     currentCharIndex,
@@ -128,7 +123,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
       wordChars.push({ correct: null, char });
     }
     console.log(Object.keys(charList).length);
-    addToCharList({
+    appendCharList({
       [Object.keys(charList).length]: {
         chars: wordChars,
         length: wordChars.length,
@@ -211,8 +206,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         const totalWordErrors = missingChars + incorrectChars;
 
         // set wpm data timestep
-        setWpmData((prev) => ({
-          ...prev,
+        appendWpmData({
           [userWordIndex]: {
             word: charList[userWordIndex].word,
             wordNum: userWordIndex + 1,
@@ -222,23 +216,17 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             extraChars,
             incorrectChars,
           },
-        }));
+        });
 
         // else move to next word
-        setWordBoxConfig((prev) => ({
-          ...prev,
-          // add +1 for space
-          charCount: prev.charCount + 1,
-          incorrectChars: 0,
-          uncorrectedErrors: prev.uncorrectedErrors + missingChars,
-        }));
+        updateWordBoxConfig(missingChars);
         setCurrentCharIndex(0);
         if (userWordIndex === currentWordIndex) {
           setCurrentWordIndex((prev) => prev + 1);
         }
         setUserWordIndex((prev) => prev + 1);
         setUserInput('');
-        setInputHistory((prev) => [...prev, e.target.value]);
+        appendInputHistory(e.target.value);
       } else {
         // move to next or previous character
         setCurrentCharIndex(e.target.value.length);
