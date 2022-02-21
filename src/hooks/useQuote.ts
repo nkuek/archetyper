@@ -1,4 +1,4 @@
-import { WordListContext } from 'providers';
+import { useStore, WordListContext } from 'providers';
 import { useCallback, useContext, useMemo } from 'react';
 
 interface IQuote {
@@ -14,15 +14,13 @@ const paramsMap = {
 };
 
 const useQuote = () => {
-  const {
-    setWordList,
-    setWordCount,
-    setLoading,
-    author,
-    setAuthor,
-    quoteParams,
-    setErrorMessage,
-  } = useContext(WordListContext);
+  const setWordList = useStore((state) => state.setWordList);
+  const setWordCount = useStore((state) => state.setWordCount);
+  const setLoading = useStore((state) => state.setLoading);
+  const author = useStore((state) => state.author);
+  const setAuthor = useStore((state) => state.setAuthor);
+  const quoteParams = useStore((state) => state.quoteParams);
+  const setErrorMessage = useStore((state) => state.setErrorMessage);
 
   const getQuote = useCallback(() => {
     setLoading(true);
