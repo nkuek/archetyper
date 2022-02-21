@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { ThemeContext, WordListContext } from 'providers';
+import { ThemeContext, useStore } from 'providers';
 import useWordOptionTheme from './styles';
 import { useFocus, useLocalStorage } from 'hooks';
 import { Box } from '@mui/system';
@@ -9,7 +9,9 @@ import { IOptionProps } from './types';
 const options = ['short', 'medium', 'long', 'all'] as const;
 
 const QuoteOptions: FC<IOptionProps> = ({ setNeedReset }) => {
-  const { setQuoteParams, quoteParams } = useContext(WordListContext);
+  const setQuoteParams = useStore((state) => state.setQuoteParams);
+  const quoteParams = useStore((state) => state.quoteParams);
+
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('quotes');
   const { textColor } = useContext(ThemeContext);

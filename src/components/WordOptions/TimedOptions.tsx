@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { ThemeContext, useTimer, WordListContext } from 'providers';
+import { ThemeContext, useStore, useTimer } from 'providers';
 import { useFocus, useLocalStorage } from 'hooks';
 import useWordOptionTheme from './styles';
 import { Box } from '@mui/system';
@@ -12,7 +12,7 @@ const options = [15, 30, 60, 120, 'endless'] as const;
 const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
   const { timer } = useTimer();
   const { textColor } = useContext(ThemeContext);
-  const { setWordCount } = useContext(WordListContext);
+  const setWordCount = useStore((state) => state.setWordCount);
   const { setLocalStorage } = useLocalStorage('typer-time');
   const { setLocalStorage: setLSWordCount } =
     useLocalStorage('typer-word-count');

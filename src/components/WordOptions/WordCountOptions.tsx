@@ -1,6 +1,6 @@
 import { FC, useContext } from 'react';
 import { useFocus, useLocalStorage } from 'hooks';
-import { ThemeContext, WordListContext } from 'providers';
+import { ThemeContext, useStore } from 'providers';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import useWordOptionTheme from './styles';
@@ -12,7 +12,8 @@ const options = [10, 25, 50, 'endless'] as const;
 const WordCountOptions: FC<IOptionProps> = ({ setNeedReset }) => {
   const { textColor } = useContext(ThemeContext);
 
-  const { setWordCount, wordCount } = useContext(WordListContext);
+  const setWordCount = useStore((state) => state.setWordCount);
+  const wordCount = useStore((state) => state.wordCount);
 
   const { setLocalStorage } = useLocalStorage('typer-word-count');
 
