@@ -4,8 +4,8 @@ import {
   IndexContext,
   ThemeContext,
   useSettings,
+  useStore,
   WordContext,
-  WordListContext,
 } from 'providers';
 import Char from './Char';
 import { IChars } from 'providers/WordListProvider';
@@ -20,7 +20,8 @@ const Word: FC<IProps> = (props) => {
   const { theme } = useContext(ThemeContext);
   const { userWordIndex } = useContext(IndexContext);
   const { currentWordRef } = useContext(WordContext);
-  const { wordList, wordCount } = useContext(WordListContext);
+  const wordList = useStore((state) => state.wordList);
+  const wordCount = useStore((state) => state.wordCount);
   const [showWord, setShowWord] = useState(true);
 
   const { settings } = useSettings();

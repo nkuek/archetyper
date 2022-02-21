@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useContext } from 'react';
 import { Box } from '@mui/system';
-import { ThemeContext, IndexContext, WordListContext } from 'providers';
+import { ThemeContext, IndexContext, useStore } from 'providers';
 import { TWordChar } from 'providers/WordListProvider';
 
 interface IProps {
@@ -11,7 +11,7 @@ interface IProps {
 
 const Char: FC<IProps> = (props) => {
   const { charIdx, char, wordIdx } = props;
-  const { charList } = useContext(WordListContext);
+  const charList = useStore((state) => state.charList);
   const { userWordIndex, currentCharIndex, setCaretSpacing } =
     useContext(IndexContext);
   const { theme } = useContext(ThemeContext);

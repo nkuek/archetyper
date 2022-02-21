@@ -5,11 +5,11 @@ import Button from '@mui/material/Button';
 import Replay from '@mui/icons-material/Replay';
 import {
   ThemeContext,
-  WordListContext,
   WordContext,
   useTimer,
   useSettings,
   IndexContext,
+  useStore,
 } from 'providers';
 import { useFocus, useLocalStorage, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
@@ -39,15 +39,13 @@ interface IProps {
 }
 
 const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
-  const {
-    wordList,
-    wordCount,
-    loading,
-    author,
-    charList,
-    setCharList,
-    errorMessage,
-  } = useContext(WordListContext);
+  const wordList = useStore((state) => state.wordList);
+  const wordCount = useStore((state) => state.wordCount);
+  const loading = useStore((state) => state.loading);
+  const author = useStore((state) => state.author);
+  const charList = useStore((state) => state.charList);
+  const setCharList = useStore((state) => state.setCharList);
+  const errorMessage = useStore((state) => state.errorMessage);
 
   const {
     wordBoxConfig,
@@ -133,14 +131,13 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     for (const char of newWord) {
       wordChars.push({ correct: null, char });
     }
-    setCharList((prev) => ({
-      ...prev,
-      [Object.keys(prev).length]: {
+    setCharList({
+      [Object.keys(charList).length]: {
         chars: wordChars,
         length: wordChars.length,
         word: newWord,
       },
-    }));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWordIndex]);
 
