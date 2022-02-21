@@ -1,5 +1,10 @@
-import { IndexContext, useSettings, useTimer, WordContext } from 'providers';
-import { WordListContext } from 'providers/WordListProvider';
+import {
+  IndexContext,
+  useSettings,
+  useStore,
+  useTimer,
+  WordContext,
+} from 'providers';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
@@ -8,8 +13,11 @@ import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { wordList, setWordList, setAuthor, setErrorMessage, setWordCount } =
-    useContext(WordListContext);
+  const wordList = useStore((state) => state.wordList);
+  const setWordList = useStore((state) => state.setWordList);
+  const setAuthor = useStore((state) => state.setAuthor);
+  const setErrorMessage = useStore((state) => state.setErrorMessage);
+  const setWordCount = useStore((state) => state.setWordCount);
   const {
     setWpm,
     setWpmData,

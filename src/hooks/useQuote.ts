@@ -1,5 +1,5 @@
-import { useStore, WordListContext } from 'providers';
-import { useCallback, useContext, useMemo } from 'react';
+import { useStore } from 'providers';
+import { useCallback, useMemo } from 'react';
 
 interface IQuote {
   content: string;
