@@ -2,27 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './app/App';
-import {
-  ThemeProvider,
-  WordProvider,
-  WordListProvider,
-  TimeProvider,
-  IndexProvider,
-} from 'providers';
+import { ThemeProvider, WordProvider, IndexProvider } from 'providers';
 
 ReactDOM.render(
   <React.StrictMode>
-    <WordListProvider>
-      <IndexProvider>
-        <WordProvider>
-          <ThemeProvider>
-            <TimeProvider>
-              <App />
-            </TimeProvider>
-          </ThemeProvider>
-        </WordProvider>
-      </IndexProvider>
-    </WordListProvider>
+    <IndexProvider>
+      <WordProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </WordProvider>
+    </IndexProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

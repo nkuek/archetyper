@@ -3,20 +3,13 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Replay from '@mui/icons-material/Replay';
-import {
-  ThemeContext,
-  WordContext,
-  useTimer,
-  useSettings,
-  IndexContext,
-  useStore,
-} from 'providers';
+import { ThemeContext, WordContext, IndexContext, useStore } from 'providers';
 import { useFocus, useLocalStorage, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation, slowAnimation } from './styles';
-import { TWordChar } from 'providers/WordListProvider';
+import { TWordChar } from 'providers/WordListSlice';
 import randomizeWords from 'words';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
@@ -45,7 +38,12 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const author = useStore((state) => state.author);
   const charList = useStore((state) => state.charList);
   const setCharList = useStore((state) => state.setCharList);
+  const addToCharList = useStore((state) => state.addToCharList);
   const errorMessage = useStore((state) => state.errorMessage);
+  const timer = useStore((state) => state.timer);
+  const setTimer = useStore((state) => state.setTimer);
+  const updateTime = useStore((state) => state.updateTime);
+  const settings = useStore((state) => state.settings);
 
   const {
     wordBoxConfig,
@@ -76,8 +74,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   const muiTheme = useTheme();
   const { theme } = useContext(ThemeContext);
-  const { timer, setTimer, updateTime } = useTimer();
-  const { settings } = useSettings();
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
@@ -131,7 +127,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     for (const char of newWord) {
       wordChars.push({ correct: null, char });
     }
-    setCharList({
+    console.log(Object.keys(charList).length);
+    addToCharList({
       [Object.keys(charList).length]: {
         chars: wordChars,
         length: wordChars.length,

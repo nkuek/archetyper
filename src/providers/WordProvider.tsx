@@ -14,7 +14,7 @@ import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
 import { IndexContext } from './IndexProvider';
 import { useStore } from './store';
-import { ICharList, TWordChar } from './WordListProvider';
+import { ICharList, TWordChar } from './WordListSlice';
 
 interface ITimeStepData {
   wordNum: number;

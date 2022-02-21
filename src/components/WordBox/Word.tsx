@@ -8,7 +8,7 @@ import {
   WordContext,
 } from 'providers';
 import Char from './Char';
-import { IChars } from 'providers/WordListProvider';
+import { IChars } from 'providers/WordListSlice';
 
 interface IProps {
   wordIdx: number;

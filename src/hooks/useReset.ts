@@ -1,10 +1,4 @@
-import {
-  IndexContext,
-  useSettings,
-  useStore,
-  useTimer,
-  WordContext,
-} from 'providers';
+import { IndexContext, useStore, WordContext } from 'providers';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
 import randomizeWords from 'words';
@@ -18,6 +12,9 @@ const useReset = (randomize = false) => {
   const setAuthor = useStore((state) => state.setAuthor);
   const setErrorMessage = useStore((state) => state.setErrorMessage);
   const setWordCount = useStore((state) => state.setWordCount);
+  const settings = useStore((state) => state.settings);
+  const timer = useStore((state) => state.timer);
+  const resetTimer = useStore((state) => state.resetTimer);
   const {
     setWpm,
     setWpmData,
@@ -34,12 +31,10 @@ const useReset = (randomize = false) => {
     setUserWordIndex,
   } = useContext(IndexContext);
 
-  const { settings } = useSettings();
-  const { timer, resetTimer, defaultTimer } = useTimer();
-
   const { getQuote } = useQuote();
 
   const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
+  const { value: time } = useLocalStorage<number | 'endless'>('typer-time', 30);
 
   const focus = useFocus();
 
@@ -78,7 +73,12 @@ const useReset = (randomize = false) => {
         clearInterval(timer.id);
       }
 
-      resetTimer(defaultTimer);
+      resetTimer({
+        id: null,
+        time: settings.type === 'timed' && time !== 'endless' ? time : 1,
+        _time: settings.type === 'timed' ? time : 1,
+        countdown: settings.type === 'timed' && time !== 'endless',
+      });
       setTimeout(() => {
         focus();
       }, 1);
@@ -106,7 +106,6 @@ const useReset = (randomize = false) => {
       focus,
       setWordCount,
       LSWordCount,
-      defaultTimer,
     ]
   );
 };

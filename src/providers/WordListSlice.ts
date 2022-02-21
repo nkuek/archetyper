@@ -30,6 +30,7 @@ export interface IWordListSlice {
   setAuthor: (author: string | null) => void;
   charList: ICharList;
   setCharList: (charList: ICharList) => void;
+  addToCharList: (charList: ICharList) => void;
   quoteParams: TQuoteParam;
   setQuoteParams: (quoteParam: TQuoteParam) => void;
   errorMessage: string | null;
@@ -50,6 +51,8 @@ export const WordListSlice: StoreSlice<IWordListSlice> = (set) => ({
     set(() => ({
       charList,
     })),
+  addToCharList: (charList) =>
+    set((state) => ({ charList: { ...state.charList, ...charList } })),
   quoteParams: 'medium',
   setQuoteParams: (quoteParams) => set(() => ({ quoteParams })),
   errorMessage: null,

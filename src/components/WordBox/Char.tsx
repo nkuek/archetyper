@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext } from 'react';
 import { Box } from '@mui/system';
 import { ThemeContext, IndexContext, useStore } from 'providers';
-import { TWordChar } from 'providers/WordListProvider';
+import { TWordChar } from 'providers/WordListSlice';
 
 interface IProps {
   charIdx: number;

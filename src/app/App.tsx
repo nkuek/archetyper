@@ -10,7 +10,7 @@ import { TReactSetState } from 'providers/general/types';
 import AboutMe from 'components/AboutMe';
 import Tip from 'components/Tip';
 import { useFocus, useLocalStorage } from 'hooks';
-import { TQuoteParam } from 'providers/WordListProvider';
+import { TQuoteParam } from 'providers/WordListSlice';
 
 const App = () => {
   const { wpmData, setFocused } = useContext(WordContext);
