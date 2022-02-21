@@ -13,7 +13,8 @@ import {
 import randomizedWords from 'words';
 import { TReactSetState } from './general/types';
 import { IndexContext } from './IndexProvider';
-import { ICharList, TWordChar, WordListContext } from './WordListProvider';
+import { useStore } from './store';
+import { ICharList, TWordChar } from './WordListProvider';
 
 interface ITimeStepData {
   wordNum: number;
@@ -87,8 +88,10 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC = ({ children }) => {
-  const { setWordList, setAuthor, loading, quoteParams } =
-    useContext(WordListContext);
+  const setWordList = useStore((state) => state.setWordList);
+  const setAuthor = useStore((state) => state.setAuthor);
+  const loading = useStore((state) => state.loading);
+  const quoteParams = useStore((state) => state.quoteParams);
   const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
 
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
