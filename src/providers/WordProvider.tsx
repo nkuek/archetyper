@@ -1,4 +1,4 @@
-import { useLocalStorage, useQuote } from 'hooks';
+import { useQuote } from 'hooks';
 import {
   createContext,
   useState,
@@ -9,9 +9,10 @@ import {
   useContext,
   useCallback,
 } from 'react';
-import randomizedWords from 'words';
+
 import { TReactSetState } from './general/types';
 import { IndexContext } from './IndexProvider';
+import { IWpm } from './InputProvider';
 import { ICharList, TWordChar, WordListContext } from './WordListProvider';
 
 interface ITimeStepData {
@@ -28,18 +29,6 @@ interface IWPMData {
   [key: number | string]: ITimeStepData;
 }
 
-export interface ISettings {
-  specialChars: boolean;
-  capitalChars: boolean;
-  numbers: boolean;
-  type: 'quotes' | 'words' | 'timed';
-}
-
-interface IWpm {
-  raw: number;
-  net: number;
-}
-
 export interface IWordBoxConfig {
   charCount: number;
   incorrectChars: number;
@@ -47,22 +36,12 @@ export interface IWordBoxConfig {
 }
 
 interface IWordContext {
-  wpm: IWpm;
-  setWpm: TReactSetState<IWpm>;
   wpmData: IWPMData;
   setWpmData: TReactSetState<IWPMData>;
-  userInput: string;
-  setUserInput: TReactSetState<string>;
-  inputHistory: string[];
-  setInputHistory: TReactSetState<string[]>;
   currentWordRef: React.MutableRefObject<HTMLDivElement | null>;
   textFieldRef: React.RefObject<HTMLInputElement>;
-  settings: ISettings;
-  setSettings: TReactSetState<ISettings>;
   wordBoxConfig: IWordBoxConfig;
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
-  focused: boolean;
-  setFocused: TReactSetState<boolean>;
   generateCharList: (wordList: string[] | string) => ICharList;
 }
 
@@ -74,13 +53,6 @@ export const wordOptions = [
   { name: 'numbers', value: 'numbers' },
 ] as const;
 
-export const defaultSettings: ISettings = {
-  capitalChars: false,
-  specialChars: false,
-  numbers: false,
-  type: 'words',
-};
-
 export const defaultWordBoxConfig = {
   charCount: 0,
   incorrectChars: 0,
@@ -88,23 +60,12 @@ export const defaultWordBoxConfig = {
 };
 
 const WordContextProvider: FC = ({ children }) => {
-  const { value: LSSettings } = useLocalStorage(
-    'typer-settings',
-    defaultSettings
-  );
-  const { setWordList, setAuthor, loading, quoteParams } =
-    useContext(WordListContext);
+  const { loading } = useContext(WordListContext);
   const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
-
-  const [wpm, setWpm] = useState({ raw: 0, net: 0 });
 
   const [wpmData, setWpmData] = useState<IWPMData>({});
   const [wordBoxConfig, setWordBoxConfig] =
     useState<IWordBoxConfig>(defaultWordBoxConfig);
-  const [userInput, setUserInput] = useState('');
-  const [inputHistory, setInputHistory] = useState<string[]>([]);
-  const [settings, setSettings] = useState<ISettings>(LSSettings);
-  const [focused, setFocused] = useState(true);
 
   const generateCharList = useCallback((wordList: string[] | string) => {
     const charList: ICharList = {};
@@ -144,60 +105,24 @@ const WordContextProvider: FC = ({ children }) => {
   }, [currentWordIndex]);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
-  const { getQuote } = useQuote();
-
-  useEffect(() => {
-    if (settings.type !== 'quotes') {
-      setWordList(randomizedWords(settings));
-      setAuthor(null);
-      // asynchronous timeout to generate new word list before focusing
-      setTimeout(() => {
-        setFocused(true);
-      }, 1);
-    } else {
-      getQuote();
-      setFocused(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings, quoteParams]);
 
   const value = useMemo(
     () => ({
       wordBoxConfig,
       setWordBoxConfig,
-      wpm,
-      setWpm,
       wpmData,
       setWpmData,
-      userInput,
-      setUserInput,
-      inputHistory,
-      setInputHistory,
       currentWordRef,
       textFieldRef,
-      settings,
-      setSettings,
-      focused,
-      setFocused,
       generateCharList,
     }),
     [
-      wpm,
-      setWpm,
       wpmData,
       setWpmData,
-      userInput,
-      setUserInput,
-      inputHistory,
-      setInputHistory,
       currentWordRef,
       textFieldRef,
-      settings,
-      setSettings,
       wordBoxConfig,
       setWordBoxConfig,
-      focused,
-      setFocused,
       generateCharList,
     ]
   );

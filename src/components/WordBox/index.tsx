@@ -7,8 +7,9 @@ import {
   ThemeContext,
   WordListContext,
   WordContext,
-  TimeContext,
   IndexContext,
+  InputContext,
+  SettingsContext,
 } from 'providers';
 import { useFocus, useLocalStorage, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
@@ -51,19 +52,24 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const {
     wordBoxConfig,
     setWordBoxConfig,
-    wpm,
-    setWpm,
     wpmData,
     setWpmData,
+    textFieldRef,
+    generateCharList,
+  } = useContext(WordContext);
+
+  const { focused, settings } = useContext(SettingsContext);
+
+  const {
     userInput,
     setUserInput,
+    timer,
+    setTimer,
+    wpm,
+    setWpm,
     inputHistory,
     setInputHistory,
-    textFieldRef,
-    focused,
-    generateCharList,
-    settings,
-  } = useContext(WordContext);
+  } = useContext(InputContext);
 
   const {
     currentCharIndex,
@@ -77,7 +83,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   const muiTheme = useTheme();
   const { theme } = useContext(ThemeContext);
-  const { timer, setTimer } = useContext(TimeContext);
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));

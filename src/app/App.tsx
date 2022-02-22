@@ -6,7 +6,8 @@ import {
   WordContext,
   ThemeContext,
   WordListContext,
-  TimeContext,
+  InputContext,
+  SettingsContext,
 } from 'providers';
 import Stats from 'components/Stats';
 import { Container, Typography } from '@mui/material';
@@ -18,9 +19,10 @@ import { useFocus } from 'hooks';
 
 const App = () => {
   const { wordCount } = useContext(WordListContext);
-  const { wpmData, setFocused, settings } = useContext(WordContext);
+  const { wpmData } = useContext(WordContext);
   const { theme } = useContext(ThemeContext);
-  const { timer } = useContext(TimeContext);
+  const { timer } = useContext(InputContext);
+  const { setFocused, settings } = useContext(SettingsContext);
 
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [aboutMeOpen, setAboutMeOpen] = useState(false);

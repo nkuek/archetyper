@@ -1,4 +1,9 @@
-import { IndexContext, TimeContext, WordContext } from 'providers';
+import {
+  IndexContext,
+  InputContext,
+  SettingsContext,
+  WordContext,
+} from 'providers';
 import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
@@ -10,14 +15,12 @@ import useQuote from './useQuote';
 const useReset = (randomize = false) => {
   const { wordList, setWordList, setAuthor, setErrorMessage, setWordCount } =
     useContext(WordListContext);
-  const {
-    setWpm,
-    setWpmData,
-    setUserInput,
-    setInputHistory,
-    settings,
-    setWordBoxConfig,
-  } = useContext(WordContext);
+  const { setWpmData, setWordBoxConfig } = useContext(WordContext);
+
+  const { settings } = useContext(SettingsContext);
+
+  const { setUserInput, timer, setTimer, setWpm, setInputHistory } =
+    useContext(InputContext);
 
   const {
     currentCharIndex,
@@ -26,8 +29,6 @@ const useReset = (randomize = false) => {
     setCurrentWordIndex,
     setUserWordIndex,
   } = useContext(IndexContext);
-
-  const { timer, setTimer } = useContext(TimeContext);
 
   const { getQuote } = useQuote();
 

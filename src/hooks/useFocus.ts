@@ -1,8 +1,9 @@
-import { WordContext } from 'providers';
+import { SettingsContext, WordContext } from 'providers';
 import { useContext } from 'react';
 
 const useFocus = () => {
-  const { textFieldRef, setFocused } = useContext(WordContext);
+  const { textFieldRef } = useContext(WordContext);
+  const { setFocused } = useContext(SettingsContext);
 
   return () => {
     if (!textFieldRef.current) return;

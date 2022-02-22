@@ -1,13 +1,10 @@
 import React, { FC, useContext } from 'react';
-import {
-  defaultSettings,
-  ISettings,
-  wordOptions,
-} from 'providers/WordProvider';
+import { wordOptions } from 'providers/WordProvider';
 import useWordOptionTheme from './styles';
-import { WordContext } from 'providers';
+import { SettingsContext } from 'providers';
 import { useFocus, useLocalStorage } from 'hooks';
 import { Box } from '@mui/system';
+import { defaultSettings, ISettings } from 'providers/SettingsProvider';
 
 interface IProps {
   type: ISettings['type'];
@@ -19,7 +16,7 @@ const WordTypeOptions: FC<IProps> = ({ type }) => {
     'typer-settings',
     defaultSettings
   );
-  const { settings, setSettings } = useContext(WordContext);
+  const { settings, setSettings } = useContext(SettingsContext);
 
   const focus = useFocus();
 
