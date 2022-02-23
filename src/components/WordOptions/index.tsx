@@ -1,7 +1,7 @@
 import { useMemo, useContext, useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { SettingsContext, ThemeContext } from 'providers';
+import { SettingsContext, ThemeContext, WordListContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useReset } from 'hooks';
@@ -14,6 +14,7 @@ const categories = ['words', 'timed', 'quotes'] as const;
 
 const WordOptions = () => {
   const { settings, setSettings } = useContext(SettingsContext);
+  const { LSWordCount, setWordCount } = useContext(WordListContext);
 
   const { theme } = useContext(ThemeContext);
 
@@ -29,10 +30,11 @@ const WordOptions = () => {
     ) => {
       e.stopPropagation();
       setSettings((prev) => ({ ...prev, type: option }));
+      if (option === 'words') setWordCount(LSWordCount);
       setShowOptions(true);
       setNeedReset(true);
     },
-    [setSettings, setShowOptions, setNeedReset]
+    [setSettings, setShowOptions, setNeedReset, LSWordCount, setWordCount]
   );
 
   const reset = useReset();

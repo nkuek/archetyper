@@ -16,6 +16,7 @@ interface IWordListContext {
   setQuoteParams: TReactSetState<TQuoteParam>;
   errorMessage: string | null;
   setErrorMessage: TReactSetState<string | null>;
+  LSWordCount: TCountOption;
   setLSWordCount: TReactSetState<TCountOption>;
 }
 
@@ -75,6 +76,7 @@ const WordListProvider: FC = ({ children }) => {
       setQuoteParams,
       errorMessage,
       setErrorMessage,
+      LSWordCount,
       setLSWordCount,
     }),
     [
@@ -92,6 +94,7 @@ const WordListProvider: FC = ({ children }) => {
       setQuoteParams,
       errorMessage,
       setErrorMessage,
+      LSWordCount,
       setLSWordCount,
     ]
   );
