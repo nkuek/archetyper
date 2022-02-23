@@ -7,14 +7,19 @@ import {
 import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
-import randomizeWords from 'words';
+import randomizeWords from 'languages/words';
 import useFocus from './useFocus';
-import useLocalStorage from './useLocalStorage';
 import useQuote from './useQuote';
 
 const useReset = (randomize = false) => {
-  const { wordList, setWordList, setAuthor, setErrorMessage, setWordCount } =
-    useContext(WordListContext);
+  const {
+    wordList,
+    setWordList,
+    setAuthor,
+    setErrorMessage,
+    setWordCount,
+    wordCount,
+  } = useContext(WordListContext);
   const { setWpmData, setWordBoxConfig } = useContext(WordContext);
 
   const { settings } = useContext(SettingsContext);
@@ -32,12 +37,6 @@ const useReset = (randomize = false) => {
 
   const { getQuote } = useQuote();
 
-  const { value: LSTime } = useLocalStorage<number | 'endless'>(
-    'typer-time',
-    30
-  );
-  const { value: LSWordCount } = useLocalStorage('typer-word-count', 25);
-
   const focus = useFocus();
 
   return useCallback(
@@ -53,7 +52,7 @@ const useReset = (randomize = false) => {
           getQuote();
         } else {
           setWordList(randomizeWords(settings));
-          setWordCount(LSWordCount);
+          setWordCount(wordCount);
           setAuthor(null);
         }
         // otherwise reset to the current word list
@@ -77,9 +76,12 @@ const useReset = (randomize = false) => {
 
       setTimer({
         id: null,
-        time: settings.type === 'timed' && LSTime !== 'endless' ? LSTime : 1,
-        _time: settings.type === 'timed' ? LSTime : 1,
-        countdown: settings.type === 'timed' && LSTime !== 'endless',
+        time:
+          settings.type === 'timed' && timer._time !== 'endless'
+            ? timer._time
+            : 1,
+        _time: settings.type === 'timed' ? timer._time : 1,
+        countdown: settings.type === 'timed' && timer._time !== 'endless',
       });
       setTimeout(() => {
         focus();
@@ -104,11 +106,10 @@ const useReset = (randomize = false) => {
       currentWordIndex,
       setCurrentWordIndex,
       setUserWordIndex,
-      LSTime,
       setErrorMessage,
       focus,
       setWordCount,
-      LSWordCount,
+      wordCount,
     ]
   );
 };

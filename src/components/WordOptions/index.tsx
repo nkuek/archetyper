@@ -1,38 +1,41 @@
-import { useMemo, useContext, useState, useEffect } from 'react';
+import { useMemo, useContext, useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { InputContext, SettingsContext, ThemeContext } from 'providers';
+import { SettingsContext, ThemeContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
 import { useLocalStorage, useReset } from 'hooks';
 import QuoteOptions from './QuoteOptions';
 import WordOption from './WordOption';
 import TimedOptions from './TimedOptions';
+import Wpm from './Wpm';
 
 const categories = ['words', 'timed', 'quotes'] as const;
 
 const WordOptions = () => {
   const { settings, setSettings } = useContext(SettingsContext);
-  const { wpm } = useContext(InputContext);
 
   const { theme } = useContext(ThemeContext);
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
-  const { setLocalStorage } = useLocalStorage('typer-settings');
+
+  console.log('rerender');
 
   const [showOptions, setShowOptions] = useState(false);
   const [needReset, setNeedReset] = useState(false);
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    option: typeof categories[number]
-  ) => {
-    e.stopPropagation();
-    setSettings((prev) => ({ ...prev, type: option }));
-    setLocalStorage({ ...settings, type: option });
-    setShowOptions(true);
-    setNeedReset(true);
-  };
+  const handleClick = useCallback(
+    (
+      e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+      option: typeof categories[number]
+    ) => {
+      e.stopPropagation();
+      setSettings((prev) => ({ ...prev, type: option }));
+      setShowOptions(true);
+      setNeedReset(true);
+    },
+    [setSettings, setShowOptions, setNeedReset, settings]
+  );
 
   const reset = useReset();
 
@@ -94,16 +97,7 @@ const WordOptions = () => {
           ))}
         </Box>
       </Box>
-      <div style={{ display: 'flex', alignSelf: 'flex-end' }}>
-        <Typography
-          sx={{ color: textColor, marginRight: '.25em', fontWeight: 'bold' }}
-        >
-          {'wpm: '}
-        </Typography>
-        <Typography sx={{ color: textColor, fontWeight: 'bold' }}>
-          {wpm.net || ''}
-        </Typography>
-      </div>
+      <Wpm />
     </Container>
   );
 };

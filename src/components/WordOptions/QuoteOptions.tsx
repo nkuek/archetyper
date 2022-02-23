@@ -13,7 +13,6 @@ const QuoteOptions: FC<IOptionProps> = ({ setNeedReset }) => {
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('quotes');
   const { textColor } = useContext(ThemeContext);
-  const { setLocalStorage } = useLocalStorage('typer-quote-length');
   const focus = useFocus();
 
   return (
@@ -25,7 +24,6 @@ const QuoteOptions: FC<IOptionProps> = ({ setNeedReset }) => {
             onClick={(e) => {
               e.stopPropagation();
               setQuoteParams(option);
-              setLocalStorage(option);
               setNeedReset(true);
             }}
           >

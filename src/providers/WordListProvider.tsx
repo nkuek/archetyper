@@ -41,19 +41,18 @@ export type TQuoteParam = 'short' | 'medium' | 'long' | 'all';
 export const WordListContext = createContext<IWordListContext>(undefined!);
 
 const WordListProvider: FC = ({ children }) => {
-  const { value: LSWordCount } = useLocalStorage<'endless' | number>(
+  const [LSWordCount] = useLocalStorage<'endless' | number>(
     'typer-word-count',
     25
-  );
-  const { value: quoteLength } = useLocalStorage<TQuoteParam>(
-    'typer-quote-length',
-    'medium'
   );
   const [wordList, setWordList] = useState<string[]>([]);
   const [wordCount, setWordCount] = useState(LSWordCount);
   const [loading, setLoading] = useState(false);
   const [author, setAuthor] = useState<null | string>(null);
-  const [quoteParams, setQuoteParams] = useState(quoteLength);
+  const [quoteParams, setQuoteParams] = useLocalStorage<TQuoteParam>(
+    'typer-quote-length',
+    'medium'
+  );
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

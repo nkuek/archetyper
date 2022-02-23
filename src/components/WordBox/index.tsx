@@ -17,7 +17,7 @@ import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation, slowAnimation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
-import randomizeWords from 'words';
+import randomizeWords from 'languages/words';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
 
@@ -93,7 +93,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     focus();
   };
 
-  const { value: LSTime } = useLocalStorage('typer-time', 30);
+  const [LSTime] = useLocalStorage('typer-time', 30);
 
   const handleReset = useReset();
 

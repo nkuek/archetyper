@@ -12,10 +12,6 @@ interface IProps {
 
 const WordTypeOptions: FC<IProps> = ({ type }) => {
   const { getOptionStyle, optionContainerStyle } = useWordOptionTheme(type);
-  const { setLocalStorage } = useLocalStorage(
-    'typer-settings',
-    defaultSettings
-  );
   const { settings, setSettings } = useContext(SettingsContext);
 
   const focus = useFocus();
@@ -35,10 +31,6 @@ const WordTypeOptions: FC<IProps> = ({ type }) => {
                 ...prev,
                 [setting.value]: !prev[setting.value],
               }));
-              setLocalStorage({
-                ...settings,
-                [setting.value]: !settings[setting.value],
-              });
               focus();
             }}
           >

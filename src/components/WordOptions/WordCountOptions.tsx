@@ -14,7 +14,7 @@ const WordCountOptions: FC<IOptionProps> = ({ setNeedReset }) => {
 
   const { setWordCount, wordCount } = useContext(WordListContext);
 
-  const { setLocalStorage } = useLocalStorage('typer-word-count');
+  const [, setLSWordCount] = useLocalStorage('typer-word-count');
 
   const { getOptionTypographyStyle, optionContainerStyle, getOptionStyle } =
     useWordOptionTheme('words');
@@ -32,7 +32,7 @@ const WordCountOptions: FC<IOptionProps> = ({ setNeedReset }) => {
               onClick={(e) => {
                 e.stopPropagation();
                 setWordCount(option);
-                setLocalStorage(option);
+                setLSWordCount(option);
                 setNeedReset(true);
               }}
             >

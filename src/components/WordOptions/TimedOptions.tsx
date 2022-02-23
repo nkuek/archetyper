@@ -10,12 +10,11 @@ import { IOptionProps } from './types';
 const options = [15, 30, 60, 120, 'endless'] as const;
 
 const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
-  const {timer} = useContext(InputContext)
+  const { timer } = useContext(InputContext);
   const { textColor } = useContext(ThemeContext);
   const { setWordCount } = useContext(WordListContext);
-  const { setLocalStorage } = useLocalStorage('typer-time');
-  const { setLocalStorage: setLSWordCount } =
-    useLocalStorage('typer-word-count');
+  const [, setLSTime] = useLocalStorage('typer-time');
+  const [, setLSWordCount] = useLocalStorage('typer-word-count');
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('timed');
 
@@ -40,7 +39,7 @@ const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
                   setWordCount(option);
                   setLSWordCount(option);
                 }
-                setLocalStorage(option);
+                setLSTime(option);
                 setNeedReset(true);
               }}
             >

@@ -9,7 +9,7 @@ import {
 import { useLocalStorage, useQuote } from 'hooks';
 import { TReactSetState } from './general/types';
 import { WordListContext } from './WordListProvider';
-import randomizedWords from 'words';
+import randomizedWords from 'languages/words';
 
 export interface ISettings {
   specialChars: boolean;
@@ -35,12 +35,10 @@ export const defaultSettings: ISettings = {
 export const SettingsContext = createContext<ISettingsContext>(null!);
 
 const SettingsProvider: FC = ({ children }) => {
-  const { value: LSSettings } = useLocalStorage(
+  const [settings, setSettings] = useLocalStorage(
     'typer-settings',
     defaultSettings
   );
-
-  const [settings, setSettings] = useState(LSSettings);
 
   const { setWordList, setAuthor, quoteParams } = useContext(WordListContext);
 
