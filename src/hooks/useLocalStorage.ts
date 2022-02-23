@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
 export const getSavedValue = <T>(key: string, initialValue: T) => {
-  const savedValue = JSON.parse(localStorage.getItem(key) || '');
+  const savedValue =
+    localStorage.getItem(key) && JSON.parse(localStorage.getItem(key) || '');
   if (savedValue) return savedValue;
   if (initialValue instanceof Function) return initialValue();
   return initialValue;

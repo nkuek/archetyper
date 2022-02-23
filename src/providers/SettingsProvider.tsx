@@ -9,13 +9,14 @@ import {
 import { useLocalStorage, useQuote } from 'hooks';
 import { TReactSetState } from './general/types';
 import { WordListContext } from './WordListProvider';
-import randomizedWords from 'languages/words';
+import randomizedWords, { languageMap } from 'languages/words';
 
 export interface ISettings {
   specialChars: boolean;
   capitalChars: boolean;
   numbers: boolean;
   type: 'quotes' | 'words' | 'timed';
+  language: keyof typeof languageMap;
 }
 
 export interface ISettingsContext {
@@ -30,6 +31,7 @@ export const defaultSettings: ISettings = {
   specialChars: false,
   numbers: false,
   type: 'words',
+  language: 'english',
 };
 
 export const SettingsContext = createContext<ISettingsContext>(null!);
