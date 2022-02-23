@@ -148,7 +148,9 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   useEffect(() => {
     const time =
-      timeOption !== 'endless' ? timeOption - timer.time + 1 : timer.time;
+      timer.countdown && timeOption !== 'endless'
+        ? timeOption - timer.time + 1
+        : timer.time;
     setWpm(calculateWpm(charCount, time, uncorrectedErrors));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.time, charCount, uncorrectedErrors]);
@@ -159,14 +161,16 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         () =>
           setTimer((prev) => ({
             ...prev,
-            time: prev.time + (timeOption !== 'endless' ? -1 : 1),
+            time:
+              prev.time +
+              (timer.countdown && timeOption !== 'endless' ? -1 : 1),
           })),
         1000
       );
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     } else if (
       timer.id &&
-      ((timeOption !== 'endless' && timer.time === 0) ||
+      ((timer.countdown && timeOption !== 'endless' && timer.time === 0) ||
         (settings.type !== 'timed' &&
           wordCount !== 'endless' &&
           currentWordIndex === wordCount - 1 &&

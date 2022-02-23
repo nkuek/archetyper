@@ -14,6 +14,7 @@ interface ITimerConfig {
   id?: null | NodeJS.Timeout;
   time: number;
   _time: number | 'endless';
+  countdown?: boolean;
 }
 
 export interface IWpm {
@@ -53,6 +54,7 @@ const InputProvider: FC = ({ children }) => {
       time:
         settings.type === 'timed' && timeOption !== 'endless' ? timeOption : 1,
       _time: settings.type === 'timed' ? timeOption : 1,
+      countdown: settings.type === 'timed' && timeOption !== 'endless',
     }),
     [settings.type, timeOption]
   );
