@@ -1,5 +1,12 @@
 import { useLocalStorage } from 'hooks';
-import { createContext, FC, useContext, useMemo, useState } from 'react';
+import {
+  createContext,
+  FC,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { TReactSetState } from './general/types';
 import { SettingsContext } from './SettingsProvider';
 
@@ -54,6 +61,10 @@ const InputProvider: FC = ({ children }) => {
     [settings, timeOption]
   );
   const [timer, setTimer] = useState<ITimerConfig>(defaultTimer);
+
+  useEffect(() => {
+    setTimer(defaultTimer);
+  }, [timeOption, settings.type]);
 
   const value = {
     timeOption,
