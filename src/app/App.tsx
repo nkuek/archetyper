@@ -37,7 +37,9 @@ const App = () => {
   ) => {
     e.stopPropagation();
     setDialog(false);
-    focus();
+    setTimeout(() => {
+      focus();
+    }, 1);
   };
 
   // handle pressing escape
