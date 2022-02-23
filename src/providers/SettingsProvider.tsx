@@ -9,7 +9,7 @@ import {
 import { useLocalStorage, useQuote } from 'hooks';
 import { TReactSetState } from './general/types';
 import { WordListContext } from './WordListProvider';
-import randomizedWords, { languageMap } from 'languages/words';
+import randomizedWords, { languageMap } from 'languages/wordListGenerator';
 
 export interface ISettings {
   specialChars: boolean;

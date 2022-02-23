@@ -7,7 +7,7 @@ import {
 import { WordListContext } from 'providers/WordListProvider';
 import { defaultWordBoxConfig } from 'providers/WordProvider';
 import { useCallback, useContext } from 'react';
-import randomizeWords from 'languages/words';
+import randomizeWords from 'languages/wordListGenerator';
 import useFocus from './useFocus';
 import useQuote from './useQuote';
 

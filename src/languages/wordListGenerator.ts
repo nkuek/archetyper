@@ -1,8 +1,10 @@
 import { ISettings } from 'providers/SettingsProvider';
 import english from './english.json';
+import vietnamese from './vietnamese.json';
 
 export const languageMap = {
   english,
+  vietnamese,
 };
 
 const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];

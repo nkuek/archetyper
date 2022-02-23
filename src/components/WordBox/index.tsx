@@ -17,7 +17,7 @@ import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation, slowAnimation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
-import randomizeWords from 'languages/words';
+import randomizeWords from 'languages/wordListGenerator';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
 
