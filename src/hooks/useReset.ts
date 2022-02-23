@@ -108,6 +108,7 @@ const useReset = (randomize = false) => {
       focus,
       setWordCount,
       wordCount,
+      defaultTimer,
     ]
   );
 };

@@ -54,13 +54,13 @@ const InputProvider: FC = ({ children }) => {
         settings.type === 'timed' && timeOption !== 'endless' ? timeOption : 1,
       _time: settings.type === 'timed' ? timeOption : 1,
     }),
-    [settings, timeOption]
+    [settings.type, timeOption]
   );
   const [timer, setTimer] = useState<ITimerConfig>(defaultTimer);
 
   useEffect(() => {
     setTimer(defaultTimer);
-  }, [timeOption, settings.type]);
+  }, [defaultTimer]);
 
   const value = {
     timeOption,

@@ -19,8 +19,6 @@ const WordOptions = () => {
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
 
-  console.log('rerender');
-
   const [showOptions, setShowOptions] = useState(false);
   const [needReset, setNeedReset] = useState(false);
 
@@ -34,7 +32,7 @@ const WordOptions = () => {
       setShowOptions(true);
       setNeedReset(true);
     },
-    [setSettings, setShowOptions, setNeedReset, settings]
+    [setSettings, setShowOptions, setNeedReset]
   );
 
   const reset = useReset();

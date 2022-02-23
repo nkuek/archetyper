@@ -12,7 +12,7 @@ const useLocalStorage = <T>(key: string, defaultValue?: T) => {
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
-  }, [value]);
+  }, [value, key]);
 
   return [value, setValue];
 };

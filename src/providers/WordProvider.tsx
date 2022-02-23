@@ -1,4 +1,3 @@
-import { useQuote } from 'hooks';
 import {
   createContext,
   useState,
@@ -9,7 +8,6 @@ import {
   useContext,
   useCallback,
 } from 'react';
-
 import { TReactSetState } from './general/types';
 import { IndexContext } from './IndexProvider';
 import { IWpm } from './InputProvider';
