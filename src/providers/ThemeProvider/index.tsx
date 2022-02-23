@@ -1,5 +1,5 @@
 import { TReactSetState } from '../general/types';
-import { createContext, useState, FC, useMemo, useEffect } from 'react';
+import { createContext, FC, useMemo, useEffect } from 'react';
 import { useLocalStorage } from 'hooks';
 import useThemeList, { ITheme } from './useThemeList';
 
@@ -14,8 +14,7 @@ export const ThemeContext = createContext<IThemeContext>(undefined!);
 
 const ThemeProvider: FC = ({ children }) => {
   const themeList = useThemeList();
-  const { value: LSTheme } = useLocalStorage('typer-theme', 'default');
-  const [themeName, setThemeName] = useState(LSTheme);
+  const [themeName, setThemeName] = useLocalStorage('typer-theme', 'default');
 
   const favicon = document.getElementById('favicon') as HTMLLinkElement;
 

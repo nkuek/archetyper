@@ -1,37 +1,41 @@
-import { useMemo, useContext, useState, useEffect } from 'react';
+import { useMemo, useContext, useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { ThemeContext, WordContext } from 'providers';
+import { SettingsContext, ThemeContext, WordListContext } from 'providers';
 import WordCountOptions from './WordCountOptions';
 import { Typography } from '@mui/material';
-import { useLocalStorage, useReset } from 'hooks';
+import { useReset } from 'hooks';
 import QuoteOptions from './QuoteOptions';
 import WordOption from './WordOption';
 import TimedOptions from './TimedOptions';
+import Wpm from './Wpm';
 
 const categories = ['words', 'timed', 'quotes'] as const;
 
 const WordOptions = () => {
-  const { wpm, setSettings, settings } = useContext(WordContext);
+  const { settings, setSettings } = useContext(SettingsContext);
+  const { LSWordCount, setWordCount } = useContext(WordListContext);
 
   const { theme } = useContext(ThemeContext);
 
   const textColor = useMemo(() => theme.wordsContrast || theme.words, [theme]);
-  const { setLocalStorage } = useLocalStorage('typer-settings');
 
   const [showOptions, setShowOptions] = useState(false);
   const [needReset, setNeedReset] = useState(false);
 
-  const handleClick = (
-    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    option: typeof categories[number]
-  ) => {
-    e.stopPropagation();
-    setSettings((prev) => ({ ...prev, type: option }));
-    setLocalStorage({ ...settings, type: option });
-    setShowOptions(true);
-    setNeedReset(true);
-  };
+  const handleClick = useCallback(
+    (
+      e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+      option: typeof categories[number]
+    ) => {
+      e.stopPropagation();
+      setSettings((prev) => ({ ...prev, type: option }));
+      if (option === 'words') setWordCount(LSWordCount);
+      setShowOptions(true);
+      setNeedReset(true);
+    },
+    [setSettings, setShowOptions, setNeedReset, LSWordCount, setWordCount]
+  );
 
   const reset = useReset();
 
@@ -93,16 +97,7 @@ const WordOptions = () => {
           ))}
         </Box>
       </Box>
-      <div style={{ display: 'flex', alignSelf: 'flex-end' }}>
-        <Typography
-          sx={{ color: textColor, marginRight: '.25em', fontWeight: 'bold' }}
-        >
-          {'wpm: '}
-        </Typography>
-        <Typography sx={{ color: textColor, fontWeight: 'bold' }}>
-          {wpm.net || ''}
-        </Typography>
-      </div>
+      <Wpm />
     </Container>
   );
 };

@@ -4,5 +4,9 @@ export {
   default as WordListProvider,
   WordListContext,
 } from './WordListProvider';
-export { default as TimeProvider, TimeContext } from './TimeProvider';
 export { default as IndexProvider, IndexContext } from './IndexProvider';
+export { default as InputProvider, InputContext } from './InputProvider';
+export {
+  default as SettingsProvider,
+  SettingsContext,
+} from './SettingsProvider';

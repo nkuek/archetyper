@@ -1,13 +1,10 @@
 import React, { FC, useContext } from 'react';
-import {
-  defaultSettings,
-  ISettings,
-  wordOptions,
-} from 'providers/WordProvider';
+import { wordOptions } from 'providers/WordProvider';
 import useWordOptionTheme from './styles';
-import { WordContext } from 'providers';
-import { useFocus, useLocalStorage } from 'hooks';
+import { SettingsContext } from 'providers';
+import { useFocus } from 'hooks';
 import { Box } from '@mui/system';
+import { ISettings } from 'providers/SettingsProvider';
 
 interface IProps {
   type: ISettings['type'];
@@ -15,11 +12,7 @@ interface IProps {
 
 const WordTypeOptions: FC<IProps> = ({ type }) => {
   const { getOptionStyle, optionContainerStyle } = useWordOptionTheme(type);
-  const { setLocalStorage } = useLocalStorage(
-    'typer-settings',
-    defaultSettings
-  );
-  const { settings, setSettings } = useContext(WordContext);
+  const { settings, setSettings } = useContext(SettingsContext);
 
   const focus = useFocus();
 
@@ -38,10 +31,6 @@ const WordTypeOptions: FC<IProps> = ({ type }) => {
                 ...prev,
                 [setting.value]: !prev[setting.value],
               }));
-              setLocalStorage({
-                ...settings,
-                [setting.value]: !settings[setting.value],
-              });
               focus();
             }}
           >

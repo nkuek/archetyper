@@ -7,16 +7,17 @@ import {
   ThemeContext,
   WordListContext,
   WordContext,
-  TimeContext,
   IndexContext,
+  InputContext,
+  SettingsContext,
 } from 'providers';
-import { useFocus, useLocalStorage, useReset } from 'hooks';
+import { useFocus, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
 import { animation, slowAnimation } from './styles';
 import { TWordChar } from 'providers/WordListProvider';
-import randomizeWords from 'words';
+import randomizeWords from 'languages/words';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
 
@@ -51,19 +52,25 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   const {
     wordBoxConfig,
     setWordBoxConfig,
-    wpm,
-    setWpm,
     wpmData,
     setWpmData,
+    textFieldRef,
+    generateCharList,
+  } = useContext(WordContext);
+
+  const { focused, settings } = useContext(SettingsContext);
+
+  const {
     userInput,
     setUserInput,
+    timer,
+    setTimer,
+    wpm,
+    setWpm,
     inputHistory,
     setInputHistory,
-    textFieldRef,
-    focused,
-    generateCharList,
-    settings,
-  } = useContext(WordContext);
+    timeOption,
+  } = useContext(InputContext);
 
   const {
     currentCharIndex,
@@ -77,7 +84,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
 
   const muiTheme = useTheme();
   const { theme } = useContext(ThemeContext);
-  const { timer, setTimer } = useContext(TimeContext);
   const { charCount, incorrectChars, uncorrectedErrors } = wordBoxConfig;
 
   const mobileDevice = useMediaQuery(muiTheme.breakpoints.down('sm'));
@@ -87,8 +93,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     e.stopPropagation();
     focus();
   };
-
-  const { value: LSTime } = useLocalStorage('typer-time', 30);
 
   const handleReset = useReset();
 
@@ -143,7 +147,10 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   }, [currentWordIndex]);
 
   useEffect(() => {
-    const time = timer.countdown ? LSTime - timer.time + 1 : timer.time;
+    const time =
+      timer.countdown && timeOption !== 'endless'
+        ? timeOption - timer.time + 1
+        : timer.time;
     setWpm(calculateWpm(charCount, time, uncorrectedErrors));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.time, charCount, uncorrectedErrors]);
@@ -154,14 +161,16 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         () =>
           setTimer((prev) => ({
             ...prev,
-            time: prev.time + (timer.countdown ? -1 : 1),
+            time:
+              prev.time +
+              (timer.countdown && timeOption !== 'endless' ? -1 : 1),
           })),
         1000
       );
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     } else if (
       timer.id &&
-      ((timer.countdown && timer.time === 0) ||
+      ((timer.countdown && timeOption !== 'endless' && timer.time === 0) ||
         (settings.type !== 'timed' &&
           wordCount !== 'endless' &&
           currentWordIndex === wordCount - 1 &&

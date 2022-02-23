@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react';
-import { ThemeContext, TimeContext, WordListContext } from 'providers';
-import { useFocus, useLocalStorage } from 'hooks';
+import { InputContext, ThemeContext, WordListContext } from 'providers';
+import { useFocus } from 'hooks';
 import useWordOptionTheme from './styles';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
@@ -10,12 +10,10 @@ import { IOptionProps } from './types';
 const options = [15, 30, 60, 120, 'endless'] as const;
 
 const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
-  const { timer } = useContext(TimeContext);
+  const { timeOption, setTimeOption } = useContext(InputContext);
   const { textColor } = useContext(ThemeContext);
   const { setWordCount } = useContext(WordListContext);
-  const { setLocalStorage } = useLocalStorage('typer-time');
-  const { setLocalStorage: setLSWordCount } =
-    useLocalStorage('typer-word-count');
+
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('timed');
 
@@ -33,20 +31,19 @@ const TimedOptions: FC<IOptionProps> = ({ setNeedReset }) => {
         {options.map((option, idx) => (
           <div style={optionContainerStyle} key={'quotesbox' + idx}>
             <Box
-              sx={getOptionStyle(option === timer._time)}
+              sx={getOptionStyle(option === timeOption)}
               onClick={(e) => {
                 e.stopPropagation();
                 if (option === 'endless') {
                   setWordCount(option);
-                  setLSWordCount(option);
                 }
-                setLocalStorage(option);
+                setTimeOption(option);
                 setNeedReset(true);
               }}
             >
               <Typography
                 sx={{
-                  ...getOptionTypographyStyle(option === timer._time),
+                  ...getOptionTypographyStyle(option === timeOption),
                   fontSize: option === 'endless' ? '1.5rem' : '1rem',
                 }}
               >

@@ -1,11 +1,9 @@
 import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
-import { useLocalStorage } from 'hooks';
 import { ThemeContext } from 'providers';
 import useThemeList from 'providers/ThemeProvider/useThemeList';
 
 const Themes = () => {
-  const { setLocalStorage } = useLocalStorage('typer-theme');
   const { themeName, setThemeName } = useContext(ThemeContext);
 
   const themeList = useThemeList();
@@ -44,7 +42,6 @@ const Themes = () => {
                   }}
                   onClick={() => {
                     setThemeName(themeListItem);
-                    setLocalStorage(themeListItem);
                   }}
                 >
                   {themeListItem}

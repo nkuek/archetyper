@@ -1,4 +1,4 @@
-import { ISettings } from 'providers/WordProvider';
+import { ISettings } from 'providers/SettingsProvider';
 
 const words = [
   'the',

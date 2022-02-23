@@ -2,6 +2,7 @@ import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/system';
 import {
   IndexContext,
+  SettingsContext,
   ThemeContext,
   WordContext,
   WordListContext,
@@ -18,7 +19,8 @@ const Word: FC<IProps> = (props) => {
   const { wordIdx, word } = props;
   const { theme } = useContext(ThemeContext);
   const { userWordIndex } = useContext(IndexContext);
-  const { currentWordRef, settings } = useContext(WordContext);
+  const { currentWordRef } = useContext(WordContext);
+  const { settings } = useContext(SettingsContext);
   const { wordList, wordCount } = useContext(WordListContext);
   const [showWord, setShowWord] = useState(true);
 

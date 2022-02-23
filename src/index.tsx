@@ -6,8 +6,9 @@ import {
   ThemeProvider,
   WordProvider,
   WordListProvider,
-  TimeProvider,
   IndexProvider,
+  InputProvider,
+  SettingsProvider,
 } from 'providers';
 
 ReactDOM.render(
@@ -16,9 +17,11 @@ ReactDOM.render(
       <IndexProvider>
         <WordProvider>
           <ThemeProvider>
-            <TimeProvider>
-              <App />
-            </TimeProvider>
+            <SettingsProvider>
+              <InputProvider>
+                <App />
+              </InputProvider>
+            </SettingsProvider>
           </ThemeProvider>
         </WordProvider>
       </IndexProvider>

@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react';
 import { ThemeContext, WordListContext } from 'providers';
 import useWordOptionTheme from './styles';
-import { useFocus, useLocalStorage } from 'hooks';
+import { useFocus } from 'hooks';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 import { IOptionProps } from './types';
@@ -13,7 +13,6 @@ const QuoteOptions: FC<IOptionProps> = ({ setNeedReset }) => {
   const { optionContainerStyle, getOptionStyle, getOptionTypographyStyle } =
     useWordOptionTheme('quotes');
   const { textColor } = useContext(ThemeContext);
-  const { setLocalStorage } = useLocalStorage('typer-quote-length');
   const focus = useFocus();
 
   return (
@@ -25,7 +24,6 @@ const QuoteOptions: FC<IOptionProps> = ({ setNeedReset }) => {
             onClick={(e) => {
               e.stopPropagation();
               setQuoteParams(option);
-              setLocalStorage(option);
               setNeedReset(true);
             }}
           >

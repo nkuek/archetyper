@@ -1,11 +1,11 @@
 import { useLocalStorage } from 'hooks';
 import { createContext, FC, useMemo, useState } from 'react';
-import { TReactSetState } from './general/types';
+import { TReactSetState, TCountOption } from './general/types';
 interface IWordListContext {
   wordList: string[];
   setWordList: TReactSetState<string[]>;
-  wordCount: number | 'endless';
-  setWordCount: TReactSetState<number | 'endless'>;
+  wordCount: TCountOption;
+  setWordCount: TReactSetState<TCountOption>;
   loading: boolean;
   setLoading: TReactSetState<boolean>;
   author: string | null;
@@ -16,6 +16,8 @@ interface IWordListContext {
   setQuoteParams: TReactSetState<TQuoteParam>;
   errorMessage: string | null;
   setErrorMessage: TReactSetState<string | null>;
+  LSWordCount: TCountOption;
+  setLSWordCount: TReactSetState<TCountOption>;
 }
 
 export type TWordChar = {
@@ -41,19 +43,18 @@ export type TQuoteParam = 'short' | 'medium' | 'long' | 'all';
 export const WordListContext = createContext<IWordListContext>(undefined!);
 
 const WordListProvider: FC = ({ children }) => {
-  const { value: LSWordCount } = useLocalStorage<'endless' | number>(
+  const [LSWordCount, setLSWordCount] = useLocalStorage<TCountOption>(
     'typer-word-count',
     25
-  );
-  const { value: quoteLength } = useLocalStorage<TQuoteParam>(
-    'typer-quote-length',
-    'medium'
   );
   const [wordList, setWordList] = useState<string[]>([]);
   const [wordCount, setWordCount] = useState(LSWordCount);
   const [loading, setLoading] = useState(false);
   const [author, setAuthor] = useState<null | string>(null);
-  const [quoteParams, setQuoteParams] = useState(quoteLength);
+  const [quoteParams, setQuoteParams] = useLocalStorage<TQuoteParam>(
+    'typer-quote-length',
+    'medium'
+  );
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -75,6 +76,8 @@ const WordListProvider: FC = ({ children }) => {
       setQuoteParams,
       errorMessage,
       setErrorMessage,
+      LSWordCount,
+      setLSWordCount,
     }),
     [
       wordList,
@@ -91,6 +94,8 @@ const WordListProvider: FC = ({ children }) => {
       setQuoteParams,
       errorMessage,
       setErrorMessage,
+      LSWordCount,
+      setLSWordCount,
     ]
   );
   return (
