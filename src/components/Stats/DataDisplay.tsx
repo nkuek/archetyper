@@ -13,6 +13,7 @@ interface IProps {
 
 const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
   const { theme } = useContext(ThemeContext);
+
   const renderContent = () => {
     const children = (
       <Box fontSize="1.5em" sx={{ textAlign: 'center' }}>
@@ -35,6 +36,8 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        padding: '0 !important',
+        width: 'max-content',
       }}
     >
       <Box fontSize="1.1em">{title}</Box>
