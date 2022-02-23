@@ -24,8 +24,14 @@ const useReset = (randomize = false) => {
 
   const { settings } = useContext(SettingsContext);
 
-  const { setUserInput, timer, setTimer, setWpm, setInputHistory } =
-    useContext(InputContext);
+  const {
+    setUserInput,
+    timer,
+    setTimer,
+    setWpm,
+    setInputHistory,
+    defaultTimer,
+  } = useContext(InputContext);
 
   const {
     currentCharIndex,
@@ -74,15 +80,7 @@ const useReset = (randomize = false) => {
         clearInterval(timer.id);
       }
 
-      setTimer({
-        id: null,
-        time:
-          settings.type === 'timed' && timer._time !== 'endless'
-            ? timer._time
-            : 1,
-        _time: settings.type === 'timed' ? timer._time : 1,
-        countdown: settings.type === 'timed' && timer._time !== 'endless',
-      });
+      setTimer(defaultTimer);
       setTimeout(() => {
         focus();
       }, 1);

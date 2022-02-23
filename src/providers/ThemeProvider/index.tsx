@@ -1,5 +1,5 @@
 import { TReactSetState } from '../general/types';
-import { createContext, useState, FC, useMemo, useEffect } from 'react';
+import { createContext, FC, useMemo, useEffect } from 'react';
 import { useLocalStorage } from 'hooks';
 import useThemeList, { ITheme } from './useThemeList';
 

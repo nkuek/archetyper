@@ -2,9 +2,9 @@ import React, { FC, useContext } from 'react';
 import { wordOptions } from 'providers/WordProvider';
 import useWordOptionTheme from './styles';
 import { SettingsContext } from 'providers';
-import { useFocus, useLocalStorage } from 'hooks';
+import { useFocus } from 'hooks';
 import { Box } from '@mui/system';
-import { defaultSettings, ISettings } from 'providers/SettingsProvider';
+import { ISettings } from 'providers/SettingsProvider';
 
 interface IProps {
   type: ISettings['type'];

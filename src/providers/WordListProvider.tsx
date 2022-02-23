@@ -1,11 +1,11 @@
 import { useLocalStorage } from 'hooks';
 import { createContext, FC, useMemo, useState } from 'react';
-import { TReactSetState } from './general/types';
+import { TReactSetState, TCountOption } from './general/types';
 interface IWordListContext {
   wordList: string[];
   setWordList: TReactSetState<string[]>;
-  wordCount: number | 'endless';
-  setWordCount: TReactSetState<number | 'endless'>;
+  wordCount: TCountOption;
+  setWordCount: TReactSetState<TCountOption>;
   loading: boolean;
   setLoading: TReactSetState<boolean>;
   author: string | null;
@@ -16,6 +16,7 @@ interface IWordListContext {
   setQuoteParams: TReactSetState<TQuoteParam>;
   errorMessage: string | null;
   setErrorMessage: TReactSetState<string | null>;
+  setLSWordCount: TReactSetState<TCountOption>;
 }
 
 export type TWordChar = {
@@ -41,7 +42,7 @@ export type TQuoteParam = 'short' | 'medium' | 'long' | 'all';
 export const WordListContext = createContext<IWordListContext>(undefined!);
 
 const WordListProvider: FC = ({ children }) => {
-  const [LSWordCount] = useLocalStorage<'endless' | number>(
+  const [LSWordCount, setLSWordCount] = useLocalStorage<TCountOption>(
     'typer-word-count',
     25
   );
@@ -74,6 +75,7 @@ const WordListProvider: FC = ({ children }) => {
       setQuoteParams,
       errorMessage,
       setErrorMessage,
+      setLSWordCount,
     }),
     [
       wordList,
@@ -90,6 +92,7 @@ const WordListProvider: FC = ({ children }) => {
       setQuoteParams,
       errorMessage,
       setErrorMessage,
+      setLSWordCount,
     ]
   );
   return (

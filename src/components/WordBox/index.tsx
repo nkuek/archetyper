@@ -11,7 +11,7 @@ import {
   InputContext,
   SettingsContext,
 } from 'providers';
-import { useFocus, useLocalStorage, useReset } from 'hooks';
+import { useFocus, useReset } from 'hooks';
 import { CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { TReactSetState } from 'providers/general/types';
 import Word from './Word';
@@ -69,6 +69,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setWpm,
     inputHistory,
     setInputHistory,
+    timeOption,
   } = useContext(InputContext);
 
   const {
@@ -92,8 +93,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     e.stopPropagation();
     focus();
   };
-
-  const [LSTime] = useLocalStorage('typer-time', 30);
 
   const handleReset = useReset();
 
@@ -148,7 +147,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   }, [currentWordIndex]);
 
   useEffect(() => {
-    const time = timer.countdown ? LSTime - timer.time + 1 : timer.time;
+    const time =
+      timeOption !== 'endless' ? timeOption - timer.time + 1 : timer.time;
     setWpm(calculateWpm(charCount, time, uncorrectedErrors));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.time, charCount, uncorrectedErrors]);
@@ -159,14 +159,14 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         () =>
           setTimer((prev) => ({
             ...prev,
-            time: prev.time + (timer.countdown ? -1 : 1),
+            time: prev.time + (timeOption !== 'endless' ? -1 : 1),
           })),
         1000
       );
       setTimer((prev) => ({ ...prev, id: intervalTimer }));
     } else if (
       timer.id &&
-      ((timer.countdown && timer.time === 0) ||
+      ((timeOption !== 'endless' && timer.time === 0) ||
         (settings.type !== 'timed' &&
           wordCount !== 'endless' &&
           currentWordIndex === wordCount - 1 &&

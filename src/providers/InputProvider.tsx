@@ -7,14 +7,13 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { TReactSetState } from './general/types';
+import { TReactSetState, TCountOption } from './general/types';
 import { SettingsContext } from './SettingsProvider';
 
 interface ITimerConfig {
   id?: null | NodeJS.Timeout;
   time: number;
   _time: number | 'endless';
-  countdown?: boolean;
 }
 
 export interface IWpm {
@@ -22,13 +21,11 @@ export interface IWpm {
   net: number;
 }
 
-export type TTimeOption = number | 'endless';
-
 export interface IInputContext {
   userInput: string;
   setUserInput: TReactSetState<string>;
-  timeOption: TTimeOption;
-  setTimeOption: TReactSetState<TTimeOption>;
+  timeOption: TCountOption;
+  setTimeOption: TReactSetState<TCountOption>;
   timer: ITimerConfig;
   setTimer: TReactSetState<ITimerConfig>;
   wpm: IWpm;
@@ -43,7 +40,7 @@ export const InputContext = createContext<IInputContext>(null!);
 const InputProvider: FC = ({ children }) => {
   const [userInput, setUserInput] = useState('');
 
-  const [timeOption, setTimeOption] = useLocalStorage<TTimeOption>(
+  const [timeOption, setTimeOption] = useLocalStorage<TCountOption>(
     'typer-time',
     30
   );
@@ -56,7 +53,6 @@ const InputProvider: FC = ({ children }) => {
       time:
         settings.type === 'timed' && timeOption !== 'endless' ? timeOption : 1,
       _time: settings.type === 'timed' ? timeOption : 1,
-      countdown: settings.type === 'timed' && timeOption !== 'endless',
     }),
     [settings, timeOption]
   );

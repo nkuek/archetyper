@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react';
 import { ThemeContext, WordListContext } from 'providers';
 import useWordOptionTheme from './styles';
-import { useFocus, useLocalStorage } from 'hooks';
+import { useFocus } from 'hooks';
 import { Box } from '@mui/system';
 import { Typography } from '@mui/material';
 import { IOptionProps } from './types';

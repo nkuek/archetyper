@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
-import { useLocalStorage } from 'hooks';
 import { ThemeContext } from 'providers';
 import useThemeList from 'providers/ThemeProvider/useThemeList';
 
