@@ -34,7 +34,9 @@ const Languages = () => {
         }
       >
         {Object.keys(languageMap).map((language) => (
-          <MenuItem value={language}>{language}</MenuItem>
+          <MenuItem key={language} value={language}>
+            {language}
+          </MenuItem>
         ))}
       </Select>
     </SettingsWrapper>

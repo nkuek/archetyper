@@ -13,7 +13,7 @@ export interface ITheme {
   graphText?: string;
   lineColor?: string;
   lineColor2?: string;
-  headings?: string;
+  headings: string;
   gradientUnderline?: string[];
   cartesian?: string;
   border?: string;

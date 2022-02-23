@@ -1,10 +1,14 @@
 import { ISettings } from 'providers/SettingsProvider';
 import english from './english.json';
 import vietnamese from './vietnamese.json';
+import spanish from './spanish.json';
+import englishMisspellings from './englishMisspellings.json';
 
 export const languageMap = {
   english,
+  'english misspellings': englishMisspellings,
   vietnamese,
+  spanish,
 };
 
 const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -23,7 +27,7 @@ function randomizeWords(settings: ISettings, single?: boolean) {
 
   const words = languageMap[language];
   const createWord = () => {
-    let word = words[Math.floor(Math.random() * 200)];
+    let word = words[Math.floor(Math.random() * words.length)];
     if (capitalChars) {
       const shouldCapitalize = Math.random() > 0.6;
       word = shouldCapitalize ? word[0].toUpperCase() + word.slice(1) : word;
