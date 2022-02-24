@@ -18,8 +18,21 @@ import {
 import { ThemeContext } from 'providers';
 import { useReset } from 'hooks';
 import DataDisplay from './DataDisplay';
-import _ from 'lodash';
 import { default as MuiCustomTooltip } from 'components/CustomTooltip';
+
+function get(obj: object, path: string) {
+  const result = path.split('.').reduce((r: any, p: any) => {
+    if (typeof r === 'object') {
+      p = p.startsWith('[') ? p.replace(/\D/g, '') : p;
+
+      return r[p];
+    }
+
+    return undefined;
+  }, obj);
+
+  return result;
+}
 
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
@@ -64,32 +77,35 @@ const CustomTooltip = (props: any) => {
       >
         {payload[0].payload.word}
       </p>
-      {payload.map((data: any) => (
-        <div
-          key={data.name}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            color: theme.words,
-          }}
-        >
+      {payload.map((data: any) => {
+        const dataKey = data.dataKey.split('.');
+        return (
           <div
+            key={data.name}
             style={{
-              backgroundColor: data.stroke || data.fill,
-              height: 10,
-              width: 10,
-            }}
-          ></div>
-          <p
-            style={{
-              margin: '0 0',
-              padding: '3px 7.5px',
+              display: 'flex',
+              alignItems: 'center',
+              color: theme.words,
             }}
           >
-            {`${data.name}: ${_.get(payload[0].payload, data.dataKey)}`}
-          </p>
-        </div>
-      ))}
+            <div
+              style={{
+                backgroundColor: data.stroke || data.fill,
+                height: 10,
+                width: 10,
+              }}
+            ></div>
+            <p
+              style={{
+                margin: '0 0',
+                padding: '3px 7.5px',
+              }}
+            >
+              {`${data.name}: ${get(payload[0].payload, data.dataKey)}`}
+            </p>
+          </div>
+        );
+      })}
     </div>
   );
 };
