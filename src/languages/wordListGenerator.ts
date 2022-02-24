@@ -7,8 +7,8 @@ import englishMisspellings from './englishMisspellings.json';
 export const languageMap = {
   english,
   'english misspellings': englishMisspellings,
-  vietnamese,
   spanish,
+  vietnamese,
 };
 
 const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
