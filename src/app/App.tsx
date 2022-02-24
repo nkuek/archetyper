@@ -81,7 +81,6 @@ const App = () => {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        overflowX: 'hidden',
       }}
       onClick={() => setFocused(false)}
     >
