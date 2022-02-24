@@ -77,35 +77,32 @@ const CustomTooltip = (props: any) => {
       >
         {payload[0].payload.word}
       </p>
-      {payload.map((data: any) => {
-        const dataKey = data.dataKey.split('.');
-        return (
+      {payload.map((data: any) => (
+        <div
+          key={data.name}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: theme.words,
+          }}
+        >
           <div
-            key={data.name}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              color: theme.words,
+              backgroundColor: data.stroke || data.fill,
+              height: 10,
+              width: 10,
+            }}
+          ></div>
+          <p
+            style={{
+              margin: '0 0',
+              padding: '3px 7.5px',
             }}
           >
-            <div
-              style={{
-                backgroundColor: data.stroke || data.fill,
-                height: 10,
-                width: 10,
-              }}
-            ></div>
-            <p
-              style={{
-                margin: '0 0',
-                padding: '3px 7.5px',
-              }}
-            >
-              {`${data.name}: ${get(payload[0].payload, data.dataKey)}`}
-            </p>
-          </div>
-        );
-      })}
+            {`${data.name}: ${get(payload[0].payload, data.dataKey)}`}
+          </p>
+        </div>
+      ))}
     </div>
   );
 };
