@@ -25,6 +25,7 @@ export type TWordChar = {
   extra?: boolean;
   char: string;
   skipped?: boolean;
+  mistyped?: boolean;
 };
 
 export interface IChars {

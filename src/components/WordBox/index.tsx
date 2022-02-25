@@ -214,6 +214,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             i++
           ) {
             charList[userWordIndex].chars[i].skipped = true;
+            charList[userWordIndex].chars[i].mistyped = true;
           }
         }
 
@@ -231,7 +232,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         setWpmData((prev) => ({
           ...prev,
           [userWordIndex]: {
-            word: charList[userWordIndex].word,
+            word: charList[userWordIndex].chars,
             wordNum: userWordIndex + 1,
             errors: totalWordErrors,
             wpm,
@@ -283,6 +284,8 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
               incorrectChars: prev.incorrectChars + 1,
               uncorrectedErrors: prev.uncorrectedErrors + 1,
             }));
+            charList[userWordIndex].chars[e.target.value.length - 1].mistyped =
+              true;
           }
         }
 

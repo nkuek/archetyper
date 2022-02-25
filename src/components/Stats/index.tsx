@@ -19,6 +19,7 @@ import { ThemeContext } from 'providers';
 import { useReset } from 'hooks';
 import DataDisplay from './DataDisplay';
 import { default as MuiCustomTooltip } from 'components/CustomTooltip';
+import { TWordChar } from 'providers/WordListProvider';
 
 function get(obj: object, path: string) {
   const result = path.split('.').reduce((r: any, p: any) => {
@@ -67,16 +68,26 @@ const CustomTooltip = (props: any) => {
         border: theme.border || `1px solid ${theme.graphText || theme.words}`,
       }}
     >
-      <p
-        style={{
+      <Box
+        sx={{
           margin: '0 0',
           padding: '3px 7.5px',
-          textAlign: 'center',
-          color: theme.currentWord,
+          display: 'flex',
+          justifyContent: 'center',
+          fontSize: '1.2em',
+          fontWeight: 'bold',
         }}
       >
-        {payload[0].payload.word}
-      </p>
+        {payload[0].payload.word.map((char: TWordChar) => (
+          <Box
+            sx={{
+              color: char.mistyped ? theme.incorrect ?? 'red' : theme.correct,
+            }}
+          >
+            {char.char}
+          </Box>
+        ))}
+      </Box>
       {payload.map((data: any) => (
         <div
           key={data.name}

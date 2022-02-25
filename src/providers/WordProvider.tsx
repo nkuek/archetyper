@@ -15,7 +15,7 @@ import { ICharList, TWordChar, WordListContext } from './WordListProvider';
 
 interface ITimeStepData {
   wordNum: number;
-  word: string;
+  word: TWordChar[];
   wpm: IWpm;
   errors: number;
   missingChars: number;
