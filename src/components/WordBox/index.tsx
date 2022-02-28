@@ -54,6 +54,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setWordBoxConfig,
     wpmData,
     setWpmData,
+    heatMapData,
     setHeatMapData,
     textFieldRef,
     generateCharList,
@@ -192,6 +193,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
+    console.log(heatMapData);
     if (currentWordIndex < Object.keys(charList).length) {
       const lastUserChar = e.target.value[e.target.value.length - 1];
 
@@ -270,13 +272,13 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         }));
 
         if (e.target.value.length <= charList[userWordIndex].length) {
+          const currentChar =
+            charList[userWordIndex].chars[e.target.value.length - 1];
           const isCorrect =
             e.target.value.length <= charList[userWordIndex].length &&
-            lastUserChar ===
-              charList[userWordIndex].chars[e.target.value.length - 1].char;
+            lastUserChar === currentChar.char;
 
-          charList[userWordIndex].chars[e.target.value.length - 1].correct =
-            isCorrect;
+          currentChar.correct = isCorrect;
 
           if (!isCorrect) {
             setWordBoxConfig((prev) => ({
@@ -284,11 +286,12 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
               incorrectChars: prev.incorrectChars + 1,
               uncorrectedErrors: prev.uncorrectedErrors + 1,
             }));
-            charList[userWordIndex].chars[e.target.value.length - 1].mistyped =
-              true;
+            currentChar.mistyped = true;
             setHeatMapData((prev) => ({
               ...prev,
-              [lastUserChar]: prev.lastUserChar ? prev.lastUserChar + 1 : 1,
+              [currentChar.char]: prev[currentChar.char]
+                ? prev[currentChar.char] + 1
+                : 1,
             }));
           }
         }
