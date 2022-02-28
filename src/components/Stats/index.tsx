@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { Container, Button, Box } from '@mui/material';
 import { InputContext, SettingsContext, WordContext } from 'providers';
 import ReplayIcon from '@mui/icons-material/Replay';
