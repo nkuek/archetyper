@@ -2,8 +2,7 @@ import { FC, useContext } from 'react';
 import { ThemeContext, WordListContext } from 'providers';
 import useWordOptionTheme from './styles';
 import { useFocus } from 'hooks';
-import { Box } from '@mui/system';
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { IOptionProps } from './types';
 
 const options = ['short', 'medium', 'long', 'all'] as const;

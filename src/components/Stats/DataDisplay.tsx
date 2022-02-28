@@ -1,6 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { Container } from '@mui/material';
-import { Box } from '@mui/system';
+import { Container, Box } from '@mui/material';
 import { ThemeContext } from 'providers';
 import CustomTooltip from 'components/CustomTooltip';
 
