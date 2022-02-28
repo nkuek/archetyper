@@ -54,6 +54,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setWordBoxConfig,
     wpmData,
     setWpmData,
+    setHeatMapData,
     textFieldRef,
     generateCharList,
   } = useContext(WordContext);
@@ -285,6 +286,10 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             }));
             charList[userWordIndex].chars[e.target.value.length - 1].mistyped =
               true;
+            setHeatMapData((prev) => ({
+              ...prev,
+              [lastUserChar]: prev.lastUserChar ? prev.lastUserChar + 1 : 1,
+            }));
           }
         }
 

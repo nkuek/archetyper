@@ -27,6 +27,10 @@ interface IWPMData {
   [key: number | string]: ITimeStepData;
 }
 
+interface IHeatMapData {
+  [key: string]: number;
+}
+
 export interface IWordBoxConfig {
   charCount: number;
   incorrectChars: number;
@@ -41,6 +45,8 @@ interface IWordContext {
   wordBoxConfig: IWordBoxConfig;
   setWordBoxConfig: TReactSetState<IWordBoxConfig>;
   generateCharList: (wordList: string[] | string) => ICharList;
+  heatMapData: IHeatMapData;
+  setHeatMapData: TReactSetState<IHeatMapData>;
 }
 
 export const WordContext = createContext<IWordContext>(undefined!);
@@ -62,6 +68,7 @@ const WordContextProvider: FC = ({ children }) => {
   const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
 
   const [wpmData, setWpmData] = useState<IWPMData>({});
+  const [heatMapData, setHeatMapData] = useState<IHeatMapData>({});
   const [wordBoxConfig, setWordBoxConfig] =
     useState<IWordBoxConfig>(defaultWordBoxConfig);
 
@@ -113,6 +120,8 @@ const WordContextProvider: FC = ({ children }) => {
       currentWordRef,
       textFieldRef,
       generateCharList,
+      heatMapData,
+      setHeatMapData,
     }),
     [
       wpmData,
@@ -122,6 +131,8 @@ const WordContextProvider: FC = ({ children }) => {
       wordBoxConfig,
       setWordBoxConfig,
       generateCharList,
+      heatMapData,
+      setHeatMapData,
     ]
   );
   return <WordContext.Provider value={value}>{children}</WordContext.Provider>;

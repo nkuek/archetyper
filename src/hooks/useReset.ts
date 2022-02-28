@@ -20,7 +20,8 @@ const useReset = (randomize = false) => {
     setWordCount,
     wordCount,
   } = useContext(WordListContext);
-  const { setWpmData, setWordBoxConfig } = useContext(WordContext);
+  const { setHeatMapData, setWpmData, setWordBoxConfig } =
+    useContext(WordContext);
 
   const { settings } = useContext(SettingsContext);
 
@@ -74,6 +75,7 @@ const useReset = (randomize = false) => {
       setUserWordIndex(0);
       setWpm({ net: 0, raw: 0 });
       setWpmData({});
+      setHeatMapData({});
       setErrorMessage(null);
 
       if (timer.id) {
@@ -91,6 +93,7 @@ const useReset = (randomize = false) => {
       setTimer,
       setWpm,
       setWpmData,
+      setHeatMapData,
       setUserInput,
       randomize,
       settings,
