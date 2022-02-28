@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useMemo } from 'react';
-import { Container, Button, useTheme, useMediaQuery } from '@mui/material';
+import { Container, Button } from '@mui/material';
 import { InputContext, SettingsContext, WordContext } from 'providers';
 import { Box } from '@mui/system';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -210,8 +210,6 @@ const Stats = () => {
   const { timer, wpm } = useContext(InputContext);
 
   const { theme } = useContext(ThemeContext);
-  const muiTheme = useTheme();
-  const smallScreen = useMediaQuery(muiTheme.breakpoints.down(500));
 
   useEffect(() => {
     if (timer.id) {
@@ -379,7 +377,6 @@ const Stats = () => {
           padding: 0,
           marginTop: '1em',
           justifyContent: 'center',
-          flexDirection: smallScreen ? 'column' : 'row',
         }}
       >
         <DataDisplay
