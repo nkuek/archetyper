@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react';
+import { FC, useContext, useEffect, useMemo } from 'react';
 import { Container, Button, useTheme, useMediaQuery } from '@mui/material';
 import { InputContext, SettingsContext, WordContext } from 'providers';
 import { Box } from '@mui/system';
@@ -21,20 +21,6 @@ import DataDisplay from './DataDisplay';
 import { default as MuiCustomTooltip } from 'components/CustomTooltip';
 import { TWordChar } from 'providers/WordListProvider';
 
-function get(obj: object, path: string) {
-  const result = path.split('.').reduce((r: any, p: any) => {
-    if (typeof r === 'object') {
-      p = p.startsWith('[') ? p.replace(/\D/g, '') : p;
-
-      return r[p];
-    }
-
-    return undefined;
-  }, obj);
-
-  return result;
-}
-
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
   return (
@@ -43,7 +29,6 @@ const CustomX = (props: any) => {
       width="40"
       height="40"
       fill="red"
-      // className="bi bi-x"
       viewBox="0 0 20 20"
       x={props.x - 11}
       y={props.y - 11}
@@ -53,67 +38,168 @@ const CustomX = (props: any) => {
   );
 };
 
+const CustomPayload: FC<{
+  color: string;
+  label: string;
+  payload: any;
+  line?: boolean;
+  strike?: boolean;
+  x?: boolean;
+  underline?: boolean;
+}> = ({ label, payload, color, line, strike, x, underline }) => {
+  const legend = {
+    height: line ? 2 : 10,
+    width: 10,
+    display: 'flex',
+    justifyContent: 'center',
+  };
+  const { theme } = useContext(ThemeContext);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        color: theme.words,
+      }}
+    >
+      <div style={{ display: 'flex' }}>
+        {x ? (
+          <Box sx={{ color, fontWeight: 'bold' }}>X</Box>
+        ) : (
+          <Box
+            style={{
+              backgroundColor: color,
+              zIndex: 1,
+              ...legend,
+            }}
+          >
+            {(strike || underline) && (
+              <Box
+                sx={{
+                  color,
+                  textDecoration: `${
+                    strike ? 'line-through' : 'underline'
+                  } 2px red`,
+                  position: 'relative',
+                  fontSize: '1ch',
+                  '&::before': {
+                    content: '"-"',
+                  },
+                  '&::after': {
+                    content: '"-"',
+                  },
+                }}
+              >
+                0
+              </Box>
+            )}
+          </Box>
+        )}
+      </div>
+      <p
+        style={{
+          margin: '0',
+          padding: '3px 7.5px',
+        }}
+      >
+        {`${label}: ${payload}`}
+      </p>
+    </div>
+  );
+};
+
 const CustomTooltip = (props: any) => {
   const { payload, active } = props;
   const { theme } = useContext(ThemeContext);
 
   if (!active || !payload || !payload.length) return null;
-
+  const payloadWrapperStyle = {
+    background: theme.wordBoxBackground,
+    borderRadius: 3,
+    padding: '.5em',
+    border: theme.border || `1px solid ${theme.graphText || theme.words}`,
+  };
   return (
-    <div
-      style={{
-        background: theme.wordBoxBackground,
-        borderRadius: 3,
-        padding: '.5em',
-        border: theme.border || `1px solid ${theme.graphText || theme.words}`,
-      }}
-    >
-      <Box
-        sx={{
-          margin: '0 0',
-          padding: '3px 7.5px',
-          display: 'flex',
-          justifyContent: 'center',
-          fontSize: '1.2em',
-          fontWeight: 'bold',
-        }}
-      >
-        {payload[0].payload.word.map((char: TWordChar) => (
-          <Box
-            sx={{
-              color: char.mistyped ? theme.incorrect ?? 'red' : theme.correct,
-            }}
-          >
-            {char.char}
-          </Box>
-        ))}
-      </Box>
-      {payload.map((data: any) => (
-        <div
-          key={data.name}
-          style={{
+    <div>
+      <div style={{ ...payloadWrapperStyle, height: 'fit-content' }}>
+        <CustomPayload
+          label="raw"
+          payload={payload[0].payload.wpm.raw}
+          color={payload[0].stroke}
+          line
+        />
+        <CustomPayload
+          label="wpm"
+          payload={payload[0].payload.wpm.net}
+          color={payload[1].stroke}
+          line
+        />
+        {payload[0].payload.errors > 0 && (
+          <CustomPayload
+            label="errors"
+            payload={payload[0].payload.errors}
+            color={payload[2].fill}
+            x
+          />
+        )}
+      </div>
+      <div style={{ ...payloadWrapperStyle, marginTop: '.5em' }}>
+        <Box
+          sx={{
+            margin: '0 0',
+            padding: '3px 7.5px',
             display: 'flex',
-            alignItems: 'center',
-            color: theme.words,
+            justifyContent: 'center',
+            fontSize: '1.2em',
+            fontWeight: 'bold',
           }}
         >
-          <div
-            style={{
-              backgroundColor: data.stroke || data.fill,
-              height: 10,
-              width: 10,
-            }}
-          ></div>
-          <p
-            style={{
-              margin: '0 0',
-              padding: '3px 7.5px',
-            }}
-          >
-            {`${data.name}: ${get(payload[0].payload, data.dataKey)}`}
-          </p>
-        </div>
-      ))}
+          {payload[0].payload.word.map((char: TWordChar, idx: number) => (
+            <Box
+              key={char.char + idx}
+              sx={{
+                color: char.mistyped
+                  ? theme.incorrect ?? 'red'
+                  : char.extra
+                  ? theme.currentWord
+                  : char.skipped
+                  ? theme.words
+                  : theme.correct,
+                textDecoration: char.skipped
+                  ? 'underline red 2px'
+                  : char.extra
+                  ? 'line-through red 1px'
+                  : 'none',
+              }}
+            >
+              {char.char}
+            </Box>
+          ))}
+        </Box>
+        {payload[0].payload.incorrectChars > 0 && (
+          <CustomPayload
+            label="incorrect"
+            payload={payload[0].payload.incorrectChars}
+            color={payload[2].fill}
+          />
+        )}
+        {payload[0].payload.extraChars > 0 && (
+          <CustomPayload
+            label="extra"
+            payload={payload[0].payload.extraChars}
+            color={theme.currentWord}
+            strike
+          />
+        )}
+        {payload[0].payload.missingChars > 0 && (
+          <CustomPayload
+            label="missing"
+            payload={payload[0].payload.missingChars}
+            color={theme.words}
+            underline
+          />
+        )}
+      </div>
     </div>
   );
 };

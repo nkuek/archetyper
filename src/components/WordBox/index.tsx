@@ -214,7 +214,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             i++
           ) {
             charList[userWordIndex].chars[i].skipped = true;
-            charList[userWordIndex].chars[i].mistyped = true;
           }
         }
 
