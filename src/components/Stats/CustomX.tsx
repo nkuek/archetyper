@@ -1,5 +1,3 @@
-import React, { FC } from 'react';
-
 const CustomX = (props: any) => {
   if (!props.payload.errors) return null;
   return (
