@@ -15,14 +15,21 @@ const StyledTooltip = withStyles(() => ({
   },
 }))(Tooltip);
 
-const CustomTooltip: FC<{ title: string; children: ReactElement }> = ({
-  title,
-  children,
-}) => {
+const CustomTooltip: FC<{
+  Title: string | (() => ReactElement);
+  children: ReactElement;
+}> = ({ Title, children }) => {
   return (
     <StyledTooltip
+      disableInteractive
       arrow
-      title={<Typography sx={{ textAlign: 'center' }}>{title}</Typography>}
+      title={
+        typeof Title === 'string' ? (
+          <Typography sx={{ textAlign: 'center' }}>{Title}</Typography>
+        ) : (
+          <Title />
+        )
+      }
     >
       {children}
     </StyledTooltip>

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo } from 'react';
-import { Container, Button, Box } from '@mui/material';
+import { Container, Button, Box, useMediaQuery } from '@mui/material';
 import { InputContext, SettingsContext, WordContext } from 'providers';
 import ReplayIcon from '@mui/icons-material/Replay';
 import {
@@ -20,6 +20,8 @@ import DataDisplay from './DataDisplay';
 import { default as MuiCustomTooltip } from 'components/CustomTooltip';
 import CustomX from './CustomX';
 import CustomTooltip from './CustomTooltip';
+import HeatMap from 'components/HeatMap';
+import { useTheme } from '@mui/system';
 
 const Stats = () => {
   const { wpmData, wordBoxConfig } = useContext(WordContext);
@@ -27,6 +29,8 @@ const Stats = () => {
   const { timer, wpm } = useContext(InputContext);
 
   const { theme } = useContext(ThemeContext);
+  const muiTheme = useTheme();
+  const smallScreen = useMediaQuery(muiTheme.breakpoints.down(600));
 
   useEffect(() => {
     if (timer.id) {
@@ -78,7 +82,7 @@ const Stats = () => {
         <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 1.5em)">
           wpm:
         </Box>
-        <MuiCustomTooltip title="wpm with uncorrected errors">
+        <MuiCustomTooltip Title="wpm with uncorrected errors">
           <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 2em)">
             {wpm.net}
           </Box>
@@ -95,7 +99,7 @@ const Stats = () => {
         <Box textAlign="center" fontSize="clamp(1em, 5vw + .5em, 1.5em)">
           accuracy:
         </Box>
-        <MuiCustomTooltip title={`${(accuracy * 100).toFixed(2)}%`}>
+        <MuiCustomTooltip Title={`${(accuracy * 100).toFixed(2)}%`}>
           <Box
             textAlign="center"
             fontSize="clamp(1em, 5vw + .5em, 2em)"
@@ -220,15 +224,16 @@ const Stats = () => {
           justifyContent: 'center',
         }}
       >
-        <MuiCustomTooltip title="restart test">
+        <MuiCustomTooltip Title="restart test">
           <Button
             sx={{ color: theme.buttonText || theme.currentWord }}
             onClick={handleReset}
           >
-            <ReplayIcon />
+            <ReplayIcon fontSize="large" />
           </Button>
         </MuiCustomTooltip>
       </Container>
+      {!smallScreen && <HeatMap />}
     </Container>
   );
 };

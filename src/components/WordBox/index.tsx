@@ -54,6 +54,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setWordBoxConfig,
     wpmData,
     setWpmData,
+    setHeatMapData,
     textFieldRef,
     generateCharList,
   } = useContext(WordContext);
@@ -269,13 +270,13 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
         }));
 
         if (e.target.value.length <= charList[userWordIndex].length) {
+          const currentChar =
+            charList[userWordIndex].chars[e.target.value.length - 1];
           const isCorrect =
             e.target.value.length <= charList[userWordIndex].length &&
-            lastUserChar ===
-              charList[userWordIndex].chars[e.target.value.length - 1].char;
+            lastUserChar === currentChar.char;
 
-          charList[userWordIndex].chars[e.target.value.length - 1].correct =
-            isCorrect;
+          currentChar.correct = isCorrect;
 
           if (!isCorrect) {
             setWordBoxConfig((prev) => ({
@@ -283,8 +284,30 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
               incorrectChars: prev.incorrectChars + 1,
               uncorrectedErrors: prev.uncorrectedErrors + 1,
             }));
-            charList[userWordIndex].chars[e.target.value.length - 1].mistyped =
-              true;
+            currentChar.mistyped = true;
+            setHeatMapData((prev) => ({
+              ...prev,
+              [currentChar.char]: {
+                correct: prev[currentChar.char]
+                  ? prev[currentChar.char].correct
+                  : 0,
+                incorrect: prev[currentChar.char]
+                  ? prev[currentChar.char].incorrect + 1
+                  : 1,
+              },
+            }));
+          } else {
+            setHeatMapData((prev) => ({
+              ...prev,
+              [currentChar.char]: {
+                correct: prev[currentChar.char]
+                  ? prev[currentChar.char].correct + 1
+                  : 1,
+                incorrect: prev[currentChar.char]
+                  ? prev[currentChar.char].incorrect
+                  : 0,
+              },
+            }));
           }
         }
 
@@ -500,7 +523,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             autoComplete="off"
           />
         </div>
-        <CustomTooltip title="restart test">
+        <CustomTooltip Title="restart test">
           <Button
             sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
             onClick={(e) => {

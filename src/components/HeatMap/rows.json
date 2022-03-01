@@ -1,0 +1,63 @@
+{
+  "row1": [
+    { "primary": "`", "secondary": "~" },
+    { "primary": "1", "secondary": "!" },
+    { "primary": "2", "secondary": "@" },
+    { "primary": "3", "secondary": "#" },
+    { "primary": "4", "secondary": "$" },
+    { "primary": "5", "secondary": "%" },
+    { "primary": "6", "secondary": "^" },
+    { "primary": "7", "secondary": "&" },
+    { "primary": "8", "secondary": "*" },
+    { "primary": "9", "secondary": "(" },
+    { "primary": "0", "secondary": ")" },
+    { "primary": "-", "secondary": "_" },
+    { "primary": "=", "secondary": "+" },
+    { "primary": "Backspace", "modifier": true, "size": 2.25 }
+  ],
+  "row2": [
+    { "primary": "Tab", "modifier": true, "size": 1.5 },
+    { "primary": "Q" },
+    { "primary": "W" },
+    { "primary": "E" },
+    { "primary": "R" },
+    { "primary": "T" },
+    { "primary": "Y" },
+    { "primary": "U" },
+    { "primary": "I" },
+    { "primary": "O" },
+    { "primary": "P" },
+    { "primary": "[", "secondary": "{" },
+    { "primary": "]", "secondary": "}" },
+    { "primary": "\\", "secondary": "|", "size": 1.75 }
+  ],
+  "row3": [
+    { "primary": "Caps", "modifier": true, "size": 1.75 },
+    { "primary": "A" },
+    { "primary": "S" },
+    { "primary": "D" },
+    { "primary": "F" },
+    { "primary": "G" },
+    { "primary": "H" },
+    { "primary": "J" },
+    { "primary": "K" },
+    { "primary": "L" },
+    { "primary": ";", "secondary": ":" },
+    { "primary": "'", "secondary": "\"" },
+    { "primary": "Enter", "modifier": true, "size": 2.5 }
+  ],
+  "row4": [
+    { "primary": "Shift", "modifier": true, "size": 2.25 },
+    { "primary": "Z" },
+    { "primary": "X" },
+    { "primary": "C" },
+    { "primary": "V" },
+    { "primary": "B" },
+    { "primary": "N" },
+    { "primary": "M" },
+    { "primary": ",", "secondary": "<" },
+    { "primary": ".", "secondary": ">" },
+    { "primary": "/", "secondary": "?" },
+    { "primary": "Shift", "modifier": true, "size": 2.5 }
+  ]
+}

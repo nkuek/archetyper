@@ -6,7 +6,7 @@ import englishMisspellings from './englishMisspellings.json';
 
 export const languageMap = {
   english,
-  'english misspellings': englishMisspellings,
+  'english - commonly misspelled': englishMisspellings,
   spanish,
   vietnamese,
 };

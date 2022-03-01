@@ -21,7 +21,7 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
       </Box>
     );
     if (tooltip) {
-      return <CustomTooltip title={tooltip}>{children}</CustomTooltip>;
+      return <CustomTooltip Title={tooltip}>{children}</CustomTooltip>;
     } else {
       return children;
     }
