@@ -28,7 +28,10 @@ interface IWPMData {
 }
 
 interface IHeatMapData {
-  [key: string]: number;
+  [key: string]: {
+    correct: number;
+    incorrect: number;
+  };
 }
 
 export interface IWordBoxConfig {

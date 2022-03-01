@@ -14,7 +14,7 @@ const SettingsWrapper: FC<{ title: string; tooltip?: string }> = ({
       </Typography>
     );
     if (!tooltip) return defaultTitle;
-    return <CustomTooltip title={tooltip}>{defaultTitle}</CustomTooltip>;
+    return <CustomTooltip Title={tooltip}>{defaultTitle}</CustomTooltip>;
   };
   return (
     <>

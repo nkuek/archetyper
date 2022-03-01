@@ -82,7 +82,7 @@ const Stats = () => {
         <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 1.5em)">
           wpm:
         </Box>
-        <MuiCustomTooltip title="wpm with uncorrected errors">
+        <MuiCustomTooltip Title="wpm with uncorrected errors">
           <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 2em)">
             {wpm.net}
           </Box>
@@ -99,7 +99,7 @@ const Stats = () => {
         <Box textAlign="center" fontSize="clamp(1em, 5vw + .5em, 1.5em)">
           accuracy:
         </Box>
-        <MuiCustomTooltip title={`${(accuracy * 100).toFixed(2)}%`}>
+        <MuiCustomTooltip Title={`${(accuracy * 100).toFixed(2)}%`}>
           <Box
             textAlign="center"
             fontSize="clamp(1em, 5vw + .5em, 2em)"
@@ -224,7 +224,7 @@ const Stats = () => {
           justifyContent: 'center',
         }}
       >
-        <MuiCustomTooltip title="restart test">
+        <MuiCustomTooltip Title="restart test">
           <Button
             sx={{ color: theme.buttonText || theme.currentWord }}
             onClick={handleReset}
