@@ -229,7 +229,7 @@ const Stats = () => {
             sx={{ color: theme.buttonText || theme.currentWord }}
             onClick={handleReset}
           >
-            <ReplayIcon />
+            <ReplayIcon fontSize="large" />
           </Button>
         </MuiCustomTooltip>
       </Container>
