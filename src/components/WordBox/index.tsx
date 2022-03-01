@@ -524,7 +524,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           </Button>
         </CustomTooltip>
       </Box>
-      <HeatMap />
     </Container>
   );
 };
