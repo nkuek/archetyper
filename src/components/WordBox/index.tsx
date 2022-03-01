@@ -20,6 +20,7 @@ import { TWordChar } from 'providers/WordListProvider';
 import randomizeWords from 'languages/wordListGenerator';
 import MessageOverlay from './MessageOverlay';
 import CustomTooltip from 'components/CustomTooltip';
+import HeatMap from 'components/HeatMap';
 
 const calculateWpm = (charCount: number, timer: number, errors: number) => {
   const timeToMins = timer / 60;
@@ -523,6 +524,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           </Button>
         </CustomTooltip>
       </Box>
+      <HeatMap />
     </Container>
   );
 };
