@@ -21,13 +21,14 @@ const HeatMap = () => {
       <CustomTooltip Title="all mistakes are shown whether corrected or uncorrected">
         <Box
           sx={{
-            textAlign: 'center',
             fontSize: '1.5em',
+            margin: '0 auto',
             marginBottom: '1em',
             color: theme.words,
+            width: 'fit-content',
           }}
         >
-          Error Heatmap
+          Key Heatmap
         </Box>
       </CustomTooltip>
       {Object.values(rows).map((row, idx) => (

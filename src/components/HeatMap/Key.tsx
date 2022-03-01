@@ -13,11 +13,11 @@ const Key: FC<{ keyProp: IKey }> = ({ keyProp }) => {
   const { heatMapData } = useContext(WordContext);
 
   const displayTooltip =
+    heatMapData[primary] ||
     heatMapData[primary.toLowerCase()] ||
-    (secondary && heatMapData[secondary.toLowerCase()]);
+    (secondary && heatMapData[secondary]);
 
   const renderTooltip = () => {
-    console.log(heatMapData[primary], heatMapData[primary.toLowerCase()]);
     const children = (
       <Box
         sx={{
@@ -33,21 +33,19 @@ const Key: FC<{ keyProp: IKey }> = ({ keyProp }) => {
           fontSize: secondary || modifier ? '1.2em' : '1.5em',
           width: 45 * size,
           height: 45,
-          opacity:
-            heatMapData[primary]?.incorrect ||
-            heatMapData[primary.toLowerCase()]?.incorrect ||
-            (secondary && heatMapData[secondary]?.incorrect)
-              ? 0.7
-              : 1,
           backgroundColor:
-            heatMapData[primary]?.incorrect > 3 ||
-            heatMapData[primary.toLowerCase()]?.incorrect > 3 ||
-            (secondary && heatMapData[secondary]?.incorrect > 3)
-              ? 'red'
+            heatMapData[primary]?.incorrect > 2 ||
+            heatMapData[primary.toLowerCase()]?.incorrect > 2 ||
+            (secondary && heatMapData[secondary]?.incorrect > 2)
+              ? 'rgba(255, 0, 0, .6)'
               : heatMapData[primary]?.incorrect > 0 ||
                 heatMapData[primary.toLowerCase()]?.incorrect > 0 ||
                 (secondary && heatMapData[secondary]?.incorrect > 0)
-              ? 'orange'
+              ? 'rgba(255, 165, 0, .6)'
+              : heatMapData[primary] ||
+                heatMapData[primary.toLowerCase()] ||
+                (secondary && heatMapData[secondary])
+              ? 'rgba(0, 155, 0, .3)'
               : 'inherit',
         }}
       >
@@ -73,25 +71,38 @@ const Key: FC<{ keyProp: IKey }> = ({ keyProp }) => {
             >
               <Box>
                 <Box sx={{ marginBottom: '.5em' }}>key:</Box>
-                <Box>{primary.toLowerCase()}</Box>
+                {primary.match(/^[A-Z]+$/) &&
+                  heatMapData[primary.toLowerCase()] && (
+                    <Box>{primary.toLowerCase()}</Box>
+                  )}
                 {heatMapData[primary] && <Box>{primary}</Box>}
-                {secondary && <Box>{secondary}</Box>}
+                {secondary && heatMapData[secondary] && <Box>{secondary}</Box>}
               </Box>
               <Box>
                 <Box sx={{ marginBottom: '.5em' }}>correct:</Box>
-                <Box>{heatMapData[primary.toLowerCase()].correct}</Box>
+                {primary.match(/^[A-Z]+$/) &&
+                  heatMapData[primary.toLowerCase()] && (
+                    <Box>{heatMapData[primary.toLowerCase()].correct}</Box>
+                  )}
                 {heatMapData[primary] && (
                   <Box>{heatMapData[primary].correct}</Box>
                 )}
-                {secondary && <Box>{heatMapData[secondary].correct}</Box>}
+                {secondary && heatMapData[secondary] && (
+                  <Box>{heatMapData[secondary].correct}</Box>
+                )}
               </Box>
               <Box>
                 <Box sx={{ marginBottom: '.5em' }}>incorrect:</Box>
-                <Box>{heatMapData[primary.toLowerCase()].incorrect}</Box>
+                {primary.match(/^[A-Z]+$/) &&
+                  heatMapData[primary.toLowerCase()] && (
+                    <Box>{heatMapData[primary.toLowerCase()].incorrect}</Box>
+                  )}
                 {heatMapData[primary] && (
                   <Box>{heatMapData[primary].incorrect}</Box>
                 )}
-                {secondary && <Box>{heatMapData[secondary].incorrect}</Box>}
+                {secondary && heatMapData[secondary] && (
+                  <Box>{heatMapData[secondary].incorrect}</Box>
+                )}
               </Box>
             </Box>
           </Box>

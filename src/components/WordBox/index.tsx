@@ -54,7 +54,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
     setWordBoxConfig,
     wpmData,
     setWpmData,
-    heatMapData,
     setHeatMapData,
     textFieldRef,
     generateCharList,
@@ -193,7 +192,6 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
   // input field logic
   const handleUserInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
-    console.log(heatMapData);
     if (currentWordIndex < Object.keys(charList).length) {
       const lastUserChar = e.target.value[e.target.value.length - 1];
 
