@@ -242,7 +242,7 @@ const Stats = () => {
           </Button>
         </MuiCustomTooltip>
       </Container>
-      {smallScreen && (
+      {smallScreen ? (
         <Box
           sx={{
             display: 'flex',
@@ -261,8 +261,9 @@ const Stats = () => {
             rotate device to view heatmap
           </Typography>
         </Box>
+      ) : (
+        <HeatMap />
       )}
-      {!smallScreen && <HeatMap />}
     </Container>
   );
 };
