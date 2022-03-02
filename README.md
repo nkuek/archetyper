@@ -1,6 +1,6 @@
 # Introducing [archetyper](https://archetyper.herokuapp.com) - an aesthetic type tester!
-<div style="display: flex; justify-content: center">
-  <img src="https://media.giphy.com/media/YCwNeOGnCQYwc5DYkv/giphy.gif">
+<div align="center">
+  <img width='50%' src="https://media.giphy.com/media/VJmrvdo4nphUBluxXF/giphy.gif">
 </div>
 
 
