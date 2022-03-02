@@ -31,15 +31,18 @@ const App = () => {
 
   const focus = useFocus();
 
-  const closeDialog = (
-    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
-    setDialog: TReactSetState<boolean>
-  ) => {
-    e.stopPropagation();
-    setDialog(false);
-    setTimeout(() => {
-      focus();
-    }, 1);
+  const closeDialog = (setDialog: TReactSetState<boolean>) => {
+    return (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+      e.stopPropagation();
+      setDialog(false);
+      setTimeout(() => {
+        focus();
+      }, 1);
+    };
+  };
+
+  const openDialog = (setDialog: TReactSetState<boolean>) => {
+    return () => setDialog(true);
   };
 
   // handle pressing escape
@@ -150,7 +153,7 @@ const App = () => {
         }}
       >
         <Typography
-          onClick={() => setSettingsDialogOpen(true)}
+          onClick={openDialog(setSettingsDialogOpen)}
           sx={{
             ...gradientUnderline(settingsDialogOpen),
             cursor: 'pointer',
@@ -168,7 +171,7 @@ const App = () => {
           /
         </Typography>
         <Typography
-          onClick={() => setAboutMeOpen(true)}
+          onClick={openDialog(setAboutMeOpen)}
           sx={{
             ...gradientUnderline(aboutMeOpen),
             cursor: 'pointer',
@@ -180,12 +183,9 @@ const App = () => {
       </Container>
       <Settings
         open={settingsDialogOpen}
-        onClose={(e) => closeDialog(e, setSettingsDialogOpen)}
+        onClose={closeDialog(setSettingsDialogOpen)}
       />
-      <AboutMe
-        open={aboutMeOpen}
-        onClose={(e) => closeDialog(e, setAboutMeOpen)}
-      />
+      <AboutMe open={aboutMeOpen} onClose={closeDialog(setAboutMeOpen)} />
     </div>
   );
 };
