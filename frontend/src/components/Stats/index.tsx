@@ -89,14 +89,26 @@ const Stats = () => {
             color: theme.headings,
             display: 'flex',
             flexDirection: 'column',
-            padding: '1em',
+            paddingTop: '1em',
           }}
         >
-          <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 1.5em)">
-            wpm:
+          <Box
+            sx={{
+              textAlign: 'center',
+              fontSize: 'clamp(1.5em, 4vw + .5em, 2em)',
+              lineHeight: '1.5rem',
+            }}
+          >
+            wpm
           </Box>
           <MuiCustomTooltip Title="wpm with uncorrected errors">
-            <Box textAlign="center" fontSize="clamp(2.5em, 4vw + .5em, 3em)">
+            <Box
+              sx={{
+                textAlign: 'center',
+                fontSize: 'clamp(2.5em, 4vw + .5em, 3.5em)',
+                fontWeight: 'bold',
+              }}
+            >
               {wpm.net}
             </Box>
           </MuiCustomTooltip>
@@ -106,16 +118,25 @@ const Stats = () => {
             color: theme.headings,
             display: 'flex',
             flexDirection: 'column',
-            padding: '1em',
+            paddingTop: '1em',
           }}
         >
-          <Box textAlign="center" fontSize="clamp(1em, 5vw + .5em, 1.5em)">
-            accuracy:
+          <Box
+            sx={{
+              textAlign: 'center',
+              fontSize: 'clamp(1.5em, 4vw + .5em, 2em)',
+              lineHeight: '1.5rem',
+            }}
+          >
+            accuracy
           </Box>
           <MuiCustomTooltip Title={`${(accuracy * 100).toFixed(2)}%`}>
             <Box
-              textAlign="center"
-              fontSize="clamp(2.5em, 4vw + .5em, 3em)"
+              sx={{
+                textAlign: 'center',
+                fontSize: 'clamp(2.5em, 4vw + .5em, 3.5em)',
+                fontWeight: 'bold',
+              }}
             >{`${Math.round(Math.floor(accuracy * 100))}%`}</Box>
           </MuiCustomTooltip>
         </Box>
@@ -254,7 +275,7 @@ const Stats = () => {
             flexDirection: 'column',
             alignItems: 'center',
             color: theme.headings,
-            margin: '1em 0',
+            margin: '3em 0',
           }}
         >
           <Box>

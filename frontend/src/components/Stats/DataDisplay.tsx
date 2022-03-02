@@ -15,7 +15,9 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
 
   const renderContent = () => {
     const children = (
-      <Box fontSize="1.5em" sx={{ textAlign: 'center' }}>
+      <Box
+        sx={{ textAlign: 'center', fontSize: 'clamp(1.5em, 3vw + .5em, 2em)' }}
+      >
         {data}
         {unit || ''}
       </Box>
@@ -39,7 +41,14 @@ const DataDisplay: FC<IProps> = ({ title, data, unit, tooltip }) => {
         width: 'max-content',
       }}
     >
-      <Box fontSize="1.1em">{title}</Box>
+      <Box
+        sx={{
+          lineHeight: 'clamp(1em, 3vw + .5em, 1.5em)',
+          fontSize: 'clamp(1em, 3vw + .5em, 1.5em)',
+        }}
+      >
+        {title}
+      </Box>
       {renderContent()}
     </Container>
   );
