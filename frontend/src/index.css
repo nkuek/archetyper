@@ -22,3 +22,7 @@ a:visited {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+#root {
+  width: 100%;
+}

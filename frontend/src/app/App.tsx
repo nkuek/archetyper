@@ -105,7 +105,7 @@ const App = () => {
           justifyContent: 'center',
           padding: 0,
           position: 'relative',
-          overflow: 'auto',
+          overflowY: 'auto',
         }}
       >
         {displayStats ? (
@@ -119,6 +119,9 @@ const App = () => {
               minHeight: '30%',
               top: -64,
               position: 'relative',
+              '@media screen and (max-height: 450px)': {
+                top: 0,
+              },
             }}
           >
             <WordOptions />

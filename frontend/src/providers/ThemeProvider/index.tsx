@@ -2,6 +2,11 @@ import { TReactSetState } from '../general/types';
 import { createContext, FC, useMemo, useEffect } from 'react';
 import { useLocalStorage } from 'hooks';
 import useThemeList, { ITheme } from './useThemeList';
+import { CssBaseline, GlobalStyles } from '@mui/material';
+import {
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+} from '@mui/material/styles';
 
 interface IThemeContext {
   themeName: string;
@@ -36,8 +41,18 @@ const ThemeProvider: FC = ({ children }) => {
     }),
     [themeName, setThemeName, textColor, themeList]
   );
+
+  const muiTheme = createTheme();
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <MuiThemeProvider theme={{ ...muiTheme, ...themeList[themeName] }}>
+      <CssBaseline />
+      <GlobalStyles
+        styles={{
+          body: { backgroundColor: themeList[themeName].pageBackground },
+        }}
+      />
+      <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    </MuiThemeProvider>
   );
 };
 
