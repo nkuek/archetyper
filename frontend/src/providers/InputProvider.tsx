@@ -1,4 +1,5 @@
-import { useLocalStorage } from 'hooks';
+import { useLocalStorage, useReset } from 'hooks';
+import randomizeWords from 'languages/wordListGenerator';
 import {
   createContext,
   FC,
@@ -8,7 +9,9 @@ import {
   useState,
 } from 'react';
 import { TReactSetState, TCountOption } from './general/types';
+import { IndexContext } from './IndexProvider';
 import { SettingsContext } from './SettingsProvider';
+import { TWordChar, WordListContext } from './WordListProvider';
 
 interface ITimerConfig {
   id?: null | NodeJS.Timeout;
@@ -46,8 +49,11 @@ const InputProvider: FC = ({ children }) => {
     30
   );
   const { settings } = useContext(SettingsContext);
+  const { setCharList } = useContext(WordListContext);
+  const { currentWordIndex } = useContext(IndexContext);
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
   const [inputHistory, setInputHistory] = useState<string[]>([]);
+
   const defaultTimer = useMemo(
     () => ({
       id: null,
@@ -63,6 +69,24 @@ const InputProvider: FC = ({ children }) => {
   useEffect(() => {
     setTimer(defaultTimer);
   }, [defaultTimer]);
+
+  useEffect(() => {
+    if (settings.type === 'quotes') return;
+    const newWord = randomizeWords(settings, true);
+    const wordChars: TWordChar[] = [];
+    for (const char of newWord) {
+      wordChars.push({ correct: null, char });
+    }
+    setCharList((prev) => ({
+      ...prev,
+      [Object.keys(prev).length]: {
+        chars: wordChars,
+        length: wordChars.length,
+        word: newWord,
+      },
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWordIndex]);
 
   const value = {
     timeOption,
