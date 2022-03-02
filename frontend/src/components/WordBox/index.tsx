@@ -126,15 +126,20 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           sx={{
             position: 'relative',
             zIndex: 1,
-            height: '8vh',
-            '@media screen and (max-height: 450px)': {
-              height: '20vh',
+            height: {
+              xs: '14.5vh',
+              md: '10vh',
+            },
+            '@media screen and (max-height: 800px) and (max-width: 1280px)': {
+              height: '22vh',
+              lineHeight: '1.75rem',
             },
             overflow: 'hidden',
             fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
             width: '100%',
             display: 'flex',
             flexWrap: 'wrap',
+            lineHeight: 'clamp(1.5rem, 5vw + .25rem, 2.25rem)',
           }}
           id="wordBox"
         >

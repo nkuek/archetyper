@@ -119,7 +119,7 @@ const App = () => {
               minHeight: '30%',
               top: -64,
               position: 'relative',
-              '@media screen and (max-height: 450px)': {
+              '@media screen and (max-height: 550px)': {
                 top: 0,
               },
             }}

@@ -9,7 +9,12 @@ const Wpm = () => {
   return (
     <div style={{ display: 'flex', alignSelf: 'flex-end' }}>
       <Typography
-        sx={{ color: textColor, marginRight: '.25em', fontWeight: 'bold' }}
+        sx={{
+          color: textColor,
+          marginLeft: '.5em',
+          marginRight: '.25em',
+          fontWeight: 'bold',
+        }}
       >
         {'wpm: '}
       </Typography>

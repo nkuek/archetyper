@@ -53,6 +53,8 @@ const WordOptions = () => {
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: '.5em',
+        flexWrap: 'wrap',
+        padding: 0,
       }}
     >
       <Box
