@@ -81,40 +81,45 @@ const Stats = () => {
         flexDirection: 'column',
       }}
     >
-      <Container
-        sx={{
-          color: theme.headings,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+      <Box
+        sx={{ display: 'flex', width: '100%', justifyContent: 'space-around' }}
       >
-        <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 1.5em)">
-          wpm:
-        </Box>
-        <MuiCustomTooltip Title="wpm with uncorrected errors">
-          <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 2em)">
-            {wpm.net}
+        <Box
+          sx={{
+            color: theme.headings,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '1em',
+          }}
+        >
+          <Box textAlign="center" fontSize="clamp(1em, 4vw + .5em, 1.5em)">
+            wpm:
           </Box>
-        </MuiCustomTooltip>
-      </Container>
-      <Container
-        sx={{
-          color: theme.headings,
-          display: 'flex',
-          flexDirection: 'column',
-          marginBottom: '1em',
-        }}
-      >
-        <Box textAlign="center" fontSize="clamp(1em, 5vw + .5em, 1.5em)">
-          accuracy:
+          <MuiCustomTooltip Title="wpm with uncorrected errors">
+            <Box textAlign="center" fontSize="clamp(2.5em, 4vw + .5em, 3em)">
+              {wpm.net}
+            </Box>
+          </MuiCustomTooltip>
         </Box>
-        <MuiCustomTooltip Title={`${(accuracy * 100).toFixed(2)}%`}>
-          <Box
-            textAlign="center"
-            fontSize="clamp(1em, 5vw + .5em, 2em)"
-          >{`${Math.round(Math.floor(accuracy * 100))}%`}</Box>
-        </MuiCustomTooltip>
-      </Container>
+        <Box
+          sx={{
+            color: theme.headings,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '1em',
+          }}
+        >
+          <Box textAlign="center" fontSize="clamp(1em, 5vw + .5em, 1.5em)">
+            accuracy:
+          </Box>
+          <MuiCustomTooltip Title={`${(accuracy * 100).toFixed(2)}%`}>
+            <Box
+              textAlign="center"
+              fontSize="clamp(2.5em, 4vw + .5em, 3em)"
+            >{`${Math.round(Math.floor(accuracy * 100))}%`}</Box>
+          </MuiCustomTooltip>
+        </Box>
+      </Box>
       <Container
         sx={{
           backgroundColor: theme.wordBoxBackground,
