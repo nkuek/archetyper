@@ -61,7 +61,7 @@ const Word: FC<IProps> = (props) => {
       key={wordIdx}
       sx={{
         display: 'flex',
-        margin: '0.25em',
+        margin: '0.125em 0.25em',
         textDecoration: word.skipped
           ? `underline ${theme.incorrect || 'red'}`
           : 'none',

@@ -126,7 +126,10 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
           sx={{
             position: 'relative',
             zIndex: 1,
-            height: 100,
+            height: '8vh',
+            '@media screen and (max-height: 450px)': {
+              height: '20vh',
+            },
             overflow: 'hidden',
             fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
             width: '100%',
