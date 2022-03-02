@@ -1,7 +1,16 @@
 import { useContext, useEffect, useMemo } from 'react';
-import { Container, Button, Box, useMediaQuery } from '@mui/material';
+import {
+  Container,
+  Button,
+  Box,
+  useMediaQuery,
+  Typography,
+} from '@mui/material';
 import { InputContext, SettingsContext, WordContext } from 'providers';
 import ReplayIcon from '@mui/icons-material/Replay';
+import ScreenLockLandscapeIcon from '@mui/icons-material/ScreenLockLandscape';
+import KeyboardIcon from '@mui/icons-material/Keyboard';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import {
   Line,
   ResponsiveContainer,
@@ -233,6 +242,26 @@ const Stats = () => {
           </Button>
         </MuiCustomTooltip>
       </Container>
+      {smallScreen && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            color: theme.headings,
+            margin: '1em 0',
+          }}
+        >
+          <Box>
+            <ScreenLockLandscapeIcon fontSize="large" />
+            <ArrowRightAltIcon fontSize="large" />
+            <KeyboardIcon fontSize="large" />
+          </Box>
+          <Typography fontSize="1.2em">
+            rotate device to view heatmap
+          </Typography>
+        </Box>
+      )}
       {!smallScreen && <HeatMap />}
     </Container>
   );
