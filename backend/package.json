@@ -7,8 +7,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "compress": "^0.99.0",
-    "express": "^4.17.3",
-    "express-favicon": "^2.0.1"
+    "compression": "^1.7.4",
+    "express": "^4.17.3"
   }
 }
