@@ -105,6 +105,7 @@ const App = () => {
           justifyContent: 'center',
           padding: 0,
           position: 'relative',
+          overflow: 'auto',
         }}
       >
         {displayStats ? (
