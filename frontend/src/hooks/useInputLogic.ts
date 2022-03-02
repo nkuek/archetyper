@@ -99,6 +99,14 @@ export const useInputLogic = () => {
         // userInput is > target value only when deleting since userInput is one state behind
         if (userInput.length > e.target.value.length) return;
 
+        const incrementErrors = () => {
+          setWordBoxConfig((prev) => ({
+            ...prev,
+            incorrectChars: prev.incorrectChars + 1,
+            uncorrectedErrors: prev.uncorrectedErrors + 1,
+          }));
+        };
+
         setWordBoxConfig((prev) => ({
           ...prev,
           charCount: prev.charCount + 1,
@@ -114,11 +122,8 @@ export const useInputLogic = () => {
           currentChar.correct = isCorrect;
 
           if (!isCorrect) {
-            setWordBoxConfig((prev) => ({
-              ...prev,
-              incorrectChars: prev.incorrectChars + 1,
-              uncorrectedErrors: prev.uncorrectedErrors + 1,
-            }));
+            incrementErrors();
+
             currentChar.mistyped = true;
             setHeatMapData((prev) => ({
               ...prev,
@@ -154,11 +159,7 @@ export const useInputLogic = () => {
             extra: true,
             skipped: false,
           });
-          setWordBoxConfig((prev) => ({
-            ...prev,
-            uncorrectedErrors: prev.uncorrectedErrors + 1,
-            incorrectChars: prev.incorrectChars + 1,
-          }));
+          incrementErrors();
         }
       }
     }

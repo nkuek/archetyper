@@ -92,15 +92,16 @@ export const useKeyDownLogic = () => {
             0,
             charList[userWordIndex].chars.length - 1
           );
+          decrementErrors();
           // otherwise just decrement the num errors and update correct state
         } else if (currentCharIndex > 0) {
-          charList[userWordIndex].chars[currentCharIndex - 1].correct = null;
           if (
             !charList[userWordIndex].chars[currentCharIndex - 1].correct ||
             charList[userWordIndex].chars[currentCharIndex - 1].extra
           ) {
             decrementErrors();
           }
+          charList[userWordIndex].chars[currentCharIndex - 1].correct = null;
         }
       }
     }
