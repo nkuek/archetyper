@@ -79,8 +79,6 @@ const App = () => {
   return (
     <div
       style={{
-        fontFamily: 'Roboto',
-        background: theme.pageBackground,
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',

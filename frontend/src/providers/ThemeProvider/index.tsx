@@ -17,6 +17,8 @@ interface IThemeContext {
 
 export const ThemeContext = createContext<IThemeContext>(undefined!);
 
+const muiTheme = createTheme();
+
 const ThemeProvider: FC = ({ children }) => {
   const themeList = useThemeList();
   const [themeName, setThemeName] = useLocalStorage('typer-theme', 'default');
@@ -42,15 +44,20 @@ const ThemeProvider: FC = ({ children }) => {
     [themeName, setThemeName, textColor, themeList]
   );
 
-  const muiTheme = createTheme();
+  const globalStyles = useMemo(
+    () => ({
+      body: {
+        background: themeList[themeName].pageBackground,
+        fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      },
+    }),
+    [themeName, themeList]
+  );
+
   return (
     <MuiThemeProvider theme={{ ...muiTheme, ...themeList[themeName] }}>
       <CssBaseline />
-      <GlobalStyles
-        styles={{
-          body: { backgroundColor: themeList[themeName].pageBackground },
-        }}
-      />
+      <GlobalStyles styles={globalStyles} />
       <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
     </MuiThemeProvider>
   );
