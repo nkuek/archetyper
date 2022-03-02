@@ -12,7 +12,10 @@ const aboutMeLinks = [
     Icon: <LinkedInIcon fontSize="inherit" />,
     link: 'https://www.linkedin.com/in/nick-kuek/',
   },
-  { Icon: <GitHubIcon fontSize="inherit" />, link: 'https://github.com/nkuek' },
+  {
+    Icon: <GitHubIcon fontSize="inherit" />,
+    link: 'https://github.com/nkuek/archetyper',
+  },
   { Icon: <FolderSharedIcon fontSize="inherit" />, link: 'https://nkuek.dev/' },
 ];
 

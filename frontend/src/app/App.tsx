@@ -89,17 +89,16 @@ const App = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: 40,
           fontSize: 'clamp(2rem, 5vw + .5rem, 3rem)',
           color: theme.headings || theme.currentWord,
-          padding: '1rem 0',
         }}
       >
         archetyper
       </Box>
       <Container
         sx={{
-          height: 'calc(100% - 80px)',
+          height:
+            'calc(100% - clamp(2rem, 5vw + .5rem, 3rem) - clamp(1rem, 5vw + .25rem, 1.5rem))',
           display: 'flex',
           alignItems: displayStats ? 'start' : 'center',
           justifyContent: 'center',
@@ -145,7 +144,7 @@ const App = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: 40,
+          padding: '.25rem',
           fontSize: 'clamp(1rem, 5vw + .25rem, 1.5rem)',
           color: theme.headings || theme.currentWord,
         }}
