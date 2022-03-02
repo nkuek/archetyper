@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme } from '@mui/material';
 import { IProps } from 'components/WordBox';
-import { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export const useCapsLockListener = ({ setShowTip, setShowWarning }: IProps) => {
   const muiTheme = useTheme();

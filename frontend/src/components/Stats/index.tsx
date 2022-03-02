@@ -106,7 +106,6 @@ const Stats = () => {
               sx={{
                 textAlign: 'center',
                 fontSize: 'clamp(2.5em, 4vw + .5em, 3.5em)',
-                fontWeight: 'bold',
               }}
             >
               {wpm.net}
@@ -135,7 +134,6 @@ const Stats = () => {
               sx={{
                 textAlign: 'center',
                 fontSize: 'clamp(2.5em, 4vw + .5em, 3.5em)',
-                fontWeight: 'bold',
               }}
             >{`${Math.round(Math.floor(accuracy * 100))}%`}</Box>
           </MuiCustomTooltip>

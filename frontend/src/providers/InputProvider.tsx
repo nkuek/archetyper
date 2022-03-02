@@ -1,4 +1,4 @@
-import { useLocalStorage, useReset } from 'hooks';
+import { useLocalStorage } from 'hooks';
 import randomizeWords from 'languages/wordListGenerator';
 import {
   createContext,
