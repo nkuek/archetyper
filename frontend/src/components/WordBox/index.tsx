@@ -130,7 +130,7 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
               xs: '14.5vh',
               xl: '10vh',
             },
-            '@media screen and (max-height: 800px) and (max-width: 1280px)': {
+            '@media screen and (max-height: 800px) and (max-width: 800px)': {
               height: '22vh',
               lineHeight: '1.75rem',
             },
