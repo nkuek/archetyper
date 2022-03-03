@@ -34,7 +34,14 @@ export const useCaretStyling = () => {
     return {
       height: 'clamp(1.5rem, 5vw + .5rem, 2rem)',
       width: 'clamp(1px, 1vw - 1px, 3px)',
-      top: `clamp(${top - 4}px, 1vw - .25px, ${top + 2}px)`,
+      top: {
+        xs: top - 1,
+        sm: top + 1,
+        md: top + 2.5,
+      },
+      '@media screen and (max-height: 800px)': {
+        top: top - 2,
+      },
       left: `clamp(${left - 4}px, 5vw - .25px, ${left - 2}px)`,
       position: 'absolute',
       backgroundColor: theme.currentChar,
