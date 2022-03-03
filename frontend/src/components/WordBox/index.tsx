@@ -128,9 +128,9 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             zIndex: 1,
             height: {
               xs: '14.5vh',
-              md: '10vh',
+              xl: '10vh',
             },
-            '@media screen and (max-height: 800px) and (max-width: 1440px)': {
+            '@media screen and (max-height: 800px) and (max-width: 1280px)': {
               height: '22vh',
               lineHeight: '1.75rem',
             },
