@@ -68,7 +68,7 @@ export const defaultWordBoxConfig = {
 
 const WordContextProvider: FC = ({ children }) => {
   const { loading } = useContext(WordListContext);
-  const { setCaretSpacing, userWordIndex } = useContext(IndexContext);
+  const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
 
   const [wpmData, setWpmData] = useState<IWPMData>({});
   const [heatMapData, setHeatMapData] = useState<IHeatMapData>({});
@@ -101,16 +101,15 @@ const WordContextProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (!currentWordRef.current || loading) return;
-    currentWordRef.current.scrollIntoView({ block: 'center' });
     setTimeout(() => {
       if (!currentWordRef.current) return;
       setCaretSpacing({
         top: currentWordRef.current.offsetTop,
         left: currentWordRef.current.offsetLeft,
       });
-    }, 25);
+    }, 28);
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userWordIndex]);
+  }, [currentWordIndex]);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
 

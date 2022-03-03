@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext } from 'react';
+import React, { FC, useContext, useEffect, useRef } from 'react';
 import { Box } from '@mui/system';
 import { ThemeContext, IndexContext, WordListContext } from 'providers';
 import { TWordChar } from 'providers/WordListProvider';
@@ -24,17 +24,22 @@ const Char: FC<IProps> = (props) => {
 
   const currentChar = wordIdx === userWordIndex && charIdx === currentCharIndex;
 
-  const charRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (node) {
-        setCaretSpacing({
-          top: node.offsetTop,
-          left: node.offsetLeft + (displayExtraChar ? node.offsetWidth + 2 : 0),
-        });
-      }
-    },
-    [setCaretSpacing, displayExtraChar]
-  );
+  const charRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!charRef.current) return;
+    setCaretSpacing({
+      top: charRef.current.offsetTop,
+      left:
+        charRef.current.offsetLeft +
+        (displayExtraChar ? charRef.current.offsetWidth + 2 : 0),
+    });
+  }, [displayExtraChar, currentCharIndex, userWordIndex, setCaretSpacing]);
+
+  useEffect(() => {
+    if (!charRef.current) return;
+    charRef.current.scrollIntoView({ block: 'center' });
+  }, [userWordIndex]);
 
   return (
     <Box
