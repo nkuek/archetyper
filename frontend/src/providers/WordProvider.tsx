@@ -68,7 +68,7 @@ export const defaultWordBoxConfig = {
 
 const WordContextProvider: FC = ({ children }) => {
   const { loading } = useContext(WordListContext);
-  const { setCaretSpacing, currentWordIndex } = useContext(IndexContext);
+  const { setCaretSpacing, userWordIndex } = useContext(IndexContext);
 
   const [wpmData, setWpmData] = useState<IWPMData>({});
   const [heatMapData, setHeatMapData] = useState<IHeatMapData>({});
@@ -110,7 +110,7 @@ const WordContextProvider: FC = ({ children }) => {
       });
     }, 25);
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentWordIndex]);
+  }, [userWordIndex]);
 
   const textFieldRef = useRef<HTMLInputElement>(null);
 

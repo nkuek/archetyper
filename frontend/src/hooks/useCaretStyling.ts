@@ -34,8 +34,8 @@ export const useCaretStyling = () => {
     return {
       height: 'clamp(1.5rem, 5vw + .5rem, 2rem)',
       width: 'clamp(1px, 1vw - 1px, 3px)',
-      top: `clamp(${top - 3}px, 1.5vw - 1px, ${top + 2}px)`,
-      left: `clamp(${left - 4}px, 3vw - 1px, ${left - 2}px)`,
+      top: `clamp(${top - 4}px, 1vw - .25px, ${top + 2}px)`,
+      left: `clamp(${left - 4}px, 5vw - .25px, ${left - 2}px)`,
       position: 'absolute',
       backgroundColor: theme.currentChar,
       animation: !timer.id
