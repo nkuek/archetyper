@@ -31,19 +31,22 @@ const App = () => {
 
   const focus = useFocus();
 
-  const closeDialog = (setDialog: TReactSetState<boolean>) => {
-    return (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
-      e.stopPropagation();
-      setDialog(false);
-      setTimeout(() => {
-        focus();
-      }, 1);
-    };
-  };
+  const closeDialog = useCallback(
+    (setDialog: TReactSetState<boolean>) => {
+      return (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+        e.stopPropagation();
+        setDialog(false);
+        setTimeout(() => {
+          focus();
+        }, 1);
+      };
+    },
+    [focus]
+  );
 
-  const openDialog = (setDialog: TReactSetState<boolean>) => {
+  const openDialog = useCallback((setDialog: TReactSetState<boolean>) => {
     return () => setDialog(true);
-  };
+  }, []);
 
   // handle pressing escape
   useEffect(() => {
