@@ -16,7 +16,7 @@
 </div>
 
 ### 2. Variety of Languages
-- Current supports English, Spanish, and Vietnamese, with better language support on the way
+- Currently supports English, Spanish, and Vietnamese, with better language support on the way
 <div align="center">
   <img width='75%' src="https://media.giphy.com/media/fbLXRo4fIoXzRZR5kb/giphy.gif">
 </div>
