@@ -1,5 +1,5 @@
 import { useLocalStorage } from 'hooks';
-import randomizeWords, { maxWords } from 'languages/wordListGenerator';
+import randomizeWords, { maxInitialWords } from 'languages/wordListGenerator';
 import {
   createContext,
   FC,
@@ -49,7 +49,7 @@ const InputProvider: FC = ({ children }) => {
     30
   );
   const { settings } = useContext(SettingsContext);
-  const { setCharList } = useContext(WordListContext);
+  const { setCharList, wordCount } = useContext(WordListContext);
   const { currentWordIndex } = useContext(IndexContext);
   const [wpm, setWpm] = useState({ raw: 0, net: 0 });
   const [inputHistory, setInputHistory] = useState<string[]>([]);
@@ -72,7 +72,8 @@ const InputProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (settings.type === 'quotes') return;
-    if (currentWordIndex < maxWords - 10) return;
+    if (wordCount !== 'endless' && wordCount < maxInitialWords) return;
+    if (currentWordIndex < maxInitialWords - 25) return;
     const newWord = randomizeWords(settings, true);
     const wordChars: TWordChar[] = [];
     for (const char of newWord) {

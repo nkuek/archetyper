@@ -28,7 +28,7 @@ const specialCharsList = [
 ] as const;
 
 const maxNumLength = 6;
-export const maxWords = 40;
+export const maxInitialWords = 60;
 
 // create overload function based on the single parameter
 function randomizeWords(settings: ISettings, single: boolean): string;
@@ -87,7 +87,7 @@ function randomizeWords(settings: ISettings, single?: boolean) {
   }
 
   const randomized: string[] = [];
-  while (randomized.length < maxWords) {
+  while (randomized.length < maxInitialWords) {
     randomized.push(createWord());
   }
   return randomized;

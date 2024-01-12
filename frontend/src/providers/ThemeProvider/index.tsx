@@ -21,7 +21,7 @@ const muiTheme = createTheme();
 
 const ThemeProvider: FC = ({ children }) => {
   const themeList = useThemeList();
-  const [themeName, setThemeName] = useLocalStorage('typer-theme', 'default');
+  const [themeName, setThemeName] = useLocalStorage('typer-theme', 'jade');
 
   const favicon = document.getElementById('favicon') as HTMLLinkElement;
 
