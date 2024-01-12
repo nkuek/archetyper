@@ -13,7 +13,19 @@ export const languageMap = {
 
 const numbersList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-const specialCharsList = ['"', '!', '?', ':', ';', '/', '(', '-', "'"];
+const specialCharsList = [
+  '"',
+  '!',
+  '?',
+  ':',
+  ';',
+  '/',
+  '(',
+  '-',
+  "'",
+  '[',
+  '{',
+] as const;
 
 const maxNumLength = 6;
 export const maxWords = 40;
@@ -35,7 +47,7 @@ function randomizeWords(settings: ISettings, single?: boolean) {
     if (specialChars) {
       const shouldAddSpecial = Math.random() > 0.4;
       if (shouldAddSpecial) {
-        const specialChar =
+        const specialChar: (typeof specialCharsList)[number] =
           specialCharsList[Math.floor(Math.random() * specialCharsList.length)];
         switch (specialChar) {
           case '"':
@@ -44,6 +56,12 @@ function randomizeWords(settings: ISettings, single?: boolean) {
             break;
           case '(':
             word = `(${word})`;
+            break;
+          case '[':
+            word = `[${word}]`;
+            break;
+          case '{':
+            word = `{${word}}`;
             break;
           default:
             word += specialChar;
