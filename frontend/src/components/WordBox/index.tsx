@@ -193,11 +193,13 @@ const WordBox: FC<IProps> = ({ setShowTip, setShowWarning }) => {
             autoCapitalize="off"
             autoCorrect="off"
             autoComplete="off"
+            aria-label="typing test input field"
           />
         </div>
         <CustomTooltip Title="restart test">
           <Button
             sx={{ color: theme.currentWord, height: '100%', width: '20%' }}
+            aria-label="restart test"
             onClick={(e) => {
               handleReset(e);
               if (!mobileDevice) {
