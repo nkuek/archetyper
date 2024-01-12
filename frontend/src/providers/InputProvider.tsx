@@ -1,5 +1,5 @@
 import { useLocalStorage } from 'hooks';
-import randomizeWords from 'languages/wordListGenerator';
+import randomizeWords, { maxWords } from 'languages/wordListGenerator';
 import {
   createContext,
   FC,
@@ -72,6 +72,7 @@ const InputProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (settings.type === 'quotes') return;
+    if (currentWordIndex < maxWords - 10) return;
     const newWord = randomizeWords(settings, true);
     const wordChars: TWordChar[] = [];
     for (const char of newWord) {
