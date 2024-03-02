@@ -1,8 +1,7 @@
-import React, { FC, ReactElement } from 'react';
-import { Tooltip, Typography } from '@mui/material';
-import { withStyles } from '@mui/styles';
+import { FC, ReactElement } from 'react';
+import { Tooltip, Typography, styled } from '@mui/material';
 
-const StyledTooltip = withStyles(() => ({
+const StyledTooltip = styled(Tooltip)({
   tooltip: {
     backgroundColor: '#1c1c1c',
     fontSize: '1em',
@@ -13,7 +12,7 @@ const StyledTooltip = withStyles(() => ({
   arrow: {
     color: '#1c1c1c',
   },
-}))(Tooltip);
+});
 
 const CustomTooltip: FC<{
   Title: string | (() => ReactElement);

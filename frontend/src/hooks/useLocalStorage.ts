@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 
-export const getSavedValue = <T>(key: string, initialValue: T) => {
+export const getSavedValue = <T>(key: string, initialValue?: T) => {
   try {
     const savedValue =
       localStorage.getItem(key) && JSON.parse(localStorage.getItem(key) || '');
     if (savedValue) {
       // in case there are any new keys added that aren't in user's local storage, check and add here to prevent errors
       if (
+        initialValue &&
         typeof savedValue === 'object' &&
         !Object.keys(initialValue).every((key) => savedValue[key])
       ) {

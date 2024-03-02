@@ -26,7 +26,7 @@ const WordOptions = () => {
   const handleClick = useCallback(
     (
       e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-      option: typeof categories[number]
+      option: (typeof categories)[number]
     ) => {
       e.stopPropagation();
       setSettings((prev) => ({ ...prev, type: option }));
@@ -85,6 +85,10 @@ const WordOptions = () => {
                 opacity: option === settings.type ? 1 : 0.6,
                 cursor: 'pointer',
                 fontWeight: option === settings.type ? 'bold' : 'normal',
+                '&:hover': {
+                  opacity: 1,
+                },
+                transition: 'opacity 300ms ease-in-out',
               }}
               key={option}
               onMouseEnter={() => {

@@ -10,6 +10,7 @@ import {
   InputProvider,
   SettingsProvider,
 } from 'providers';
+import { Analytics } from '@vercel/analytics/react';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
             <SettingsProvider>
               <InputProvider>
                 <App />
+                <Analytics />
               </InputProvider>
             </SettingsProvider>
           </ThemeProvider>
