@@ -1,4 +1,4 @@
-# Welcome to [archetyper](https://archetyper.vercel.app) - an aesthetic type tester!
+# Welcome to [archetyper](https://archetyper.xyz) - an aesthetic type tester!
 <div align="center">
   <img width='75%' src="https://media.giphy.com/media/K6pXs6oFM4noQx2eE9/giphy.gif">
 </div>
