@@ -160,9 +160,10 @@ const Stats = () => {
             <CartesianGrid stroke={theme.cartesian || theme.words} />
             <XAxis height={40} dataKey="wordNum" stroke={theme.cartesian}>
               <Label
-                value="words"
+                value="word number"
                 fill={theme.graphText || theme.words}
                 position="insideBottom"
+                dy={10}
               />
             </XAxis>
             <YAxis
@@ -173,7 +174,9 @@ const Stats = () => {
                 dx: -20,
                 fill: theme.graphText || theme.words,
               }}
+              domain={[0, 'dataMax + 50']}
               stroke={theme.cartesian}
+              scale="linear"
             />
             <YAxis
               yAxisId="right"
