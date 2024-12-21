@@ -97,7 +97,7 @@ const App = () => {
           color: theme.headings || theme.currentWord,
         }}
       >
-        archetyper hi
+        archetyper
       </Box>
       <Container
         sx={{
