@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './app/App';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./app/App";
 import {
   ThemeProvider,
   WordProvider,
@@ -9,8 +9,8 @@ import {
   IndexProvider,
   InputProvider,
   SettingsProvider,
-} from 'providers';
-import { Analytics } from '@vercel/analytics/react';
+} from "providers";
+import { Analytics } from "@vercel/analytics/react";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -29,5 +29,5 @@ ReactDOM.render(
       </IndexProvider>
     </WordListProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root"),
 );

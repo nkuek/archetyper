@@ -1,16 +1,16 @@
-import { WordListContext } from 'providers';
-import { useCallback, useContext, useMemo } from 'react';
+import { WordListContext } from "providers";
+import { useCallback, useContext, useMemo } from "react";
 
 interface IQuote {
-  content: string;
+  quote: string;
   author: string;
 }
 
 const paramsMap = {
-  short: '?maxLength=100',
-  medium: '?minLength=140&maxLength=180',
-  long: '?minLength=200',
-  all: '',
+  short: "?maxLength=100",
+  medium: "?minLength=140&maxLength=180",
+  long: "?minLength=200",
+  all: "",
 };
 
 const useQuote = () => {
@@ -26,10 +26,13 @@ const useQuote = () => {
 
   const getQuote = useCallback(() => {
     setLoading(true);
-    fetch(`https://api.quotable.io/random${paramsMap[quoteParams]}`)
+    fetch(
+      `https://quoteslate.vercel.app/api/quotes/random${paramsMap[quoteParams]}`,
+    )
       .then((response) => response.json())
       .then((quote: IQuote) => {
-        const quoteContent = quote.content.split(' ');
+        const quoteContent = quote.quote.split(" ");
+        console.log(quoteContent);
         setAuthor(quote.author);
         setWordList(quoteContent);
         setWordCount(quoteContent.length);
@@ -38,14 +41,14 @@ const useQuote = () => {
         }, 100);
       })
       .catch((error) => {
-        if (error.message.includes('Failed to fetch')) {
+        if (error.message.includes("Failed to fetch")) {
           setLoading(false);
           setErrorMessage(
-            'there was a problem loading this quote. please ensure you have a stable network connection.'
+            "there was a problem loading this quote. please ensure you have a stable network connection.",
           );
         } else {
           setErrorMessage(
-            'something went wrong. try refreshing the page and ensure you have a stable network connection.'
+            "something went wrong. try refreshing the page and ensure you have a stable network connection.",
           );
         }
       });
@@ -62,7 +65,7 @@ const useQuote = () => {
       getQuote,
       author,
     }),
-    [getQuote, author]
+    [getQuote, author],
   );
 };
 
